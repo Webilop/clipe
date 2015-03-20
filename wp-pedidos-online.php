@@ -23,8 +23,16 @@ class pedidosOnline {
     //pages of plugin with respective template.
     $this->pages['1'] = 'index.php'; //index
     $this->pages['2'] = 'recovery_password.php';
-    $this->pages['3'] = 'list_clients.php';
-    $this->pages['4'] = 'create_client.php';
+    $this->pages['3'] = 'client_list.php';
+    $this->pages['4'] = 'client_create.php';
+    $this->pages['5'] = 'client_view.php';
+    $this->pages['6'] = 'supplier_list.php';
+    $this->pages['7'] = 'product_list.php';
+    $this->pages['8'] = 'order_view.php';
+    $this->pages['9'] = 'order_list.php';
+    $this->pages['10'] = 'order_create.php';
+    $this->pages['11'] = 'reports.php';
+    $this->pages['12'] = 'my_account.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_filter('template_include', array($this, 'template_function'));
@@ -62,9 +70,13 @@ class pedidosOnline {
 
   function template_function($template_path) {
     if (isset($_SERVER['QUERY_STRING'])) {
-      $page = $_SERVER['QUERY_STRING'];
+      $array=explode("&", $_SERVER['QUERY_STRING']);
+      $page = $array[0];//page always firts.
+      //echo "QUERY_STRING:".$page;
       foreach ($this->pages as $key => $value) {
         if ($page == $this->suffixPages . $key) {
+          wp_enqueue_style('font-awesome', plugins_url('lib/font-awesome/font-awesome.min.css', __FILE__));
+          wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
           $template_path = $this->search_template($this->pages[$key]);
           return $template_path;
         }
@@ -76,7 +88,7 @@ class pedidosOnline {
       $id = $options['login_page'];
       if (is_page($id)) {
         wp_enqueue_script('login_js', plugins_url('templates/pedidosonline/js/login.js', __FILE__), array('jquery'));
-        wp_enqueue_style('login_css', plugins_url('templates/pedidosonline/css/login.css', __FILE__));
+        wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
         $template_path = $this->search_template('login.php');
       }
     }
@@ -86,16 +98,9 @@ class pedidosOnline {
   // Add options page
   public function add_plugin_page() {
     add_menu_page(__('pedidos online Users', 'pedidos-online'), __('Pedidos Online', 'pedidos-online'), 'manage_options', 'pedidosonline-settings', array($this, 'create_admin_page'), '', 6);
-    /* add_submenu_page(
-      'pedidosonline-crud-users',__('Settings Admin','pedidos-online'),  __('Settings','pedidos-online'), 'manage_options', 'pedidosonline-my-setting-admin', array($this, 'create_admin_page')
-      ); */
     add_submenu_page(
             'pedidosonline-settings', __('Create Client', 'pedidos-online'), __('Create Client', 'pedidos-online'), 'manage_options', 'pedidosonline-create-users', array($this, 'create_user')
     );
-    // This page will be under "Settings"
-    /* add_options_page(
-      __('Settings Admin','pedidos-online'),  __('Pedidos Online','pedidos-online'), 'manage_options', 'pedidosonline-my-setting-admin', array($this, 'create_admin_page')
-      ); */
   }
 
   // Options page callback
@@ -242,8 +247,7 @@ class pedidosOnline {
   /*
    *
    */
-
-  public function get_clients_list($options = array()) {
+  public function get_clients($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $_COOKIE[$this->cookieName]);
       $data = array_merge($data, $options);
@@ -257,10 +261,25 @@ class pedidosOnline {
     }
   }
 
+   /*
+   *
+   */
+  public function get_client($id) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/providers/getClient/'.$id.'.json?'.$parameters);
+      if ($result->status == "success") {
+        return $result->data;
+      } else {
+        return array();
+      }
+    }
+  }
+
   /*
    *
    */
-
   public function create_client() {
     if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['code'])) {
       $data = array('email' => $_POST['email']);

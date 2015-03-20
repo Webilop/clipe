@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $pedidosOnline->create_client();
 }
 ?>
-<div><h1>Create of Client</h1></div>
-<div class="">
+<div class="clipe-container">
+  <h1>Create of Client</h1>
   <form method="POST">
     <div>
       <label for="name"><?php _e('Name', 'pedidos-online'); ?></label>
@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <input type="submit" value="<?php _e('Login', 'pedidos-online'); ?>" class="login-submit" id="submit" name="submit">
   </form>
+  <div class="clipe-links">
+    <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+  </div>
 </div>
 <?php
 get_sidebar();
