@@ -9,8 +9,8 @@ $suppliers = array();
   <table>
     <thead>
       <tr>
-        <th><?php _e('Suppliers', 'pedidos-online'); ?></th>
-        <th><?php _e('Actions', 'pedidos-online'); ?></th>
+        <th><?php _e('Suppliers', 'clipe'); ?></th>
+        <th><?php _e('Actions', 'clipe'); ?></th>
       </tr>
     </thead>
     <tbody>

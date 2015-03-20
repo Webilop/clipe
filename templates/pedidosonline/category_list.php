@@ -2,24 +2,24 @@
 get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
-$clients = $pedidosOnline->get_clients(array('limit' => 50, 'order_by' => 'name'));
+$categories = $pedidosOnline->get_categories();
 ?>
 <div class="clipe-container">
-  <h1>list of customer</h1>
+  <h1><?php _e('Category List', 'clipe'); ?>?></h1>
   <table>
     <thead>
       <tr>
-        <th><?php _e('Client', 'clipe'); ?></th>
+        <th><?php _e('Products', 'clipe'); ?></th>
         <th><?php _e('Actions', 'clipe'); ?></th>
       </tr>
     </thead>
     <tbody>
       <?php
-      foreach ($clients as $client) {
+      foreach ($categories as $category) {
         ?>
         <tr>
-          <td><?php echo $client->Client->name; ?></td>
-          <td><a href="<?php echo $pedidosOnline->get_link_page("client_view.php") . '&id=' . $client->Client->id ?>"><i class="fa fa-eye"></i></a></td>
+          <td><?php //echo $client->Client->name;  ?></td>
+          <td><a href="<?php //echo $pedidosOnline->get_link_page("client_view.php").'&id='.$client->Client->id ?>"><i class="fa fa-eye"></i></a></td>
         </tr>
         <?php
       }

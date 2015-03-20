@@ -42,7 +42,7 @@ class InterfacePedidos {
    * type => get,post,delete.
    */
   public function request($request, $type = "get", $data = array()) {
-    //echo "<br> request:".$this->server."$request <br> type:$type data:".implode ( ',' , $data ). "<br>";
+    echo "<br> request:".$this->server."$request <br> type:$type data:".implode ( ',' , $data ). "<br>";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->server . $request);
     switch ($type) {

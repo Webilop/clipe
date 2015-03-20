@@ -2,15 +2,15 @@
 get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
-$products = array();
+$products = $pedidosOnline->get_products();
 ?>
 <div class="clipe-container">
-  <h1>list of customer</h1>
+  <h1><?php _e('Product List', 'clipe'); ?>?></h1>
   <table>
     <thead>
       <tr>
-        <th><?php _e('Products', 'pedidos-online'); ?></th>
-        <th><?php _e('Actions', 'pedidos-online'); ?></th>
+        <th><?php _e('Products', 'clipe'); ?></th>
+        <th><?php _e('Actions', 'clipe'); ?></th>
       </tr>
     </thead>
     <tbody>
