@@ -31,8 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label for="client_id"><?php _e('Category', 'clipe'); ?></label>
       <select id="client_id" name="client_id[]" required multiple>
         <option value="">----------</option>
-        <option value="">**********</option>
-        <option value="">++++++++++</option>
+        <?php echo $pedidosOnline->get_category_options();?>
       </select>
     </div>
     <input type="submit" value="<?php _e('Create', 'clipe'); ?>" class="" id="submit" name="submit">

@@ -1,0 +1,70 @@
+<?php
+get_header();
+global $pedidosOnline;
+$pedidosOnline->is_login(true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
+  $result=$pedidosOnline->edit_client($_POST['client_id']);
+  //wp_redirect($pedidosOnline->get_link_page('index.php'));
+}
+?>
+<div class="clipe-container">
+  <?php
+  if (isset($_GET['id'])) {
+    $user = $pedidosOnline->get_user($_GET['id']);
+    ?>
+    <h1><?php _e('My Client Account', 'clipe'); ?></h1>
+    <?php if (in_array('client', $user->permissions)) { ?>
+      <form method="POST">
+        <input type="hidden" name="client_id" value="<?php echo $user->Client->id;?>"/>
+        <div>
+          <label for="email"><?php _e('Email', 'clipe'); ?></label>
+          <input type="email" id="mail" name="email" required type="email" value="<?php echo $user->User->email; ?>"/>
+        </div>
+        <div>
+          <label for="password"><?php _e('Password', 'clipe'); ?></label>
+          <input type="password" id="password" name="password" required/>
+        </div>
+        <div>
+          <label for="confirm_password"><?php _e('Confirm Password', 'clipe'); ?></label>
+          <input type="password" id="confirm_password" name="confirm_password"/>
+        </div>
+        <div>
+          <label for="current_password"><?php _e('Current Password', 'clipe'); ?></label>
+          <input type="password" id="current_password" name="current_password"/>
+        </div>
+        <div>
+          <label for="name"><?php _e('Name', 'clipe'); ?></label>
+          <input type="text" id="name" name="name" value="<?php echo $user->Client->name; ?>"/>
+        </div>
+        <div>
+          <label for="first_name"><?php _e('First Name', 'clipe'); ?></label>
+          <input type="text" id="first_name" name="first_name" value="<?php echo $user->User->first_name; ?>"/>
+        </div>
+        <div>
+          <label for="last_name"><?php _e('Last Name', 'clipe'); ?></label>
+          <input type="text" id="last_name" name="last_name" value="<?php echo $user->User->last_name; ?>"/>
+        </div>
+        <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="button" id="submit" name="submit">
+      </form>
+    <?php }else{
+      wp_redirect($pedidosOnline->get_link_page('index.php'));
+    } ?>
+
+    <div class="clipe-links">
+      <a href="<?php echo $pedidosOnline->get_link_page('client_list.php'); ?>"><i class="fa fa-arrow-left"></i></a>
+      <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+    </div>
+    <?php
+  } else {
+    ?>
+    <h1><?php _e('Error', 'clipe') ?></h1>
+    <?php
+  }
+  ?>
+</div>
+<?php
+get_sidebar();
+get_footer();
+?>
+
+

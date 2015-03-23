@@ -32,7 +32,13 @@ class pedidosOnline {
     $this->pages['9'] = 'order_list.php';
     $this->pages['10'] = 'order_create.php';
     $this->pages['11'] = 'reports.php';
-    $this->pages['12'] = 'my_account.php';
+    $this->pages['12'] = 'provider_edit.php';
+    $this->pages['13'] = 'category_create.php';
+    $this->pages['14'] = 'category_edit.php';
+    $this->pages['15'] = 'category_list.php';
+    $this->pages['16'] = 'category_view.php';
+    $this->pages['17'] = 'category_delete.php';
+    $this->pages['18'] = 'client_edit.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_filter('template_include', array($this, 'template_function'));
@@ -49,6 +55,10 @@ class pedidosOnline {
       return site_url() . '?' . $this->suffixPages . $key;
     }
     return false;
+  }
+
+  public function get_logout_url() {
+      return site_url() . '?' . $this->suffixPages . "logout";
   }
 
   /*
@@ -72,6 +82,11 @@ class pedidosOnline {
     if (isset($_SERVER['QUERY_STRING'])) {
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
+      if($page==$this->suffixPages."logout"){
+        //delete cockie.
+        setcookie($this->cookieName, "", time() - 3600);
+        $this->redirectLogin();
+      }
       //echo "QUERY_STRING:".$page;
       foreach ($this->pages as $key => $value) {
         if ($page == $this->suffixPages . $key) {
@@ -235,7 +250,7 @@ class pedidosOnline {
       if ($result->status == "success") {
         $b_login = true;
       } else {
-        setcookie("wp_pedidosonline", "", time() - 3600);
+        setcookie($this->cookieName, "", time() - 3600);
       }
     }
     if (!$b_login && $redirect) {
@@ -256,6 +271,33 @@ class pedidosOnline {
         return array();
       }
     }
+  }
+
+  public function create_client() {
+    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['code'])) {
+      $data = array('email' => $_POST['email']);
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['name'] = $_POST['name'];
+      $data['address'] = $_POST['address'];
+      $data['phone'] = $_POST['phone'];
+      $data['code'] = $_POST['code'];
+      $result = $this->interface->request('api/clients/add.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function edit_client($id) {
+    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['first_name']) && isset($_POST['last_name'])) {
+      $data = array('email' => $_POST['email']);
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['name'] = $_POST['name'];
+      $data['first_name'] = $_POST['first_name'];
+      $data['last_name'] = $_POST['last_name'];
+      $result = $this->interface->request('api/clients/edit/'.$id.'.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
   }
 
   public function get_client($id) {
@@ -312,7 +354,7 @@ class pedidosOnline {
   }
 
   public function edit_provider($id) {
-    if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name'])&& isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address'])) {
+    if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name'])&& isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['url'])) {
       $data = array('email' => $_POST['email']);
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['name'] = $_POST['name'];
@@ -320,6 +362,7 @@ class pedidosOnline {
       $data['last_name'] = $_POST['last_name'];
       $data['phone'] = $_POST['phone'];
       $data['address'] = $_POST['address'];
+      $data['url'] = $_POST['url'];
       $result = $this->interface->request('api/providers/edit/'.$id.'.json', 'post', $data);
       return $result;
     }
@@ -328,7 +371,6 @@ class pedidosOnline {
 
   public function create_category() {
     if (isset($_POST['name'])) {
-      $data = array('email' => $_POST['email']);
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['name'] = $_POST['name'];
       $result = $this->interface->request('api/product_categories/add.json', 'post', $data);
@@ -337,9 +379,17 @@ class pedidosOnline {
     return 'validate fields';
   }
 
+  public function delete_category($id) {
+    if (isset($id)) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $result = $this->interface->request('api/product_categories/delete/'.$id.'.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
   public function edit_category($id) {
     if (isset($_POST['name'])) {
-      $data = array('email' => $_POST['email']);
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['name'] = $_POST['name'];
       $result = $this->interface->request('api/product_categories/edit/'.$id.'.json', 'post', $data);
@@ -348,13 +398,36 @@ class pedidosOnline {
     return 'validate fields';
   }
 
+  public function get_categories($options = array()) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array_merge($data, $options);
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/product_categories/index.json?' . $parameters);
+      if ($result->status == "success") {
+        return $result->data->productCategories;
+      } else {
+        return array();
+      }
+    }
+  }
+
+  public function get_category_options() {
+    $categories->$this->get_categories();
+    $htmlCategories="";
+    foreach ($categories as $category) {
+      $htmlCategories.='<option value="'.$category->ProductCategory->id.'">'.$category->ProductCategory->id.'</option>';
+    }
+    return $htmlCategories;
+  }
+
   public function get_category($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $_COOKIE[$this->cookieName]);
       $parameters = http_build_query($data);
-      $result = $this->interface->request('api/product_categories/view/' . $id . '.json?' . $parameters);
+      $result = $this->interface->request('api/product_categories/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data;
+        return $result->data->ProductCategory;
       } else {
         return array();
       }
@@ -367,7 +440,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/users/getId.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data;
+        return $result->data->id;
       } else {
         return false;
       }
@@ -380,25 +453,20 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/users/get/'.$id.'.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data;
+        $data= $result->data;
+        $permissions=array();
+        if(isset($data->Client) && !empty($data->Client->id)){
+          $permissions[]='client';
+        }
+        if(isset($data->Provider) && !empty($data->Provider->id)){
+          $permissions[]='provider';
+        }
+        $data->permissions=$permissions;
+        return $data;
       } else {
         return array();
       }
     }
-  }
-
-  public function create_client() {
-    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['code'])) {
-      $data = array('email' => $_POST['email']);
-      $data['access_token'] = $_COOKIE[$this->cookieName];
-      $data['name'] = $_POST['name'];
-      $data['address'] = $_POST['address'];
-      $data['phone'] = $_POST['phone'];
-      $data['code'] = $_POST['code'];
-      $result = $this->interface->request('api/clients/add.json', 'post', $data);
-      return $result;
-    }
-    return 'validate fields';
   }
 }
 
