@@ -1,12 +1,13 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $categories = $pedidosOnline->get_categories();
+
+get_header();
 ?>
 <div class="clipe-container">
   <h1><?php _e('Category List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("category_create.php");?>"><i class="fa fa-plus"></i></a></h1>
-  <table>
+  <table class="clipe-table">
     <thead>
       <tr>
         <th><?php _e('Categories', 'clipe'); ?></th>
@@ -37,7 +38,7 @@ $categories = $pedidosOnline->get_categories();
   </div>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

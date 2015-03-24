@@ -1,11 +1,12 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
   $result=$pedidosOnline->edit_client($_POST['client_id']);
   //wp_redirect($pedidosOnline->get_link_page('index.php'));
 }
+
+get_header();
 ?>
 <div class="clipe-container">
   <?php
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
   ?>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

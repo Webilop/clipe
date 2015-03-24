@@ -1,8 +1,9 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $product = $pedidosOnline->get_product($_GET['id']);
+
+get_header();
 ?>
 <div class="clipe-container">
   <h1><?php _e('Product', 'clipe'); ?> => <?php echo $product->Client->name; ?></h1>
@@ -13,7 +14,7 @@ $product = $pedidosOnline->get_product($_GET['id']);
   </div>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

@@ -1,5 +1,4 @@
 <?php
-get_header();
 global $pedidosOnline;
 if ($pedidosOnline->is_login()) {
   ///redirect to index of pedidos online
@@ -9,7 +8,16 @@ if ($pedidosOnline->is_login()) {
     $result = $pedidosOnline->recoveryPassword($_POST['email']);
     ?><p> <?php print_r($result); ?></p><?php
   }
-  ?>
+}
+
+//get login page url
+$options = get_option('pediodosonline_option_name');
+$id = !empty($options['login_page']) ? $options['login_page'] : null;
+$loginPage = get_permalink($id);
+
+get_header();
+?>
+<div class="clipe-container">
   <div class="clipe-container">
     <div class="form-login">
       <form method="POST">
@@ -21,9 +29,8 @@ if ($pedidosOnline->is_login()) {
       </form>
     </div>
   </div>
-
-  <?php
-}
-get_sidebar();
+</div>
+<?php
+get_sidebar('clipe');
 get_footer();
 ?>
