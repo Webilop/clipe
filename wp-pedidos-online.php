@@ -41,6 +41,8 @@ class pedidosOnline {
     $this->pages['18'] = 'client_edit.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
+    add_action( 'widgets_init', array($this, 'create_clipe_sidebar') );
+    
     add_filter('template_include', array($this, 'template_function'));
     $this->interface = new InterfacePedidos();
   }
@@ -213,6 +215,21 @@ class pedidosOnline {
       ?>
     </select>
     <?php
+  }
+  
+  // Register Clipe Sidebar
+  function create_clipe_sidebar() {
+	  $args = array(
+	    'name'          => __( 'Clipe Sidebar' ),
+	    'id'            => "clipe",
+	    'description'   => '',
+	    'class'         => '',
+	    'before_widget' => '<li id="%1$s" class="widget %2$s">',
+	    'after_widget'  => "</li>\n",
+	    'before_title'  => '<h2 class="widgettitle">',
+	    'after_title'   => "</h2>\n",
+	  );
+	  register_sidebar( $args );
   }
 
   public function login($email, $password) {
