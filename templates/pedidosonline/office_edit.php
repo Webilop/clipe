@@ -7,27 +7,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 get_header();
 $office=$pedidosOnline->get_office($_GET['id']);
+print_r($office);
 ?>
 <div class="clipe-container">
-  <h1><?php _e('Edit Product', 'clipe'); ?></h1>
+  <h1><?php _e('Edit Office', 'clipe'); ?></h1>
   <form method="POST">
     <div>
       <label for="address"><?php _e('Address', 'clipe'); ?></label>
-      <input type="text" id="address" name="address" value="<?php echo $office->addres;?>" required/>
+      <input type="text" id="address" name="address" value="<?php echo $office->Headquarters->address;?>" required/>
     </div>
     <div>
       <label for="phone"><?php _e('Phone', 'clipe'); ?></label>
-      <input type="text" id="phone" name="phone" value="<?php echo $office->phone;?>" required/>
+      <input type="text" id="phone" name="phone" value="<?php echo $office->Headquarters->phone;?>" required/>
     </div>
     <div>
       <label for="email"><?php _e('Email', 'clipe'); ?></label>
-      <input type="email" id="email" name="email" value="<?php echo $office->email;?>" required/>
+      <input type="email" id="email" name="email" value="<?php echo $office->Headquarters->email;?>" required/>
     </div>
     <div>
       <label for="provider_id"><?php _e('Provider', 'clipe'); ?></label>
-      <select id="provider_id" name="provider_id" required disabled>
+      <select id="provider_id" name="provider_id" required>
         <option value="" >----------</option>
-        <?php echo $pedidosOnline->get_providers_client_options($office->provider_id);?>
+        <?php echo $pedidosOnline->get_providers_client_options($office->HeadquartersProvider->{0}->provider_id);?>
       </select>
     </div>
     <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="" id="submit" name="submit">

@@ -4,7 +4,6 @@ $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   echo '0';
   $pedidosOnline->create_office();
-  exit;
   wp_redirect($pedidosOnline->get_link_page('office_list.php'));
 }
 get_header();

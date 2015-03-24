@@ -47,7 +47,7 @@ class pedidosOnline {
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action( 'widgets_init', array($this, 'create_clipe_sidebar') );
-    
+
     add_filter('template_include', array($this, 'template_function'));
     $this->interface = new InterfacePedidos();
   }
@@ -91,7 +91,7 @@ class pedidosOnline {
       $page = $array[0]; //page always firts.
       if ($page == $this->suffixPages . "logout") {
         //delete cockie.
-        setcookie($this->cookieName, "", time() - 3600);
+        setcookie($this->cookieName, "", time() - 3600, '/');
         $this->redirectLogin();
       }
       //echo "QUERY_STRING:".$page;
@@ -221,7 +221,7 @@ class pedidosOnline {
     </select>
     <?php
   }
-  
+
   // Register Clipe Sidebar
   function create_clipe_sidebar() {
 	  $args = array(
@@ -272,7 +272,7 @@ class pedidosOnline {
       if ($result->status == "success") {
         $b_login = true;
       } else {
-        setcookie($this->cookieName, "", time() - 3600);
+        setcookie($this->cookieName, "", time() - 3600,'/');
       }
     }
     if (!$b_login && $redirect) {
@@ -461,9 +461,7 @@ class pedidosOnline {
   }
 
    public function create_office() {
-     echo '1';
     if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email']) && isset($_POST['provider_id'])) {
-      echo '2';
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
@@ -472,7 +470,6 @@ class pedidosOnline {
       $result = $this->interface->request('api/headquarters/add.json', 'post', $data);
       return $result;
     }
-    exit;
     return 'validate fields';
   }
 

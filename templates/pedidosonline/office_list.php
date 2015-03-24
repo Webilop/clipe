@@ -7,7 +7,7 @@ get_header();
 ?>
 <div class="clipe-container">
   <h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php");?>"><i class="fa fa-plus"></i></a></h1>
-  <table>
+  <table class="clipe-table">
     <thead>
       <tr>
         <th><?php _e('Offices', 'clipe'); ?></th>
