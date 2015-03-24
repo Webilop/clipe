@@ -32,7 +32,7 @@ class InterfacePedidos {
     $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password));
     if ($result->status == "success") {
       $cookie_value = $result->data->access_token;
-      setcookie($this->cookieName, $cookie_value, time() + 3600);
+      setcookie($this->cookieName, $cookie_value, time() + 3600, '/');
     }
     return $result;
   }

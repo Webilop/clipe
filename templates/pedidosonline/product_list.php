@@ -1,12 +1,13 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $products = $pedidosOnline->get_products();
+
+get_header();
 ?>
 <div class="clipe-container">
   <h1><?php _e('Product List', 'clipe'); ?>?></h1>
-  <table>
+  <table class="clipe-table">
     <thead>
       <tr>
         <th><?php _e('Products', 'clipe'); ?></th>
@@ -31,7 +32,7 @@ $products = $pedidosOnline->get_products();
   </div>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

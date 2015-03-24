@@ -1,11 +1,12 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 
 $userId = $pedidosOnline->get_user_id();
 $user = $pedidosOnline->get_user($userId);
 //print_r($user->Provider->id);
+
+get_header();
 ?>
 <div class="clipe-container">
   <h1><?php _e('Index', 'clipe'); ?></h1>
@@ -27,6 +28,6 @@ $user = $pedidosOnline->get_user($userId);
   <?php } ?>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>

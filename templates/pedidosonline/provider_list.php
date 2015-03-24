@@ -1,12 +1,13 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $suppliers = array();
+
+get_header();
 ?>
 <div class="clipe-container">
   <h1>list of customer</h1>
-  <table>
+  <table class="clipe-table">
     <thead>
       <tr>
         <th><?php _e('Suppliers', 'clipe'); ?></th>
@@ -31,7 +32,7 @@ $suppliers = array();
   </div>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

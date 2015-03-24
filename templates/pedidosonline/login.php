@@ -4,7 +4,6 @@
  * Template Name: pedidos-online
  * Description: The template for login in pedidosonline
  */
-get_header();
 global $pedidosOnline;
 if ($pedidosOnline->is_login()) {
   ///redirect to index of pedidos online
@@ -13,7 +12,11 @@ if ($pedidosOnline->is_login()) {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pedidosOnline->login($_POST['email'], $_POST['password']);
   }
-  ?>
+}
+?>
+
+<?php get_header(); ?>
+<div class="clipe-container">
   <div class="clipe-container">
     <div class="clipe-login">
       <form method="POST">
@@ -30,9 +33,8 @@ if ($pedidosOnline->is_login()) {
       </form>
     </div>
   </div>
-
-  <?php
-}
-get_sidebar();
+</div>
+<?php
+get_sidebar('clipe');
 get_footer();
 ?>

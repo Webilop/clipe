@@ -1,7 +1,8 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+
+get_header();
 ?>
 <div class="clipe-container">
   <?php
@@ -16,7 +17,7 @@ $pedidosOnline->is_login(true);
 
     }
     ?>
-    <table>
+    <table class="clipe-table">
       <thead>
         <tr>
           <th><?php _e('Office', 'clipe'); ?></th>
@@ -57,7 +58,7 @@ $pedidosOnline->is_login(true);
   ?>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

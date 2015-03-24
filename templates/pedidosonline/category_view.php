@@ -1,8 +1,9 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $category=$pedidosOnline->get_category($_GET['id']);
+
+get_header();
 ?>
 <div class="clipe-container">
     <h1><?php _e('Category', 'clipe'); ?> => <?php echo $category->name; ?></h1>
@@ -15,7 +16,7 @@ $category=$pedidosOnline->get_category($_GET['id']);
   ?>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 
