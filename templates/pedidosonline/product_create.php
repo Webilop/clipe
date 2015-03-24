@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <form method="POST">
     <div>
       <label for="name"><?php _e('Name', 'clipe'); ?></label>
-      <input type="name" id="name" name="name" required/>
+      <input type="text" id="name" name="name" required/>
     </div>
     <div>
       <label for="measure_type"><?php _e('Measure Type', 'clipe'); ?></label>

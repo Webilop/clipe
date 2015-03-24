@@ -39,6 +39,11 @@ class pedidosOnline {
     $this->pages['16'] = 'category_view.php';
     $this->pages['17'] = 'category_delete.php';
     $this->pages['18'] = 'client_edit.php';
+    $this->pages['19'] = 'office_edit.php';
+    $this->pages['20'] = 'office_list.php';
+    $this->pages['21'] = 'office_view.php';
+    $this->pages['22'] = 'office_delete.php';
+    $this->pages['23'] = 'office_create.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_filter('template_include', array($this, 'template_function'));
@@ -58,7 +63,7 @@ class pedidosOnline {
   }
 
   public function get_logout_url() {
-      return site_url() . '?' . $this->suffixPages . "logout";
+    return site_url() . '?' . $this->suffixPages . "logout";
   }
 
   /*
@@ -82,7 +87,7 @@ class pedidosOnline {
     if (isset($_SERVER['QUERY_STRING'])) {
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
-      if($page==$this->suffixPages."logout"){
+      if ($page == $this->suffixPages . "logout") {
         //delete cockie.
         setcookie($this->cookieName, "", time() - 3600);
         $this->redirectLogin();
@@ -294,7 +299,7 @@ class pedidosOnline {
       $data['name'] = $_POST['name'];
       $data['first_name'] = $_POST['first_name'];
       $data['last_name'] = $_POST['last_name'];
-      $result = $this->interface->request('api/clients/edit/'.$id.'.json', 'post', $data);
+      $result = $this->interface->request('api/clients/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
     return 'validate fields';
@@ -354,7 +359,7 @@ class pedidosOnline {
   }
 
   public function edit_provider($id) {
-    if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name'])&& isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['url'])) {
+    if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['url'])) {
       $data = array('email' => $_POST['email']);
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['name'] = $_POST['name'];
@@ -363,7 +368,7 @@ class pedidosOnline {
       $data['phone'] = $_POST['phone'];
       $data['address'] = $_POST['address'];
       $data['url'] = $_POST['url'];
-      $result = $this->interface->request('api/providers/edit/'.$id.'.json', 'post', $data);
+      $result = $this->interface->request('api/providers/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
     return 'validate fields';
@@ -382,7 +387,7 @@ class pedidosOnline {
   public function delete_category($id) {
     if (isset($id)) {
       $data['access_token'] = $_COOKIE[$this->cookieName];
-      $result = $this->interface->request('api/product_categories/delete/'.$id.'.json', 'post', $data);
+      $result = $this->interface->request('api/product_categories/delete/' . $id . '.json', 'post', $data);
       return $result;
     }
     return 'validate fields';
@@ -392,7 +397,7 @@ class pedidosOnline {
     if (isset($_POST['name'])) {
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['name'] = $_POST['name'];
-      $result = $this->interface->request('api/product_categories/edit/'.$id.'.json', 'post', $data);
+      $result = $this->interface->request('api/product_categories/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
     return 'validate fields';
@@ -412,15 +417,6 @@ class pedidosOnline {
     }
   }
 
-  public function get_category_options() {
-    $categories->$this->get_categories();
-    $htmlCategories="";
-    foreach ($categories as $category) {
-      $htmlCategories.='<option value="'.$category->ProductCategory->id.'">'.$category->ProductCategory->id.'</option>';
-    }
-    return $htmlCategories;
-  }
-
   public function get_category($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $_COOKIE[$this->cookieName]);
@@ -432,6 +428,97 @@ class pedidosOnline {
         return array();
       }
     }
+  }
+
+  public function get_category_options($id=0) {
+    $categories->$this->get_categories();
+    $htmlCategories = "";
+    foreach ($categories as $category) {
+      $selected="";
+      if($id==$category->id){
+        $selected="selected";
+      }
+      $htmlCategories.='<option '.$selected.' value="' . $category->ProductCategory->id . '">' . $category->ProductCategory->id . '</option>';
+    }
+    return $htmlCategories;
+  }
+
+   public function create_office() {
+     echo '1';
+    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email']) && isset($_POST['provider_id'])) {
+      echo '2';
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['address'] = $_POST['address'];
+      $data['phone'] = $_POST['phone'];
+      $data['email'] = $_POST['email'];
+      $data['provider_id'] = $_POST['provider_id'];
+      $result = $this->interface->request('api/headquarters/add.json', 'post', $data);
+      return $result;
+    }
+    exit;
+    return 'validate fields';
+  }
+
+  public function delete_office($id) {
+    if (isset($id)) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $result = $this->interface->request('api/headquarters/delete/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function edit_office($id) {
+    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['address'] = $_POST['address'];
+      $data['phone'] = $_POST['phone'];
+      $data['email'] = $_POST['email'];
+      $result = $this->interface->request('api/headquarters/edit/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function get_offices($options = array()) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array_merge($data, $options);
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/headquarters/index.json?' . $parameters);
+      if ($result->status == "success") {
+        return $result->data->headquarters;
+      } else {
+        return array();
+      }
+    }
+  }
+
+  public function get_office($id) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);
+      if ($result->status == "success") {
+        return $result->data;
+      } else {
+        return array();
+      }
+    }
+  }
+
+  public function get_providers_client_options($id=0) {
+    $providers=array(0 => array("id"=>1,"name"=>'testingwebilop->quemado'));
+    $providers=json_decode(json_encode($providers), FALSE);
+    $htmlProviders = "";
+    foreach ($providers as $provider) {
+      $selected="";
+      if($id==$provider->id){
+        $selected='selected';
+      }
+      $htmlProviders.='<option '.$selected.' value="' . $provider->id . '">' . $provider->name . '</option>';
+    }
+    return $htmlProviders;
   }
 
   public function get_user_id() {
@@ -451,23 +538,24 @@ class pedidosOnline {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $_COOKIE[$this->cookieName]);
       $parameters = http_build_query($data);
-      $result = $this->interface->request('api/users/get/'.$id.'.json?' . $parameters);
+      $result = $this->interface->request('api/users/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
-        $data= $result->data;
-        $permissions=array();
-        if(isset($data->Client) && !empty($data->Client->id)){
-          $permissions[]='client';
+        $data = $result->data;
+        $permissions = array();
+        if (isset($data->Client) && !empty($data->Client->id)) {
+          $permissions[] = 'client';
         }
-        if(isset($data->Provider) && !empty($data->Provider->id)){
-          $permissions[]='provider';
+        if (isset($data->Provider) && !empty($data->Provider->id)) {
+          $permissions[] = 'provider';
         }
-        $data->permissions=$permissions;
+        $data->permissions = $permissions;
         return $data;
       } else {
         return array();
       }
     }
   }
+
 }
 
 global $pedidosOnline;

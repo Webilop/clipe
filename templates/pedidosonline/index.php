@@ -22,6 +22,7 @@ $user = $pedidosOnline->get_user($userId);
 
   <?php if (in_array( 'client',$user->permissions)) { ?><h3><?php _e('Section Client', 'clipe'); ?></h3>
     <p><a href="<?php echo $pedidosOnline->get_link_page('client_edit.php') . '&id=' . $userId; ?>"><?php _e('My Account', 'clipe'); ?></a></p>
+    <p><a href="<?php echo $pedidosOnline->get_link_page('office_list.php'); ?>"><?php _e('Offices', 'clipe'); ?></a></p>
     <p><a href="<?php echo $pedidosOnline->get_link_page('supplier_list.php'); ?>"><?php _e('Supplier List', 'clipe'); ?></a></p>
   <?php } ?>
 </div>
