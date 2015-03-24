@@ -36,7 +36,7 @@ $office=$pedidosOnline->get_office($_GET['id']);
   ?>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

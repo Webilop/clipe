@@ -1,9 +1,9 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $offices = $pedidosOnline->get_offices();
 print_r($offices);
+get_header();
 ?>
 <div class="clipe-container">
   <h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php");?>"><i class="fa fa-plus"></i></a></h1>
@@ -38,7 +38,7 @@ print_r($offices);
   </div>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 

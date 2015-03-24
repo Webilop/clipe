@@ -1,11 +1,11 @@
 <?php
-get_header();
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $pedidosOnline->edit_office($_GET['id']);
   wp_redirect($pedidosOnline->get_link_page('office_list.php'));
 }
+get_header();
 $office=$pedidosOnline->get_office($_GET['id']);
 ?>
 <div class="clipe-container">
@@ -38,7 +38,7 @@ $office=$pedidosOnline->get_office($_GET['id']);
   </div>
 </div>
 <?php
-get_sidebar();
+get_sidebar('clipe');
 get_footer();
 ?>
 
