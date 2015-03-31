@@ -19,10 +19,12 @@ get_header();
     <p><a href="<?php echo $pedidosOnline->get_link_page('client_list.php'); ?>"><?php _e('List of Client', 'clipe'); ?></a></p>
     <p><a href="<?php echo $pedidosOnline->get_link_page('product_list.php'); ?>"><?php _e('Product List', 'clipe'); ?></a></p>
     <p><a href="<?php echo $pedidosOnline->get_link_page('category_list.php'); ?>"><?php _e('Categories List', 'clipe'); ?></a></p>
+    <p><a href="<?php echo $pedidosOnline->get_link_page('order_list.php'); ?>"><?php _e('Orders', 'clipe'); ?></a></p>
   <?php } ?>
 
   <?php if (in_array( 'client',$user->permissions)) { ?><h3><?php _e('Section Client', 'clipe'); ?></h3>
     <p><a href="<?php echo $pedidosOnline->get_link_page('client_edit.php') . '&id=' . $userId; ?>"><?php _e('My Account', 'clipe'); ?></a></p>
+    <p><a href="<?php echo $pedidosOnline->get_link_page('order_list.php'); ?>"><?php _e('Orders', 'clipe'); ?></a></p>
     <p><a href="<?php echo $pedidosOnline->get_link_page('office_list.php'); ?>"><?php _e('Offices', 'clipe'); ?></a></p>
     <p><a href="<?php echo $pedidosOnline->get_link_page('supplier_list.php'); ?>"><?php _e('Supplier List', 'clipe'); ?></a></p>
   <?php } ?>

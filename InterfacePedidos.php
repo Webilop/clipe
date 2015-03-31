@@ -3,14 +3,14 @@
 class InterfacePedidos {
 
   private $server = 'http://dev.webilop.com/pedidos-online/';
-  private $cookieName="wp_clipe";
+  private $cookieName = "wp_clipe";
 
   public function InterfacePedidos() {
 
   }
 
   public function verifyConnection() {
-    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName]!= '') {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       return "connection is active :)";
     } else {
       $result = $this->login();
@@ -21,14 +21,15 @@ class InterfacePedidos {
   /*
    * login for at client or admin
    */
+
   public function login($username = "", $password = "") {
-    echo "$username-$password";
+    /*//echo "$username-$password";
     if (empty($username) || empty($password)) {
       //login for the admin
       $this->options = get_option('pediodosonline_option_name');
-      $username = $this->options['username'];
+      $username = $this->options['email'];
       $password = $this->options['password'];
-    }
+    }*/
     $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password));
     if ($result->status == "success") {
       $cookie_value = $result->data->access_token;
@@ -41,8 +42,11 @@ class InterfacePedidos {
    * handles all requests for pedidosonline.
    * type => get,post,delete.
    */
+
   public function request($request, $type = "get", $data = array()) {
-    echo "<br> request:".$this->server."$request <br> type:$type data:".implode ( ',' , $data ). "<br>";
+    /*echo '<br>post: <br>';
+    print_r($data);*/
+    echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->server . $request);
     switch ($type) {
@@ -71,8 +75,8 @@ class InterfacePedidos {
     curl_close($ch);
     // get a json file and this is decode and after iterated with this
     $response = json_decode($json_response);
-    echo "<br> status request: $status ";
-    echo "<br> json: $json_response <br>";
+    //echo "<br> status request: $status ";
+    //echo "<br> json: $json_response <br>";
     return $response;
   }
 

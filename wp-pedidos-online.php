@@ -28,25 +28,31 @@ class pedidosOnline {
     $this->pages['5'] = 'client_view.php';
     $this->pages['6'] = 'provider_list.php';
     $this->pages['7'] = 'product_list.php';
-    $this->pages['8'] = 'order_view.php';
-    $this->pages['9'] = 'order_list.php';
-    $this->pages['10'] = 'order_create.php';
-    $this->pages['11'] = 'reports.php';
-    $this->pages['12'] = 'provider_edit.php';
-    $this->pages['13'] = 'category_create.php';
-    $this->pages['14'] = 'category_edit.php';
-    $this->pages['15'] = 'category_list.php';
-    $this->pages['16'] = 'category_view.php';
-    $this->pages['17'] = 'category_delete.php';
-    $this->pages['18'] = 'client_edit.php';
-    $this->pages['19'] = 'office_edit.php';
-    $this->pages['20'] = 'office_list.php';
-    $this->pages['21'] = 'office_view.php';
-    $this->pages['22'] = 'office_delete.php';
-    $this->pages['23'] = 'office_create.php';
+    $this->pages['8'] = 'product_edit.php';
+    $this->pages['9'] = 'product_view.php';
+    $this->pages['10'] = 'product_delete.php';
+    $this->pages['11'] = 'product_create.php';
+    $this->pages['12'] = 'reports.php';
+    $this->pages['13'] = 'provider_edit.php';
+    $this->pages['14'] = 'category_create.php';
+    $this->pages['15'] = 'category_edit.php';
+    $this->pages['16'] = 'category_list.php';
+    $this->pages['17'] = 'category_view.php';
+    $this->pages['18'] = 'category_delete.php';
+    $this->pages['19'] = 'client_edit.php';
+    $this->pages['20'] = 'office_edit.php';
+    $this->pages['21'] = 'office_list.php';
+    $this->pages['22'] = 'office_view.php';
+    $this->pages['23'] = 'office_delete.php';
+    $this->pages['24'] = 'office_create.php';
+    $this->pages['25'] = 'order_edit.php';
+    $this->pages['26'] = 'order_list.php';
+    $this->pages['27'] = 'order_view.php';
+    $this->pages['28'] = 'order_delete.php';
+    $this->pages['29'] = 'order_create.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
-    add_action( 'widgets_init', array($this, 'create_clipe_sidebar') );
+    add_action('widgets_init', array($this, 'create_clipe_sidebar'));
 
     add_filter('template_include', array($this, 'template_function'));
     $this->interface = new InterfacePedidos();
@@ -97,6 +103,7 @@ class pedidosOnline {
       //echo "QUERY_STRING:".$page;
       foreach ($this->pages as $key => $value) {
         if ($page == $this->suffixPages . $key) {
+          wp_enqueue_script('clipe-functions', plugins_url('inc/js/functions.js', __FILE__), array('jquery'));
           wp_enqueue_style('font-awesome', plugins_url('lib/font-awesome/font-awesome.min.css', __FILE__));
           wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
           $template_path = $this->search_template($this->pages[$key]);
@@ -180,7 +187,7 @@ class pedidosOnline {
     $this->publish_pages = get_pages($args);
     add_settings_field(
             'login_page', // ID
-            'Login Page', // Title
+            __('Settings', 'clipe'), // Title
             array($this, 'login_page_callback'), // Callback
             'pedidosonline-my-setting-admin', // Page
             'pediodosonline_admin' // Section
@@ -199,11 +206,54 @@ class pedidosOnline {
     if (!empty($input['login_page']))
       $new_input['login_page'] = sanitize_text_field($input['login_page']);
 
+    if (!empty($input['email']))
+      $new_input['email'] = sanitize_text_field($input['email']);
+
+    if (!empty($input['password']))
+      $new_input['password'] = sanitize_text_field($input['password']);
+
     return $new_input;
+  }
+
+  /*
+   * get the provider id of the admin of site.
+   */
+  public function get_provider_id() {
+    $provider_id = get_option('pediodosonline_provider');
+    if ($provider_id) {
+      return $provider_id;
+    }
+    $options = get_option('pediodosonline_option_name');
+    $result = $this->interface->request('api/users/login.json', 'post', array('email' => $options['email'], 'password' => $options['password']));
+    if ($result->status == "success") {
+      $token = $result->data->access_token;
+      $data = array('access_token' => $token);
+      $parameters = http_build_query($data);
+      $user = $this->interface->request('api/users/getId.json?' . $parameters);
+      if ($user->status == "success") {
+        $id = $user->data->id;
+        $result = $this->interface->request('api/users/get/' . $id . '.json?' . $parameters);
+        if ($result->status == "success") {
+          if(isset($result->data->Provider->id)){
+           update_option('pediodosonline_provider', $result->data->Provider->id);
+           return $result->data->Provider->id;
+          }
+        }
+      }
+    }else{
+      echo '<h1>'.__('There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress','clipe').'</h1>';
+      exit;
+    }
   }
 
   public function login_page_callback() {
     ?>
+    <label for="email"><?php _e('Email', 'clipe'); ?></label>
+    <input value="<?php echo isset($this->options['email']) ? esc_attr($this->options['email']) : ''; ?>" name="pediodosonline_option_name[email]" type="email"/><br>
+    <label for="password"><?php _e('Password', 'clipe'); ?></label>
+    <input type="password" value="<?php echo isset($this->options['password']) ? esc_attr($this->options['password']) : ''; ?>" name="pediodosonline_option_name[password]" /><br>
+
+    <label for="email"><?php _e('Login Page', 'clipe'); ?></label>
     <select id="app_edition_page" name="pediodosonline_option_name[login_page]" required>
       <option value="">-------------------</option>
       <?php
@@ -224,23 +274,27 @@ class pedidosOnline {
 
   // Register Clipe Sidebar
   function create_clipe_sidebar() {
-	  $args = array(
-	    'name'          => __( 'Clipe Sidebar' ),
-	    'id'            => "clipe",
-	    'description'   => '',
-	    'class'         => '',
-	    'before_widget' => '<li id="%1$s" class="widget %2$s">',
-	    'after_widget'  => "</li>\n",
-	    'before_title'  => '<h2 class="widgettitle">',
-	    'after_title'   => "</h2>\n",
-	  );
-	  register_sidebar( $args );
+    $args = array(
+        'name' => __('Clipe Sidebar'),
+        'id' => "clipe",
+        'description' => '',
+        'class' => '',
+        'before_widget' => '<li id="%1$s" class="widget %2$s">',
+        'after_widget' => "</li>\n",
+        'before_title' => '<h2 class="widgettitle">',
+        'after_title' => "</h2>\n",
+    );
+    register_sidebar($args);
   }
 
-  public function login($email, $password) {
+  public function login($email, $password, $redirect = true) {
     $result = $this->interface->login($email, $password);
     if ($result->status == "success") {
-      wp_redirect($this->get_link_page('index.php'));
+      if ($redirect) {
+        wp_redirect($this->get_link_page('index.php'));
+        exit;
+      }
+      return true;
     }
     return false;
   }
@@ -272,13 +326,30 @@ class pedidosOnline {
       if ($result->status == "success") {
         $b_login = true;
       } else {
-        setcookie($this->cookieName, "", time() - 3600,'/');
+        setcookie($this->cookieName, "", time() - 3600, '/');
       }
     }
     if (!$b_login && $redirect) {
       $this->redirectLogin();
     }
     return $b_login;
+  }
+
+  /*
+   * multiple selects
+   */
+
+  public function get_clients_options($previusClients = array(), $options = array()) {
+    $clients = $this->get_clients($options);
+    $html = "";
+    foreach ($clients as $client) {
+      $selected = "";
+      if (in_array($client->Client->id, $previusClients)) {
+        $selected = 'selected';
+      }
+      $html.='<option ' . $selected . ' value="' . $client->Client->id . '">' . $client->Client->name . '</option>';
+    }
+    return $html;
   }
 
   public function get_clients($options = array()) {
@@ -335,6 +406,43 @@ class pedidosOnline {
     }
   }
 
+  public function create_product() {
+    if (isset($_POST['name']) && isset($_POST['measure_type']) && (isset($_POST['category_id']) || isset($_POST['category_name']))) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['name'] = $_POST['name'];
+      $data['measure_type'] = $_POST['measure_type'];
+      if (isset($_POST['category_id'])) {
+        $data['category_id'] = $_POST['category_id'];
+      }
+      if (isset($_POST['category_name'])) {
+        $data['category_name'] = $_POST['category_name'];
+      }
+      $data['client_id'] = isset($_POST['client_id']) ? $_POST['client_id'] : array();
+      $result = $this->interface->request('api/products/add.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function delete_product($id) {
+    if (isset($id)) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $result = $this->interface->request('api/products/delete/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function edit_product($id) {
+    if (isset($_POST['name'])) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['name'] = $_POST['name'];
+      $result = $this->interface->request('api/products/edit/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
   public function get_products($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $_COOKIE[$this->cookieName]);
@@ -342,7 +450,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/products/index.json?' . $parameters);
       if ($result->status == "success") {
-        //return $result->data->clients;
+        return $result->data->Orders;
       } else {
         return array();
       }
@@ -447,20 +555,20 @@ class pedidosOnline {
     }
   }
 
-  public function get_category_options($id=0) {
-    $categories->$this->get_categories();
+  public function get_categories_options($id = 0, $options = array()) {
+    $categories = $this->get_categories($options);
     $htmlCategories = "";
     foreach ($categories as $category) {
-      $selected="";
-      if($id==$category->id){
-        $selected="selected";
+      $selected = "";
+      if ($id == $category->ProductCategory->id) {
+        $selected = "selected";
       }
-      $htmlCategories.='<option '.$selected.' value="' . $category->ProductCategory->id . '">' . $category->ProductCategory->id . '</option>';
+      $htmlCategories.='<option ' . $selected . ' value="' . $category->ProductCategory->id . '">' . $category->ProductCategory->name . '</option>';
     }
     return $htmlCategories;
   }
 
-   public function create_office() {
+  public function create_office() {
     if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email']) && isset($_POST['provider_id'])) {
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['address'] = $_POST['address'];
@@ -521,18 +629,113 @@ class pedidosOnline {
     }
   }
 
-  public function get_providers_client_options($id=0) {
-    $providers=array(0 => array("id"=>1,"name"=>'testingwebilop->quemado'));
-    $providers=json_decode(json_encode($providers), FALSE);
+  public function get_providers_client_options($id = 0, $options = array()) {
+    $providers = array(0 => array("id" => 1, "name" => 'testingwebilop->quemado'));
+    $providers = json_decode(json_encode($providers), FALSE);
     $htmlProviders = "";
     foreach ($providers as $provider) {
-      $selected="";
-      if($id==$provider->id){
-        $selected='selected';
+      $selected = "";
+      if ($id == $provider->id) {
+        $selected = 'selected';
       }
-      $htmlProviders.='<option '.$selected.' value="' . $provider->id . '">' . $provider->name . '</option>';
+      $htmlProviders.='<option ' . $selected . ' value="' . $provider->id . '">' . $provider->name . '</option>';
     }
     return $htmlProviders;
+  }
+
+  public function get_client_products($options = array()) {
+    $data = array('access_token' => $_COOKIE[$this->cookieName]);
+    $provider_id=$this->get_provider_id();
+    $data['provider_id']=($provider_id);
+    $data = array_merge($data, $options);
+    $parameters = http_build_query($data);
+    $result = $this->interface->request('api/clients/getProducts.json?' . $parameters);
+    if ($result->status == "success") {
+      return $result->data->Orders;
+    } else {
+      return array();
+    }
+  }
+
+  public function get_client_products_options($options = array()) {
+    $products = $this->get_client_products($options);
+    $html = "";
+    foreach ($products as $product) {
+      $html.='<option value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
+    }
+    return $html;
+  }
+
+  public function get_offices_provider_options($options = array()) {
+    $offices = $this->get_offices($options);
+    $html = "";
+    foreach ($offices as $office) {
+      $officeAux = $this->get_office($office->Headquarters->id);
+      $html.='<option value="' . $officeAux->HeadquartersProvider->{0}->id . '">' . $officeAux->Headquarters->address . '</option>';
+    }
+    return $html;
+  }
+
+  public function create_order() {
+    if (isset($_POST['headquarters_provider_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['headquarters_provider_id'] = $_POST['headquarters_provider_id'];
+      $data['date'] = $_POST['date'];
+      $data['product_id'] = $_POST['product_id'];
+      $data['quantity'] = $_POST['quantity'];
+      $result = $this->interface->request('api/orders/add.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function delete_order($id) {
+    if (isset($id)) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $result = $this->interface->request('api/orders/delete/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function edit_order($id) {
+    if ( isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['date'] = $_POST['date'];
+      $data['product_id'] = $_POST['product_id'];
+      $data['quantity'] = $_POST['quantity'];
+      $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  public function get_orders($options = array()) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data['profile'] = 'client';
+      $data = array_merge($data, $options);
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/orders/index.json?' . $parameters);
+      if ($result->status == "success") {
+        return $result->data->Orders;
+      } else {
+        return array();
+      }
+    }
+  }
+
+  public function get_order($id) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/orders/get/' . $id . '.json?' . $parameters);
+      if ($result->status == "success") {
+        return $result->data;
+      } else {
+        return array();
+      }
+    }
   }
 
   public function get_user_id() {

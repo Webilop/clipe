@@ -2,11 +2,12 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $products = $pedidosOnline->get_products();
+print_r($products);
 
 get_header();
 ?>
 <div class="clipe-container">
-  <h1><?php _e('Product List', 'clipe'); ?>?></h1>
+  <h1><?php _e('Product List', 'clipe'); ?> <a href="<?php echo $pedidosOnline->get_link_page("product_create.php");?>"><i class="fa fa-plus"></i></a></h1>
   <table class="clipe-table">
     <thead>
       <tr>
@@ -19,8 +20,10 @@ get_header();
       foreach ($products as $product) {
         ?>
         <tr>
-          <td><?php //echo $client->Client->name;  ?></td>
-          <td><a href="<?php //echo $pedidosOnline->get_link_page("client_view.php").'&id='.$client->Client->id ?>"><i class="fa fa-eye"></i></a></td>
+          <td><?php echo $product->Product->name;  ?></td>
+          <td><a href="<?php echo $pedidosOnline->get_link_page("product_view.php").'&id='.$product->Product->id ?>"><i class="fa fa-eye"></i></a>
+          <a href="<?php echo $pedidosOnline->get_link_page("product_edit.php").'&id='.$product->Product->id ?>"><i class="fa fa-pencil-square-o"></i></a>
+          <a href="<?php echo $pedidosOnline->get_link_page("product_delete.php").'&id='.$product->Product->id ?>"><i class="fa fa-trash-o"></i></a></td>
         </tr>
         <?php
       }
