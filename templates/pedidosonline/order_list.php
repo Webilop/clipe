@@ -1,7 +1,10 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
-$orders = $pedidosOnline->get_orders();
+if(isset($_GET['profile'])){
+  $orders = $pedidosOnline->get_orders(array('profile'=>$_GET['profile']));
+}
+
 get_header();
 ?>
 <div class="clipe-container">
@@ -24,9 +27,9 @@ get_header();
           <td><?php echo $order->Order->created;  ?></td>
           <td><?php echo $order->Order->status;  ?></td>
           <td>
-            <a href="<?php echo $pedidosOnline->get_link_page("order_view.php").'&id='.$order->Order->id; ?>"><i class="fa fa-eye"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("order_edit.php").'&id='.$order->Order->id;?>"><i class="fa fa-pencil-square-o"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("order_delete.php").'&id='.$order->Order->id;?>"><i class="fa fa-trash-o"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("order_view.php").'&id='.$order->Order->id.'&profile='.$_GET['profile']; ?>"><i class="fa fa-eye"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("order_edit.php").'&id='.$order->Order->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-pencil-square-o"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("order_delete.php").'&id='.$order->Order->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-trash-o"></i></a>
           </td>
         </tr>
         <?php
@@ -36,6 +39,7 @@ get_header();
   </table>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+    <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
   </div>
 </div>
 <?php

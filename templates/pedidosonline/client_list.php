@@ -29,6 +29,7 @@ get_header();
   </table>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+    <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
   </div>
 </div>
 <?php

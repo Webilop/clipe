@@ -3,6 +3,7 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
   $result=$pedidosOnline->edit_client($_POST['client_id']);
+  print_r($result);
   //wp_redirect($pedidosOnline->get_link_page('index.php'));
 }
 
@@ -54,6 +55,7 @@ get_header();
     <div class="clipe-links">
       <a href="<?php echo $pedidosOnline->get_link_page('client_list.php'); ?>"><i class="fa fa-arrow-left"></i></a>
       <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+      <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
     </div>
     <?php
   } else {

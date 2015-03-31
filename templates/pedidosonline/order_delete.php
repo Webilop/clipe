@@ -5,7 +5,7 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $result=$pedidosOnline->delete_order($_GET['id']);
-wp_redirect($pedidosOnline->get_link_page('order_list.php'));
+wp_redirect($pedidosOnline->get_link_page('order_list.php').'&profile='.$_GET['profile']);
 ?>
 ?>
 

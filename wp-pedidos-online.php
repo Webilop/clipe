@@ -97,7 +97,7 @@ class pedidosOnline {
       $page = $array[0]; //page always firts.
       if ($page == $this->suffixPages . "logout") {
         //delete cockie.
-        setcookie($this->cookieName, "", time() - 3600, '/');
+        $this->interface->logout();
         $this->redirectLogin();
       }
       //echo "QUERY_STRING:".$page;
@@ -218,7 +218,8 @@ class pedidosOnline {
   /*
    * get the provider id of the admin of site.
    */
-  public function get_provider_id() {
+
+  public function get_admin_provider_id() {
     $provider_id = get_option('pediodosonline_provider');
     if ($provider_id) {
       return $provider_id;
@@ -234,14 +235,16 @@ class pedidosOnline {
         $id = $user->data->id;
         $result = $this->interface->request('api/users/get/' . $id . '.json?' . $parameters);
         if ($result->status == "success") {
-          if(isset($result->data->Provider->id)){
-           update_option('pediodosonline_provider', $result->data->Provider->id);
-           return $result->data->Provider->id;
+          if (isset($result->data->Provider->id)) {
+            update_option('pediodosonline_provider', $result->data->Provider->id);
+            return $result->data->Provider->id;
           }
+        } else {
+          return 0;
         }
       }
-    }else{
-      echo '<h1>'.__('There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress','clipe').'</h1>';
+    } else {
+      echo '<h1>' . __('There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress', 'clipe') . '</h1>';
       exit;
     }
   }
@@ -326,7 +329,7 @@ class pedidosOnline {
       if ($result->status == "success") {
         $b_login = true;
       } else {
-        setcookie($this->cookieName, "", time() - 3600, '/');
+        $this->interface->logout();
       }
     }
     if (!$b_login && $redirect) {
@@ -387,6 +390,11 @@ class pedidosOnline {
       $data['name'] = $_POST['name'];
       $data['first_name'] = $_POST['first_name'];
       $data['last_name'] = $_POST['last_name'];
+      if (isset($_POST['password']) && isset($_POST['confirm_password']) && isset($_POST['current_password'])) {
+        $data['password'] = $_POST['password'];
+        $data['confirm_password'] = $_POST['confirm_password'];
+        $data['current_password'] = $_POST['current_password'];
+      }
       $result = $this->interface->request('api/clients/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -493,6 +501,11 @@ class pedidosOnline {
       $data['phone'] = $_POST['phone'];
       $data['address'] = $_POST['address'];
       $data['url'] = $_POST['url'];
+      if (isset($_POST['password']) && isset($_POST['confirm_password']) && isset($_POST['current_password'])) {
+        $data['password'] = $_POST['password'];
+        $data['confirm_password'] = $_POST['confirm_password'];
+        $data['current_password'] = $_POST['current_password'];
+      }
       $result = $this->interface->request('api/providers/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -569,14 +582,20 @@ class pedidosOnline {
   }
 
   public function create_office() {
-    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email']) && isset($_POST['provider_id'])) {
+    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
       $data['email'] = $_POST['email'];
-      $data['provider_id'] = $_POST['provider_id'];
-      $result = $this->interface->request('api/headquarters/add.json', 'post', $data);
-      return $result;
+      $provider_id = $this->get_admin_provider_id();
+      if ($provider_id != 0) {
+        $data['provider_id'] = $provider_id;
+        $result = $this->interface->request('api/headquarters/add.json', 'post', $data);
+        return $result;
+      } else {
+        echo __('There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress', 'clipe');
+        exit;
+      }
     }
     return 'validate fields';
   }
@@ -645,8 +664,11 @@ class pedidosOnline {
 
   public function get_client_products($options = array()) {
     $data = array('access_token' => $_COOKIE[$this->cookieName]);
-    $provider_id=$this->get_provider_id();
-    $data['provider_id']=($provider_id);
+    $provider_id = $this->get_admin_provider_id();
+    if ($provider_id == 0) {
+      return array();
+    }
+    $data['provider_id'] = $provider_id;
     $data = array_merge($data, $options);
     $parameters = http_build_query($data);
     $result = $this->interface->request('api/clients/getProducts.json?' . $parameters);
@@ -658,7 +680,13 @@ class pedidosOnline {
   }
 
   public function get_client_products_options($options = array()) {
-    $products = $this->get_client_products($options);
+    if (isset($options['headquarter_id'])) {
+      $office = $this->get_office($options['headquarter_id']);
+      $clientID = $office->Headquarters->client_id;
+      $products = $this->get_products(array('client_id' => $clientID));
+    } else {
+      $products = $this->get_client_products($options);
+    }
     $html = "";
     foreach ($products as $product) {
       $html.='<option value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
@@ -699,7 +727,7 @@ class pedidosOnline {
   }
 
   public function edit_order($id) {
-    if ( isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    if (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];
@@ -713,7 +741,6 @@ class pedidosOnline {
   public function get_orders($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $_COOKIE[$this->cookieName]);
-      $data['profile'] = 'client';
       $data = array_merge($data, $options);
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/orders/index.json?' . $parameters);
@@ -772,7 +799,6 @@ class pedidosOnline {
       }
     }
   }
-
 }
 
 global $pedidosOnline;

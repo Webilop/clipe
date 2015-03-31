@@ -2,8 +2,7 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  echo '0';
-  $pedidosOnline->create_office();
+  $result=$pedidosOnline->create_office();
   wp_redirect($pedidosOnline->get_link_page('office_list.php'));
 }
 get_header();
@@ -23,18 +22,12 @@ get_header();
       <label for="email"><?php _e('Email', 'clipe'); ?></label>
       <input type="email" id="email" name="email" required/>
     </div>
-    <div>
-      <label for="provider_id"><?php _e('Provider', 'clipe'); ?></label>
-      <select id="provider_id" name="provider_id" required>
-        <option value="">----------</option>
-        <?php echo $pedidosOnline->get_providers_client_options();?>
-      </select>
-    </div>
     <input type="submit" value="<?php _e('Create', 'clipe'); ?>" class="" id="submit" name="submit">
   </form>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('office_list.php'); ?>"><i class="fa fa-arrow-left"></i></a>
     <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+    <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
   </div>
 </div>
 <?php
