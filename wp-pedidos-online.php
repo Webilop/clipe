@@ -458,7 +458,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/products/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data->Orders;
+        return $result->data->Products;
       } else {
         return array();
       }
@@ -683,13 +683,13 @@ class pedidosOnline {
     if (isset($options['headquarter_id'])) {
       $office = $this->get_office($options['headquarter_id']);
       $clientID = $office->Headquarters->client_id;
-      $products = $this->get_products(array('client_id' => $clientID));
+      $products = $this->get_products(array('clientId' => $clientID));
     } else {
       $products = $this->get_client_products($options);
     }
     $html = "";
     foreach ($products as $product) {
-      $html.='<option value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
+      $html.='<option '.$selected.' value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
     }
     return $html;
   }
@@ -732,6 +732,7 @@ class pedidosOnline {
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
+      $data['status'] = $_POST['status'];
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     }

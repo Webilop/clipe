@@ -7,19 +7,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 get_header();
 $order = $pedidosOnline->get_order($_GET['id']);
-//print_r($order);
 $userId = $pedidosOnline->get_user_id();
 $user = $pedidosOnline->get_user($userId);
-$optiosStatus = array();
+$optionsStatus = array();
 $b_update = false;
 $b_provider = false;
 if (in_array('provider', $user->permissions)) {
-  $optiosStatus = array("Pendiente", "Cancelado", "En progreso", "Completado");
+  $optionsStatus = array("Pendiente", "Cancelado", "En progreso", "Completado");
   $b_update = true;
   $b_provider = true;
 } else {
   if ($order->Order->status == "Pendiente") {
-    $optiosStatus = array("Pendiente", "Cancelado");
+    $optionsStatus = array("Pendiente", "Cancelado");
     $b_update = true;
   }
 }
@@ -41,8 +40,14 @@ if (in_array('provider', $user->permissions)) {
       <label for="status"><?php _e('Status', 'clipe'); ?></label>
       <?php if ($b_update) { ?>
         <select id="satus" name="status" required="">
-          <?php foreach ($optiosStatus as $value) { ?>
-            <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+          <?php
+          foreach ($optionsStatus as $value) {
+            $selected = "";
+            if ($value == $order->Order->status) {
+              $selected = "selected";
+            }
+            ?>
+            <option <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $value; ?></option>
           <?php } ?>
         </select>
       <?php } else { ?>
@@ -52,13 +57,17 @@ if (in_array('provider', $user->permissions)) {
     <div>
       <label for="products"><?php _e('Products', 'clipe'); ?></label>
       <select id="products" name="products">
-        <?php if ($b_provider) {//provider consult
+        <?php
+        if ($b_provider) {//provider consult
           echo$pedidosOnline->get_client_products_options(array('headquarter_id' => $order->HeadquartersProvider->headquarter_id));
         } else {//client consult
           echo$pedidosOnline->get_client_products_options();
-        } ?>
+        }
+        ?>
       </select>
-      <a onclick="clipe_add_product('#product-table', '#products')"><i class="fa fa-plus"></i></a>
+      <?php if ($b_update) { ?>
+        <a onclick="clipe_add_product('#product-table', '#products')"><i class="fa fa-plus"></i></a>
+      <?php } ?>
     </div>
     <table class="clipe-table" id="product-table">
       <thead>
@@ -69,22 +78,24 @@ if (in_array('provider', $user->permissions)) {
         </tr>
       </thead>
       <tbody>
-<?php foreach ($order->Product as $product) {
-  ?>
+        <?php foreach ($order->Product as $product) {
+          ?>
           <tr>
             <td><?php echo $product->name; ?><input type="hidden" value="<?php echo $product->id; ?>" name="product_id[]"/></td>
-            <td><input value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" name="quantity[]"/></td>
+            <td><input value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" name="quantity[]"/ <?php if (!$b_update) { echo "readonly";}?>></td>
             <td>
-              <a onclick="clipe_remove_product(this);"><i class="fa fa-trash-o"></i></a>
+              <?php if ($b_update) { ?>
+                <a onclick="clipe_remove_product(this);"><i class="fa fa-trash-o"></i></a>
+              <?php } ?>
             </td>
           </tr>
-    <?php }
-    ?>
+        <?php }
+        ?>
       </tbody>
     </table>
-<?php if ($b_update) { ?>
+    <?php if ($b_update) { ?>
       <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="" id="submit" name="submit">
-<?php } ?>
+    <?php } ?>
   </form>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('order_list.php') . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-arrow-left"></i></a>
