@@ -80,9 +80,9 @@ class pedidosOnline {
     if ( !isset($options['email']) || !isset($options['password'])) {
       $validAccess = false;
     }
-    // elseif ( !$this->login($options['email'], $options['password'], false)) {
-    //   $validAccess = false;
-    // }
+    elseif ( !$this->login($options['email'], $options['password'], false, true)) {
+      $validAccess = false;
+    }
 
     if (isset($_SERVER['QUERY_STRING'])) {
       $array = explode("&", $_SERVER['QUERY_STRING']);
@@ -329,8 +329,8 @@ class pedidosOnline {
     register_sidebar($args);
   }
 
-  public function login($email, $password, $redirect = true) {
-    $result = $this->interface->login($email, $password);
+  public function login($email, $password, $redirect = true, $onlyCheck = false) {
+    $result = $this->interface->login($email, $password, $onlyCheck);
     if ($result->status == "success") {
       if ($redirect) {
         wp_redirect($this->get_link_page('index.php'));

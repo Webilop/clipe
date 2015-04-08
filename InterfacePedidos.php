@@ -26,7 +26,7 @@ class InterfacePedidos {
    * login for at client or admin
    */
 
-  public function login($username = "", $password = "") {
+  public function login($username = "", $password = "", $onlyCheck = false) {
     /*//echo "$username-$password";
     if (empty($username) || empty($password)) {
       //login for the admin
@@ -34,10 +34,15 @@ class InterfacePedidos {
       $username = $this->options['email'];
       $password = $this->options['password'];
     }*/
-    $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password));
-    if ($result->status == "success") {
-      $cookie_value = $result->data->access_token;
-      setcookie($this->cookieName, $cookie_value, time() + 3600*2, '/');
+    if ($onlyCheck) {
+      $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password, 'only_check' => "true"));
+    }
+    else {
+      $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password));
+      if ($result->status == "success") {
+        $cookie_value = $result->data->access_token;
+        setcookie($this->cookieName, $cookie_value, time() + 3600*2, '/');
+      }
     }
     return $result;
   }
