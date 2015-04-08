@@ -18,7 +18,6 @@ class pedidosOnline {
   private $themeDir = "pedidosonline/";
   private $pluginDir = "templates/pedidosonline/";
   private $cookieName = "wp_clipe";
-  private $flashMessageSession = "clipeFlashMessages";
 
   public function pedidosOnline() {
     //pages of plugin with respective template.
@@ -51,31 +50,63 @@ class pedidosOnline {
     $this->pages['27'] = 'order_view.php';
     $this->pages['28'] = 'order_delete.php';
     $this->pages['29'] = 'order_create.php';
+    $this->pages['30'] = 'config_error.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
-    add_action('clipe-flash-messages', array($this, 'display_flash_messages'), 1);
-    add_action('wp_head', array($this, 'clipe_head_section'));
 
     add_filter('template_include', array($this, 'template_function'));
+    add_action('template_redirect', array($this, 'validAdminAccess'));
     $this->interface = new InterfacePedidos();
-
-    //init session
-    if(!session_id()) {
-        session_start();
-    }
   }
 
   /*
-   * return the lin to a page, page is the name of the template if no exist return false
+   * return the link to a page, page is the name of the template if no exist return false
    */
-
   public function get_link_page($page) {
     $key = array_search($page, $this->pages);
     if ($key) {
       return site_url() . '?' . $this->suffixPages . $key;
     }
     return false;
+  }
+
+  /*
+   * Check if credentials in backend are correct
+   */
+  function validAdminAccess() {
+    $validAccess = true;
+    $options = get_option('pediodosonline_option_name');
+    if ( !isset($options['email']) || !isset($options['password'])) {
+      $validAccess = false;
+    }
+    // elseif ( !$this->login($options['email'], $options['password'], false)) {
+    //   $validAccess = false;
+    // }
+
+    if (isset($_SERVER['QUERY_STRING'])) {
+      $array = explode("&", $_SERVER['QUERY_STRING']);
+      $page = $array[0]; //page always firts.
+      $pos = strpos($page,$suffixPages);
+      $pageNumber = substr($page, $pos);
+      if ( $pos && isset($this->pages[$pageNumber]) && $pageNumber != 30) {
+        if (!$validAccess) {
+          wp_redirect(site_url() . '?' . $this->suffixPages . 30);
+          die();
+        }
+      }
+    }
+
+    if (isset($options['login_page']) && !empty($options['login_page'])) {
+      $id = $options['login_page'];
+      if (is_page($id)) {
+        if (!$validAccess) {
+          wp_redirect(site_url() . '?' . $this->suffixPages . 30);
+          die();
+        }
+      }
+    }
+    return;
   }
 
   public function get_logout_url() {
@@ -92,7 +123,6 @@ class pedidosOnline {
     } else {
       $template_path = plugin_dir_path(__FILE__) . $this->pluginDir . $page;
     }
-
     return $template_path;
   }
 
@@ -130,7 +160,6 @@ class pedidosOnline {
         $template_path = $this->search_template('login.php');
       }
     }
-
     return $template_path;
   }
 
@@ -304,7 +333,6 @@ class pedidosOnline {
     $result = $this->interface->login($email, $password);
     if ($result->status == "success") {
       if ($redirect) {
-        $_SESSION[$this->flashMessageSession] = array();
         wp_redirect($this->get_link_page('index.php'));
         exit;
       }
@@ -335,6 +363,7 @@ class pedidosOnline {
 
   public function is_login($redirect = false) {
     $b_login = false;
+    // error_log($_COOKIE[$this->cookieName]);
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $result = $this->interface->request('api/users/checkAccessToken/' . $_COOKIE[$this->cookieName] . '.json');
       if ($result->status == "success") {
@@ -347,63 +376,6 @@ class pedidosOnline {
       $this->redirectLogin();
     }
     return $b_login;
-  }
-  
-  /**
-   * This function adds flash message to be displayed in the next page rendering.
-   *
-   * @param $message string message to be displayed in the next page.
-   * @param $type string type of the flash message: success, info, warning, danger.
-   */
-  public function add_flash_message($message, $type = 'danger'){
-    //get current messages
-    $currentMessages = isset($_SESSION[$this->flashMessageSession]) ? $_SESSION[$this->flashMessageSession] : array();
-
-    //add message
-    $currentMessages []= array('message' => $message, 'type' => $type);
-
-    //store new message
-    $_SESSION[$this->flashMessageSession] = $currentMessages;
-  }
-  
-  /**
-   * This function retrieves and flush flash messages.
-   *
-   * @param $flush boolean true if messages should be deleted.
-   *
-   * @return array array with flash messages and their types.
-   */
-  public function get_flash_messages($flush = true){
-    //get current messages
-    $currentMessages = $_SESSION[$this->flashMessageSession];
-
-    //delete messages
-    if($flush)
-      $_SESSION[$this->flashMessageSession] = array();
-
-    return $currentMessages;
-  }
-
-  /**
-   * This function displays flash messages. It is used in the head hook to display messages in the top section.
-   *
-   * @param $flush boolean true if messages should be deleted.
-   */
-  public function display_flash_messages($flush = true){
-    include $this->search_template('flash_messages.php');
-  }
-
-  /**
-   * This function add custom code to the head section of pages.
-   *
-   * - Add confirmation message for element deletion.
-   */
-  private function clipe_head_section(){
-    ?>
-    <script type="text/javascript">
-      confirmDeletionMessage = "<?= __('Are you sure?', 'clipe'); ?>";
-    </script>
-    <?php
   }
 
   /*
