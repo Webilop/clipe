@@ -20,4 +20,13 @@ function clipe_remove_product(element){
   jQuery(element).closest("tr").remove();
 }
 
+/**
+ * Add confirmation window to links to delete elements
+ */
+var confirmDeletionMessage;
+jQuery(document).ready(function(){
+  jQuery(".actions a.delete").click(function(){
+    return confirm(confirmDeletionMessage);
+  });
+});
 
