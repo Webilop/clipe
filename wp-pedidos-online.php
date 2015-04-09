@@ -165,10 +165,13 @@ class pedidosOnline {
 
   // Add options page
   public function add_plugin_page() {
-    add_menu_page(__('pedidos online Users', 'clipe'), __('Pedidos Online', 'clipe'), 'manage_options', 'pedidosonline-settings', array($this, 'create_admin_page'), '', 6);
-    add_submenu_page(
-            'pedidosonline-settings', __('Create Client', 'clipe'), __('Create Client', 'clipe'), 'manage_options', 'pedidosonline-create-users', array($this, 'create_user')
-    );
+    add_options_page(
+            __('Clipe Access', 'clipe'),
+            __('Clipe', 'clipe'),
+            'manage_options',
+            'pedidosonline-settings',
+            array( $this, 'create_admin_page' )
+        );
   }
 
   // Options page callback
@@ -176,12 +179,11 @@ class pedidosOnline {
     $this->options = get_option('pediodosonline_option_name');
     ?>
     <div class="wrap">
-      <?php screen_icon(); ?>
       <h2><?php echo __('Settings', 'clipe'); ?></h2>
       <form method="post" action="options.php">
         <?php
         settings_fields('pediodosonline_option_group');
-        do_settings_sections('pedidosonline-my-setting-admin');
+        do_settings_sections('pedidosonline-settings');
         submit_button();
         ?>
       </form>
@@ -203,7 +205,7 @@ class pedidosOnline {
             'pediodosonline_admin', // ID
             '', // Title
             array(), // Callback
-            'pedidosonline-my-setting-admin' // Page
+            'pedidosonline-settings' // Page
     );
 
     $args = array(
@@ -226,9 +228,23 @@ class pedidosOnline {
     $this->publish_pages = get_pages($args);
     add_settings_field(
             'login_page', // ID
-            __('Settings', 'clipe'), // Title
+            __('Login Page', 'clipe'), // Title
             array($this, 'login_page_callback'), // Callback
-            'pedidosonline-my-setting-admin', // Page
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin' // Section
+    );
+    add_settings_field(
+            'email', // ID
+            __('Email', 'clipe'), // Title
+            array($this, 'email_callback'), // Callback
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin' // Section
+    );
+    add_settings_field(
+            'password', // ID
+            __('Password', 'clipe'), // Title
+            array($this, 'password_callback'), // Callback
+            'pedidosonline-settings', // Page
             'pediodosonline_admin' // Section
     );
   }
@@ -250,6 +266,16 @@ class pedidosOnline {
 
     if (!empty($input['password']))
       $new_input['password'] = sanitize_text_field($input['password']);
+
+    if ( !$this->login($new_input['email'], $new_input['password'], false, true)) {
+      add_settings_error(
+        'email',
+        'invalid_credentials',
+        'Email or password incorrects. If you don\'t have an account,
+        create a new free account
+        <a href="http://clipe.co/register" target="_blank"> here.</a>',
+        'error');
+    }
 
     return $new_input;
   }
@@ -288,14 +314,21 @@ class pedidosOnline {
     }
   }
 
+  public function email_callback() {
+    ?>
+    <input value="<?php echo isset($this->options['email']) ? esc_attr($this->options['email']) : ''; ?>" name="pediodosonline_option_name[email]" type="email"/>
+    <?php
+  }
+
+  public function password_callback() {
+    ?>
+    <input type="password" value="<?php echo isset($this->options['password']) ? esc_attr($this->options['password']) : ''; ?>" name="pediodosonline_option_name[password]" /><br>
+    <?php
+  }
+
   public function login_page_callback() {
     ?>
-    <label for="email"><?php _e('Email', 'clipe'); ?></label>
-    <input value="<?php echo isset($this->options['email']) ? esc_attr($this->options['email']) : ''; ?>" name="pediodosonline_option_name[email]" type="email"/><br>
-    <label for="password"><?php _e('Password', 'clipe'); ?></label>
-    <input type="password" value="<?php echo isset($this->options['password']) ? esc_attr($this->options['password']) : ''; ?>" name="pediodosonline_option_name[password]" /><br>
 
-    <label for="email"><?php _e('Login Page', 'clipe'); ?></label>
     <select id="app_edition_page" name="pediodosonline_option_name[login_page]" required>
       <option value="">-------------------</option>
       <?php
