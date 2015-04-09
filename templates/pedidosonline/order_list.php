@@ -8,7 +8,7 @@ if(isset($_GET['profile'])){
 get_header();
 ?>
 <div class="clipe-container">
-  <h1><?php _e('Order List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("order_create.php");?>"><i class="fa fa-plus"></i></a></h1>
+  <h1><?php _e('Order List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("order_create.php").'&profile='.$_GET['profile'];?>"><i class="fa fa-plus"></i></a></h1>
   <table class="clipe-table">
     <thead>
       <tr>
