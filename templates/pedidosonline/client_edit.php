@@ -3,8 +3,25 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
   $result=$pedidosOnline->edit_client($_POST['client_id']);
-  print_r($result);
+  if (isset($result->status) && $result->status == "success") {
+      $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
+  }
+  elseif (isset($result->status) && $result->status == "fail") {
+    $message = array_values(get_object_vars($result->data));
+    $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));
+  }
+  else {
+    $pedidosOnline->add_flash_message($result);
+  }
+  //print_r($result);
   //wp_redirect($pedidosOnline->get_link_page('index.php'));
+}
+
+if (isset($_GET['id'])) {
+  $user = $pedidosOnline->get_user($_GET['id']);
+}
+elseif(empty($_GET['id']) || empty($user)){
+  wp_redirect($pedidosOnline->get_link_page('index.php'));
 }
 
 get_header();

@@ -2,7 +2,14 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $pedidosOnline->create_client();
+  $result = $pedidosOnline->create_client();
+  if (isset($result->status) && $result->status == "success") {
+    $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
+  }
+  else {
+    $pedidosOnline->add_flash_message($result);
+  }
+
 }
 
 get_header();

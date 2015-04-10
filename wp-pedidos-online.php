@@ -437,7 +437,7 @@ class pedidosOnline {
     //store new message
     $_SESSION[$this->flashMessageSession] = $currentMessages;
   }
-  
+
   /**
    * This function retrieves and flush flash messages.
    *
@@ -854,7 +854,7 @@ class pedidosOnline {
       $result = $this->interface->request('api/orders/add.json', 'post', $data);
       return $result;
     }
-    return __('Please validate fields');
+    return __('Order couldn\'t be created. Please verify fields', 'clipe');
   }
 
   public function delete_order($id) {
