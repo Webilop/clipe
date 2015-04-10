@@ -52,6 +52,7 @@ class pedidosOnline {
     $this->pages['28'] = 'order_delete.php';
     $this->pages['29'] = 'order_create.php';
     $this->pages['30'] = 'config_error.php';
+    $this->pages['29'] = 'order_cancel.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -474,6 +475,7 @@ class pedidosOnline {
     ?>
     <script type="text/javascript">
       confirmDeletionMessage = "<?= __('Are you sure?', 'clipe'); ?>";
+      confirmCancelMessage = "<?= __('Are you sure you want to cancel the order?', 'clipe'); ?>";
     </script>
     <?php
   }
@@ -866,8 +868,14 @@ class pedidosOnline {
     return 'validate fields';
   }
 
-  public function edit_order($id) {
-    if (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+  public function edit_order($id, $cancel = false) {
+    if ($cancel) {
+      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['status'] = 'Cancelado';
+      $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
+      return $result;
+    }
+    elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['access_token'] = $_COOKIE[$this->cookieName];
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];

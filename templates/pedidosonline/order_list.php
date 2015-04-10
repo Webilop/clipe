@@ -26,10 +26,15 @@ get_header();
           <td><?php echo $order->Order->address;  ?></td>
           <td><?php echo $order->Order->created;  ?></td>
           <td><?php echo $order->Order->status;  ?></td>
-          <td>
+          <td class="actions">
+            <input type="hidden" id='id' value="<?php echo $order->Order->id ?>" />
             <a href="<?php echo $pedidosOnline->get_link_page("order_view.php").'&id='.$order->Order->id.'&profile='.$_GET['profile']; ?>"><i class="fa fa-eye"></i></a>
             <a href="<?php echo $pedidosOnline->get_link_page("order_edit.php").'&id='.$order->Order->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-pencil-square-o"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("order_delete.php").'&id='.$order->Order->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-trash-o"></i></a>
+            <?php if($_GET['profile'] == 'client'):?>
+              <a title="<?= __('Cancel', 'clipe'); ?>" class="cancel" href="<?php echo $pedidosOnline->get_link_page("order_cancel.php").'&id='.$order->Order->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-times"></i></a>
+            <?php else: ?>
+              <a title="<?= __('Delete', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("order_delete.php").'&id='.$order->Order->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-trash-o"></i></a>
+            <?php endif; ?>
           </td>
         </tr>
         <?php
