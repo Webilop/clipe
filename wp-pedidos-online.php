@@ -87,7 +87,7 @@ class pedidosOnline {
     if (isset($_SERVER['QUERY_STRING'])) {
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
-      $pos = strpos($page,$suffixPages);
+      $pos = strpos($page,$this->suffixPages);
       $pageNumber = substr($page, $pos);
       if ( $pos && isset($this->pages[$pageNumber]) && $pageNumber != 30) {
         if (!$validAccess) {

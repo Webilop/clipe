@@ -54,8 +54,8 @@ class InterfacePedidos {
 
   public function request($request, $type = "get", $data = array()) {
     /*echo '<br>post: <br>';
-    print_r($data);*/
-    echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
+    print_r($data);
+    echo "<br> request:" . $this->server . "$request <br> type:$type <br>";*/
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->server . $request);
     switch ($type) {
