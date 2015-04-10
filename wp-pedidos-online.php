@@ -276,6 +276,7 @@ class pedidosOnline {
         <a href="http://clipe.co/register" target="_blank"> here.</a>',
         'error');
     }
+    delete_option('pediodosonline_provider');
 
     return $new_input;
   }
@@ -787,7 +788,7 @@ class pedidosOnline {
       $result = $this->interface->request('api/orders/add.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    return __('Please validate fields');
   }
 
   public function delete_order($id) {
