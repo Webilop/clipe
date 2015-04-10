@@ -18,6 +18,7 @@ class pedidosOnline {
   private $themeDir = "pedidosonline/";
   private $pluginDir = "templates/pedidosonline/";
   private $cookieName = "wp_clipe";
+  private $flashMessageSession = "clipeFlashMessages";
 
   public function pedidosOnline() {
     //pages of plugin with respective template.
@@ -54,10 +55,17 @@ class pedidosOnline {
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
+    add_action('clipe-flash-messages', array($this, 'display_flash_messages'), 1);
+    add_action('wp_head', array($this, 'clipe_head_section'));
 
     add_filter('template_include', array($this, 'template_function'));
     add_action('template_redirect', array($this, 'validAdminAccess'));
     $this->interface = new InterfacePedidos();
+
+    //init session
+    if(!session_id()) {
+        session_start();
+    }
   }
 
   /*
@@ -367,6 +375,7 @@ class pedidosOnline {
     $result = $this->interface->login($email, $password, $onlyCheck);
     if ($result->status == "success") {
       if ($redirect) {
+        $_SESSION[$this->flashMessageSession] = array();
         wp_redirect($this->get_link_page('index.php'));
         exit;
       }
@@ -410,6 +419,63 @@ class pedidosOnline {
       $this->redirectLogin();
     }
     return $b_login;
+  }
+
+  /**
+   * This function adds flash message to be displayed in the next page rendering.
+   *
+   * @param $message string message to be displayed in the next page.
+   * @param $type string type of the flash message: success, info, warning, danger.
+   */
+  public function add_flash_message($message, $type = 'danger'){
+    //get current messages
+    $currentMessages = isset($_SESSION[$this->flashMessageSession]) ? $_SESSION[$this->flashMessageSession] : array();
+
+    //add message
+    $currentMessages []= array('message' => $message, 'type' => $type);
+
+    //store new message
+    $_SESSION[$this->flashMessageSession] = $currentMessages;
+  }
+  
+  /**
+   * This function retrieves and flush flash messages.
+   *
+   * @param $flush boolean true if messages should be deleted.
+   *
+   * @return array array with flash messages and their types.
+   */
+  public function get_flash_messages($flush = true){
+    //get current messages
+    $currentMessages = $_SESSION[$this->flashMessageSession];
+
+    //delete messages
+    if($flush)
+      $_SESSION[$this->flashMessageSession] = array();
+
+    return $currentMessages;
+  }
+
+  /**
+   * This function displays flash messages. It is used in the head hook to display messages in the top section.
+   *
+   * @param $flush boolean true if messages should be deleted.
+   */
+  public function display_flash_messages($flush = true){
+    include $this->search_template('flash_messages.php');
+  }
+
+  /**
+   * This function add custom code to the head section of pages.
+   *
+   * - Add confirmation message for element deletion.
+   */
+  public function clipe_head_section(){
+    ?>
+    <script type="text/javascript">
+      confirmDeletionMessage = "<?= __('Are you sure?', 'clipe'); ?>";
+    </script>
+    <?php
   }
 
   /*
