@@ -398,7 +398,7 @@ class pedidosOnline {
     $b_login = false;
     // error_log($_COOKIE[$this->cookieName]);
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $result = $this->interface->request('api/users/checkAccessToken/' . $_COOKIE[$this->cookieName] . '.json');
+      $result = $this->interface->request('api/users/checkAccessToken/' . $this->interface->decrypt($_COOKIE[$this->cookieName]) . '.json');
       if ($result->status == "success") {
         $b_login = true;
       } else {
@@ -430,7 +430,7 @@ class pedidosOnline {
 
   public function get_clients($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $data = array_merge($data, $options);
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/clients/index.json?' . $parameters);
@@ -445,7 +445,7 @@ class pedidosOnline {
   public function create_client() {
     if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['code'])) {
       $data = array('email' => $_POST['email']);
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
@@ -459,7 +459,7 @@ class pedidosOnline {
   public function edit_client($id) {
     if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['first_name']) && isset($_POST['last_name'])) {
       $data = array('email' => $_POST['email']);
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $data['first_name'] = $_POST['first_name'];
       $data['last_name'] = $_POST['last_name'];
@@ -476,7 +476,7 @@ class pedidosOnline {
 
   public function get_client($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/providers/getClient/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
@@ -489,7 +489,7 @@ class pedidosOnline {
 
   public function create_product() {
     if (isset($_POST['name']) && isset($_POST['measure_type']) && (isset($_POST['category_id']) || isset($_POST['category_name']))) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $data['measure_type'] = $_POST['measure_type'];
       if (isset($_POST['category_id'])) {
@@ -507,7 +507,7 @@ class pedidosOnline {
 
   public function delete_product($id) {
     if (isset($id)) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $result = $this->interface->request('api/products/delete/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -516,7 +516,7 @@ class pedidosOnline {
 
   public function edit_product($id) {
     if (isset($_POST['name'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $result = $this->interface->request('api/products/edit/' . $id . '.json', 'post', $data);
       return $result;
@@ -526,7 +526,7 @@ class pedidosOnline {
 
   public function get_products($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $data = array_merge($data, $options);
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/products/index.json?' . $parameters);
@@ -540,7 +540,7 @@ class pedidosOnline {
 
   public function get_product($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/products/view/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
@@ -553,7 +553,7 @@ class pedidosOnline {
 
   public function get_provider($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/providers/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
@@ -567,7 +567,7 @@ class pedidosOnline {
   public function edit_provider($id) {
     if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['url'])) {
       $data = array('email' => $_POST['email']);
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $data['first_name'] = $_POST['first_name'];
       $data['last_name'] = $_POST['last_name'];
@@ -587,7 +587,7 @@ class pedidosOnline {
 
   public function create_category() {
     if (isset($_POST['name'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $result = $this->interface->request('api/product_categories/add.json', 'post', $data);
       return $result;
@@ -597,7 +597,7 @@ class pedidosOnline {
 
   public function delete_category($id) {
     if (isset($id)) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $result = $this->interface->request('api/product_categories/delete/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -606,7 +606,7 @@ class pedidosOnline {
 
   public function edit_category($id) {
     if (isset($_POST['name'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $result = $this->interface->request('api/product_categories/edit/' . $id . '.json', 'post', $data);
       return $result;
@@ -616,7 +616,7 @@ class pedidosOnline {
 
   public function get_categories($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $data = array_merge($data, $options);
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/product_categories/index.json?' . $parameters);
@@ -630,7 +630,7 @@ class pedidosOnline {
 
   public function get_category($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/product_categories/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
@@ -656,7 +656,7 @@ class pedidosOnline {
 
   public function create_office() {
     if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
       $data['email'] = $_POST['email'];
@@ -675,7 +675,7 @@ class pedidosOnline {
 
   public function delete_office($id) {
     if (isset($id)) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $result = $this->interface->request('api/headquarters/delete/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -684,7 +684,7 @@ class pedidosOnline {
 
   public function edit_office($id) {
     if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
       $data['email'] = $_POST['email'];
@@ -696,7 +696,7 @@ class pedidosOnline {
 
   public function get_offices($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $data = array_merge($data, $options);
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/headquarters/index.json?' . $parameters);
@@ -710,7 +710,7 @@ class pedidosOnline {
 
   public function get_office($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
@@ -736,7 +736,7 @@ class pedidosOnline {
   }
 
   public function get_client_products($options = array()) {
-    $data = array('access_token' => $_COOKIE[$this->cookieName]);
+    $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
     $provider_id = $this->get_admin_provider_id();
     if ($provider_id == 0) {
       return array();
@@ -779,7 +779,7 @@ class pedidosOnline {
 
   public function create_order() {
     if (isset($_POST['headquarters_provider_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_provider_id'] = $_POST['headquarters_provider_id'];
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];
@@ -792,7 +792,7 @@ class pedidosOnline {
 
   public function delete_order($id) {
     if (isset($id)) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $result = $this->interface->request('api/orders/delete/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -801,7 +801,7 @@ class pedidosOnline {
 
   public function edit_order($id) {
     if (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
-      $data['access_token'] = $_COOKIE[$this->cookieName];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
@@ -814,7 +814,7 @@ class pedidosOnline {
 
   public function get_orders($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $data = array_merge($data, $options);
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/orders/index.json?' . $parameters);
@@ -828,7 +828,7 @@ class pedidosOnline {
 
   public function get_order($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/orders/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
@@ -841,7 +841,7 @@ class pedidosOnline {
 
   public function get_user_id() {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/users/getId.json?' . $parameters);
       if ($result->status == "success") {
@@ -854,7 +854,7 @@ class pedidosOnline {
 
   public function get_user($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $data = array('access_token' => $_COOKIE[$this->cookieName]);
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/users/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
