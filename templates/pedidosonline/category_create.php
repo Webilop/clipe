@@ -2,8 +2,15 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $pedidosOnline->create_category();
+  $result = $pedidosOnline->create_category();
+  if (isset($result->status) && $result->status == "success") {
+    $pedidosOnline->add_flash_message(__('Category created successfully', 'clipe'), 'success');
+  }
+  else {
+    $pedidosOnline->add_flash_message($result);
+  }
   wp_redirect($pedidosOnline->get_link_page('category_list.php'));
+  exit();
 }
 
 get_header();

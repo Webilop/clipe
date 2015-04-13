@@ -30,3 +30,16 @@ jQuery(document).ready(function(){
   });
 });
 
+/**
+ * Add confirmation window to links to cancel orders
+ */
+var confirmCancelMessage;
+jQuery(document).ready(function(){
+  jQuery(".actions a.cancel").click(function(){
+    var orderId = jQuery(this).parent().find("input:hidden[id=id]").val();
+    var i = confirmCancelMessage.indexOf('?');
+    var message = confirmCancelMessage.substring(0,i);
+    return confirm(message+' '+orderId+'?');
+  });
+});
+

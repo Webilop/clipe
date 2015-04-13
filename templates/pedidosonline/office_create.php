@@ -2,8 +2,19 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $result=$pedidosOnline->create_office();
+  $result = $pedidosOnline->create_office();
+  if (isset($result->status) && $result->status == "success") {
+      $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
+  }
+  elseif (isset($result->status) && $result->status == "fail") {
+    $message = array_values(get_object_vars($result->data));
+    $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));
+  }
+  else {
+    $pedidosOnline->add_flash_message($result);
+  }
   wp_redirect($pedidosOnline->get_link_page('office_list.php'));
+  exit();
 }
 get_header();
 ?>

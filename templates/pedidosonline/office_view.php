@@ -4,6 +4,8 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $office=$pedidosOnline->get_office($_GET['id']);
 //print_r($office->HeadquartersProvider->{0}->provider_id);
+$userId = $pedidosOnline->get_user_id();
+$user = $pedidosOnline->get_user($userId);
 ?>
 <div class="clipe-container">
     <h1><?php _e('Office', 'clipe'); ?></h1>

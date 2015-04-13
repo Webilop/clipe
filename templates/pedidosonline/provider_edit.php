@@ -3,8 +3,15 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['provider_id'])) {
   $result=$pedidosOnline->edit_provider($_POST['provider_id']);
-  print_r($result);
+  $type = in_array($result->status, array('error', 'fail')) ? 'danger' : 'success';
+  $pedidosOnline->add_flash_message($result->data->message, $type);
   //wp_redirect($pedidosOnline->get_link_page('index.php'));
+}
+
+if (isset($_GET['id'])) {
+  $user = $pedidosOnline->get_user($_GET['id']);
+} else {
+  wp_redirect($pedidosOnline->get_link_page('index.php'));
 }
 
 get_header();
