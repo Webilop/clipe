@@ -789,6 +789,21 @@ class pedidosOnline {
       }
     }
   }
+  
+  public function get_office_orders($id,$profile='client') {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $orders=$this->get_orders(array('profile'=>$profile));
+      $office_orders=array();      
+      foreach ($orders as $order) {
+        if($order){
+          if($order->HeadquartersProvider->headquarter_id==$id){
+            $office_orders[]=$order;
+          }          
+        }
+      }
+      return $office_orders;      
+    }
+  }
 
   public function get_office($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
