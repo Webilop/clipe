@@ -6,7 +6,8 @@ $clients = $pedidosOnline->get_clients(array('limit' => 50, 'order_by' => 'name'
 get_header();
 ?>
 <div class="clipe-container">
-  <h1><?php _e('list of Clients', 'clipe'); ?> <a href="<?php echo $pedidosOnline->get_link_page("client_create.php");?>"><i class="fa fa-plus"></i></a></h1>
+  <h1><?php _e('list of Clients', 'clipe'); ?> <a href="<?php echo $pedidosOnline->get_link_page("client_create.php");?>"><i class="fa fa-plus"></i></a>
+  <a href="<?php echo $pedidosOnline->get_link_page("batch_client_addition.php");?>"><i class="fa fa-file"></i></a></h1>
   <table class="clipe-table">
     <thead>
       <tr>

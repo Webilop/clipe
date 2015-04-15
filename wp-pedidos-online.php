@@ -52,7 +52,8 @@ class pedidosOnline {
     $this->pages['28'] = 'order_delete.php';
     $this->pages['29'] = 'order_create.php';
     $this->pages['30'] = 'config_error.php';
-    $this->pages['29'] = 'order_cancel.php';
+    $this->pages['31'] = 'order_cancel.php';
+    $this->pages['32'] = 'batch_client_addition.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -510,6 +511,18 @@ class pedidosOnline {
       }
     }
   }
+  
+   public function addition_file_of_clients() {     
+    if (isset($_FILES['file'])) {  
+      $filetmp=fopen($_FILES['file']['tmp_name']);
+      $file=  base64_encode($filetmp);
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+      $data['file'] = $file;
+      $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
 
   public function create_client() {
     if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['code'])) {
@@ -947,6 +960,8 @@ class pedidosOnline {
       }
     }
   }
+  
+  
 }
 
 global $pedidosOnline;
