@@ -54,6 +54,7 @@ class pedidosOnline {
     $this->pages['30'] = 'config_error.php';
     $this->pages['31'] = 'order_cancel.php';
     $this->pages['32'] = 'batch_client_addition.php';
+    $this->pages['33'] = 'validate_user.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -395,10 +396,25 @@ class pedidosOnline {
     return false;
   }
 
+  public function logout() {
+    $this->interface->logout();
+  }
+
   public function recoveryPassword($email) {
     $data = array('email' => $email);
     $result = $this->interface->request('api/users/password_recovery.json', 'post', $data);
     return $result;
+  }
+
+  public function validateUser($id, $token) {
+    $data = array('id' => $id, 'token' => $token);
+    $result = $this->interface->request('api/users/activateAccount.json', 'post', $data);
+    if ($result->status == 'success') {
+      $this->add_flash_message(__($result->data->message, 'clipe'), 'success');
+    }
+    else {
+      $this->add_flash_message(__($result->message, 'clipe'));
+    }
   }
 
   public function redirectLogin() {
@@ -798,19 +814,19 @@ class pedidosOnline {
       }
     }
   }
-  
+
   public function get_office_orders($id,$profile='client') {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $orders=$this->get_orders(array('profile'=>$profile));
-      $office_orders=array();      
+      $office_orders=array();
       foreach ($orders as $order) {
         if($order){
           if($order->HeadquartersProvider->headquarter_id==$id){
             $office_orders[]=$order;
-          }          
+          }
         }
       }
-      return $office_orders;      
+      return $office_orders;
     }
   }
 

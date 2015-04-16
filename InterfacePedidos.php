@@ -2,10 +2,11 @@
 
 class InterfacePedidos {
 
-  private $server = 'http://dev.webilop.com/pedidos-online/';
+  // private $server = 'http://dev.webilop.com/pedidos-online/';
+  private $server = 'http://pedidos-online/';
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
-  private $salt="jjuhyfhjkkyftñyyuvyvyj";
+  private $salt="jjuhyfhjkkyftñyyuvyvyjd";
 
   public function InterfacePedidos() {
 
@@ -42,7 +43,7 @@ class InterfacePedidos {
     else {
       $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password));
       if ($result->status == "success") {
-        $cookie_value = $this->encrypt($result->data->access_token);       
+        $cookie_value = $this->encrypt($result->data->access_token);
         setcookie($this->cookieName, $cookie_value, time() + 3600*2, '/');
       }
     }
@@ -54,7 +55,7 @@ class InterfacePedidos {
    * type => get,post,delete.
    */
 
-  public function request($request, $type = "get", $data = array()) {    
+  public function request($request, $type = "get", $data = array()) {
     /*echo '<br>post: <br>';
     print_r($data);
     echo "<br> request:" . $this->server . "$request <br> type:$type <br>";*/
@@ -90,13 +91,13 @@ class InterfacePedidos {
     //echo "<br> json: $json_response <br>";
     return $response;
   }
-  
+
   private function encrypt($token) {
     $iv=get_option($this->ivOption);
     if(!$iv){
       $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC), MCRYPT_RAND);
       update_option($this->ivOption, base64_encode($iv));
-    }   
+    }
     $iv = base64_decode($iv);
     // Encrypt $string
     $encrypt_password = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->salt, $token, MCRYPT_MODE_CBC, $iv);
