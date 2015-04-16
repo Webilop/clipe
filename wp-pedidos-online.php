@@ -277,7 +277,12 @@ class pedidosOnline {
     if (!empty($input['password']))
       $new_input['password'] = sanitize_text_field($input['password']);
 
-    if ( !$this->login($new_input['email'], $new_input['password'], false, true)) {
+    $response = $this->interface->request('api/users/login.json', 'post', array(
+        'email' => $new_input['email'],
+        'password' => $new_input['password']
+    ));
+    $access_token = $response->data->access_token;
+    if ( !$access_token) {
       add_settings_error(
         'email',
         'invalid_credentials',
@@ -286,6 +291,10 @@ class pedidosOnline {
         <a href="http://clipe.co/register" target="_blank"> here.</a>',
         'error');
     }
+    //Update provider URL
+    $data['access_token'] = $access_token;
+    $data['url'] = get_bloginfo('url');
+    $result = $this->interface->request('api/providers/setURL.json', 'post', $data);
     delete_option('pediodosonline_provider');
 
     return $new_input;
@@ -511,9 +520,9 @@ class pedidosOnline {
       }
     }
   }
-  
-   public function addition_file_of_clients() {     
-    if (isset($_FILES['file'])) {  
+
+   public function addition_file_of_clients() {
+    if (isset($_FILES['file'])) {
       $filetmp=fopen($_FILES['file']['tmp_name']);
       $file=  base64_encode($filetmp);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
@@ -960,8 +969,8 @@ class pedidosOnline {
       }
     }
   }
-  
-  
+
+
 }
 
 global $pedidosOnline;
