@@ -2,8 +2,8 @@
 
 class InterfacePedidos {
 
-  // private $server = 'http://dev.webilop.com/pedidos-online/';
-  private $server = 'http://pedidos-online/';
+  private $server = 'http://dev.webilop.com/pedidos-online/';
+  //private $server = 'http://pedidos-online/';
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
   private $salt="jjuhyfhjkkyftñyyuvyvyjd";
