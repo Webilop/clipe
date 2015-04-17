@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $pedidosOnline->edit_product($_GET['id']);
 }
 $product = $pedidosOnline->get_product($_GET['id']);
-print_r($product);exit;
+print_r($product);
 
 get_header();
 ?>
@@ -14,28 +14,34 @@ get_header();
   <form method="POST">
     <div>
       <label for="name"><?php _e('Name', 'clipe'); ?></label>
-      <input type="text" id="name" name="name" required value="<?php echo $product->name;?>"/>
+      <input type="text" id="name" name="name" required value="<?php echo $product->Product->name; ?>"/>
     </div>
     <div>
       <label for="measure_type"><?php _e('Measure Type', 'clipe'); ?></label>
-      <input type="text" id="measure_type" name="measure_type" required value="<?php echo $product->measure_type;?>"/>
+      <input type="text" id="measure_type" name="measure_type" required value="<?php echo $product->Product->measure_type; ?>"/>
     </div>
     <div>
       <label for="category_name"><?php _e('For New Category', 'clipe'); ?></label>
-      <input type="text" id="category_name" name="category_name" value="<?php echo $product->category_name;?>"/>
+      <input type="text" id="category_name" name="category_name" value=""/>
     </div>
     <div>
       <label for="category_id"><?php _e('Category', 'clipe'); ?></label>
       <select id="category_id" name="category_id" >
         <option value="">----------</option>
-        <?php echo $pedidosOnline->get_categories_options($product->category_id);?>
+        <?php echo $pedidosOnline->get_categories_options($product->ProductCategory->id); ?>
       </select>
     </div>
     <div>
+      <?php
+      $clients = array();
+      foreach ($product->Client as $client) {
+        $clients[]=$client->id;
+      }
+      ?>
       <label for="client_id"><?php _e('Clients', 'clipe'); ?></label>
       <select id="client_id" name="client_id[]" multiple>
         <option value=""><?php _e('None', 'clipe'); ?></option>
-        <?php echo $pedidosOnline->get_clients_options($product->clients);?>
+          <?php echo $pedidosOnline->get_clients_options($clients); ?>
       </select>
     </div>
     <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="" id="submit" name="submit">

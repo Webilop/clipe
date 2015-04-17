@@ -5,7 +5,7 @@ class InterfacePedidos {
   private $server = 'http://dev.webilop.com/pedidos-online/';
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
-  private $salt="jjuhyfhjkkyftñyyuvyvyj";
+  private $salt="jjuhyfhjkkyftñyyuvyvyjd";
 
   public function InterfacePedidos() {
 
@@ -58,6 +58,7 @@ class InterfacePedidos {
     /*echo '<br>post: <br>';
     print_r($data);
     echo "<br> request:" . $this->server . "$request <br> type:$type <br>";*/
+    //echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->server . $request);
     switch ($type) {

@@ -483,6 +483,7 @@ class pedidosOnline {
 
   /*
    * multiple selects
+   * $previusClients array of ids.
    */
 
   public function get_clients_options($previusClients = array(), $options = array()) {
@@ -600,6 +601,14 @@ class pedidosOnline {
     if (isset($_POST['name'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
+      $data['measure_type'] = $_POST['measure_type'];
+      if (isset($_POST['category_id'])) {
+        $data['category_id'] = $_POST['category_id'];
+      }
+      if (isset($_POST['category_name'])) {
+        $data['category_name'] = $_POST['category_name'];
+      }
+      $data['client_id'] = isset($_POST['client_id']) ? $_POST['client_id'] : array();
       $result = $this->interface->request('api/products/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -624,7 +633,7 @@ class pedidosOnline {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
-      $result = $this->interface->request('api/products/view/' . $id . '.json?' . $parameters);
+      $result = $this->interface->request('api/products/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
         return $result->data;
       } else {
