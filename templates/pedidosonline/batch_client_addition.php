@@ -3,13 +3,14 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   //show message is uploading.exit;
-  print_r($_FILES);exit;
-  $result = $pedidosOnline->addition_file_of_clients();
+  $result = $pedidosOnline->addition_file_of_clients(); 
   if (isset($result->status) && $result->status == "success") {
-    $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
+    $pedidosOnline->add_flash_message(__($result->message, 'clipe'), 'success');
   }
   else {
-    $pedidosOnline->add_flash_message($result);
+    foreach ($result->errors as $error) {
+     $pedidosOnline->add_flash_message($error); 
+    }    
   }
 }
 get_header();
@@ -21,7 +22,7 @@ get_header();
       <label for="address"><?php _e('File', 'clipe'); ?></label>
       <input type="file" id="file" name="file" required/>
     </div>    
-    <input type="submit" value="<?php _e('Create', 'clipe'); ?>" class="" id="submit" >
+    <input type="submit" value="<?php _e('Upload', 'clipe'); ?>" class="" id="submit" >
   </form>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('client_list.php'); ?>"><i class="fa fa-arrow-left"></i></a>

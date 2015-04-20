@@ -2,7 +2,7 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['provider_id'])) {
-  $result=$pedidosOnline->edit_provider($_POST['provider_id']);
+  $result = $pedidosOnline->edit_provider($_POST['provider_id']);
   $type = in_array($result->status, array('error', 'fail')) ? 'danger' : 'success';
   $pedidosOnline->add_flash_message($result->data->message, $type);
   //wp_redirect($pedidosOnline->get_link_page('index.php'));
@@ -24,7 +24,7 @@ get_header();
     <h1><?php _e('My Provider Account', 'clipe'); ?></h1>
     <?php if (in_array('provider', $user->permissions)) { ?>
       <form method="POST">
-        <input type="hidden" name="provider_id" value="<?php echo $user->Provider->id;?>"/>
+        <input type="hidden" name="provider_id" value="<?php echo $user->Provider->id; ?>"/>
         <div>
           <label for="email"><?php _e('Email', 'clipe'); ?></label>
           <input type="email" id="mail" name="email" required type="email" value="<?php echo $user->User->email; ?>"/>
@@ -66,10 +66,37 @@ get_header();
           <input type="url" id="url" name="url" value="<?php echo $user->Provider->url; ?>"/>
         </div>
         <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="button" id="submit" name="submit">
+        <script type="text/javascript">
+          window.onload = function () {
+            document.getElementById("password").onchange = requiredPassword;
+            document.getElementById("confirm_password").onchange = requiredPassword;
+            document.getElementById("current_password").onchange = requiredPassword;
+          }
+          function requiredPassword() {
+            var current_password = document.getElementById("current_password").value;
+            var confirm_password = document.getElementById("confirm_password").value;
+            var password = document.getElementById("password").value;
+            var b_error = false;
+            if (password != '' && current_password == '') {
+              document.getElementById("current_password").setCustomValidity("<?php _e("if you update the password the current password is required.", "clipe"); ?>");
+            }
+            else {
+              document.getElementById("current_password").setCustomValidity('');
+            }
+            if (confirm_password != password) {
+              document.getElementById("password").setCustomValidity("<?php _e("Password and confirm password Don't Match", "clipe"); ?>");
+            }
+            else {
+              document.getElementById("password").setCustomValidity('');
+            }
+          }
+        </script>
       </form>
-    <?php }else{
+    <?php
+    } else {
       wp_redirect($pedidosOnline->get_link_page('index.php'));
-    } ?>
+    }
+    ?>
 
     <div class="clipe-links">
       <a href="<?php echo $pedidosOnline->get_link_page('client_list.php'); ?>"><i class="fa fa-arrow-left"></i></a>

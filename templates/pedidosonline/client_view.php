@@ -33,11 +33,13 @@ get_header();
         foreach ($offices as $office) {
           ?>
           <tr>
-            <td><?php echo $office->code; ?></td>
+            <td><?php echo isset($office->code)? $office->code: ''; ?></td>
             <td><?php echo $office->address; ?></td>
             <td><?php echo $office->phone; ?></td>
             <td><?php echo $office->email; ?></td>
-            <td>Proximamente ...</td>
+            <td class="actions">
+              <a title="<?= __('View', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("office_view.php").'&id='.$office->id; ?>"><i class="fa fa-eye"></i></a>
+            </td>
           </tr>
           <?php
         }

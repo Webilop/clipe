@@ -66,14 +66,15 @@ class pedidosOnline {
     $this->interface = new InterfacePedidos();
 
     //init session
-    if(!session_id()) {
-        session_start();
+    if (!session_id()) {
+      session_start();
     }
   }
 
   /*
    * return the link to a page, page is the name of the template if no exist return false
    */
+
   public function get_link_page($page) {
     $key = array_search($page, $this->pages);
     if ($key) {
@@ -85,22 +86,22 @@ class pedidosOnline {
   /*
    * Check if credentials in backend are correct
    */
+
   function validAdminAccess() {
     $validAccess = true;
     $options = get_option('pediodosonline_option_name');
-    if ( !isset($options['email']) || !isset($options['password'])) {
+    if (!isset($options['email']) || !isset($options['password'])) {
       $validAccess = false;
-    }
-    elseif ( !$this->login($options['email'], $options['password'], false, true)) {
+    } elseif (!$this->login($options['email'], $options['password'], false, true)) {
       $validAccess = false;
     }
 
     if (isset($_SERVER['QUERY_STRING'])) {
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
-      $pos = strpos($page,$this->suffixPages);
+      $pos = strpos($page, $this->suffixPages);
       $pageNumber = substr($page, $pos);
-      if ( $pos && isset($this->pages[$pageNumber]) && $pageNumber != 30) {
+      if ($pos && isset($this->pages[$pageNumber]) && $pageNumber != 30) {
         if (!$validAccess) {
           wp_redirect(site_url() . '?' . $this->suffixPages . 30);
           die();
@@ -177,12 +178,8 @@ class pedidosOnline {
   // Add options page
   public function add_plugin_page() {
     add_options_page(
-            __('Clipe Access', 'clipe'),
-            __('Clipe', 'clipe'),
-            'manage_options',
-            'pedidosonline-settings',
-            array( $this, 'create_admin_page' )
-        );
+            __('Clipe Access', 'clipe'), __('Clipe', 'clipe'), 'manage_options', 'pedidosonline-settings', array($this, 'create_admin_page')
+    );
   }
 
   // Options page callback
@@ -283,14 +280,11 @@ class pedidosOnline {
         'password' => $new_input['password']
     ));
     $access_token = $response->data->access_token;
-    if ( !$access_token) {
+    if (!$access_token) {
       add_settings_error(
-        'email',
-        'invalid_credentials',
-        'Email or password incorrects. If you don\'t have an account,
+              'email', 'invalid_credentials', 'Email or password incorrects. If you don\'t have an account,
         create a new free account
-        <a href="http://clipe.co/register" target="_blank"> here.</a>',
-        'error');
+        <a href="http://clipe.co/register" target="_blank"> here.</a>', 'error');
     }
     //Update provider URL
     $data['access_token'] = $access_token;
@@ -411,8 +405,7 @@ class pedidosOnline {
     $result = $this->interface->request('api/users/activateAccount.json', 'post', $data);
     if ($result->status == 'success') {
       $this->add_flash_message(__($result->data->message, 'clipe'), 'success');
-    }
-    else {
+    } else {
       $this->add_flash_message(__($result->message, 'clipe'));
     }
   }
@@ -454,12 +447,12 @@ class pedidosOnline {
    * @param $message string message to be displayed in the next page.
    * @param $type string type of the flash message: success, info, warning, danger.
    */
-  public function add_flash_message($message, $type = 'danger'){
+  public function add_flash_message($message, $type = 'danger') {
     //get current messages
     $currentMessages = isset($_SESSION[$this->flashMessageSession]) ? $_SESSION[$this->flashMessageSession] : array();
 
     //add message
-    $currentMessages []= array('message' => $message, 'type' => $type);
+    $currentMessages [] = array('message' => $message, 'type' => $type);
 
     //store new message
     $_SESSION[$this->flashMessageSession] = $currentMessages;
@@ -472,12 +465,12 @@ class pedidosOnline {
    *
    * @return array array with flash messages and their types.
    */
-  public function get_flash_messages($flush = true){
+  public function get_flash_messages($flush = true) {
     //get current messages
     $currentMessages = $_SESSION[$this->flashMessageSession];
 
     //delete messages
-    if($flush)
+    if ($flush)
       $_SESSION[$this->flashMessageSession] = array();
 
     return $currentMessages;
@@ -488,7 +481,7 @@ class pedidosOnline {
    *
    * @param $flush boolean true if messages should be deleted.
    */
-  public function display_flash_messages($flush = true){
+  public function display_flash_messages($flush = true) {
     include $this->search_template('flash_messages.php');
   }
 
@@ -497,7 +490,7 @@ class pedidosOnline {
    *
    * - Add confirmation message for element deletion.
    */
-  public function clipe_head_section(){
+  public function clipe_head_section() {
     ?>
     <script type="text/javascript">
       confirmDeletionMessage = "<?= __('Are you sure?', 'clipe'); ?>";
@@ -538,14 +531,25 @@ class pedidosOnline {
     }
   }
 
-   public function addition_file_of_clients() {
+  public function addition_file_of_clients() {
     if (isset($_FILES['file'])) {
-      $filetmp=fopen($_FILES['file']['tmp_name']);
-      $file=  base64_encode($filetmp);
+      $filetmp = fopen($_FILES['file']['tmp_name'], 'r');
+      $contenido = fread($filetmp, $_FILES['file']['size']);
+      fclose($filetmp);
+
+      $contenido = base64_encode($contenido);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $data['file'] = $file;
+      $data['file'] = $contenido;
       $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
-      return $result;
+      $resultAux = array('status' => $result->status,'message' => $result->data->message);      
+      if ($result->status == 'fail') {
+        $resultAux['errors'] = array();
+        foreach ($result->data as $objError) {          
+          //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
+          $resultAux['errors'][] = sprintf(__('The client %s could not be created by %s','cilpe'),$objError->field,$objError->error->{0}->{0});          
+        }
+      }
+      return json_decode(json_encode($resultAux));
     }
     return 'validate fields';
   }
@@ -824,14 +828,14 @@ class pedidosOnline {
     }
   }
 
-  public function get_office_orders($id,$profile='client') {
+  public function get_office_orders($id, $profile = 'client') {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $orders=$this->get_orders(array('profile'=>$profile));
-      $office_orders=array();
+      $orders = $this->get_orders(array('profile' => $profile));
+      $office_orders = array();
       foreach ($orders as $order) {
-        if($order){
-          if($order->HeadquartersProvider->headquarter_id==$id){
-            $office_orders[]=$order;
+        if ($order) {
+          if ($order->HeadquartersProvider->headquarter_id == $id) {
+            $office_orders[] = $order;
           }
         }
       }
@@ -893,7 +897,7 @@ class pedidosOnline {
     }
     $html = "";
     foreach ($products as $product) {
-      $html.='<option '.$selected.' value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
+      $html.='<option ' . $selected . ' value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
     }
     return $html;
   }
@@ -936,8 +940,7 @@ class pedidosOnline {
       $data['status'] = 'Cancelado';
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
-    }
-    elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    } elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
@@ -1009,7 +1012,6 @@ class pedidosOnline {
       }
     }
   }
-
 
 }
 
