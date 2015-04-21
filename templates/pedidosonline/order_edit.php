@@ -89,18 +89,28 @@ if (in_array('provider', $user->permissions)) {
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($order->Product as $product) {
+        <?php 
+        $productsJS="[";
+        $b_firts=true;
+        foreach ($order->Product as $product) {
+          if($b_firts){
+            $productsJS.="$product->id";
+            $b_firts=false;
+          }else{
+            $productsJS.=",$product->id";
+          }
           ?>
           <tr>
             <td><?php echo $product->name; ?><input type="hidden" value="<?php echo $product->id; ?>" name="product_id[]"/></td>
             <td><input value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" name="quantity[]"/ <?php if (!$b_update) { echo "readonly";}?>></td>
             <td>
               <?php if ($b_update) { ?>
-                <a onclick="clipe_remove_product(this);"><i class="fa fa-trash-o"></i></a>
+                <a onclick="clipe_remove_product(this,<?php echo $product->id; ?>);"><i class="fa fa-trash-o"></i></a>
               <?php } ?>
             </td>
           </tr>
         <?php }
+        $productsJS.="]";
         ?>
       </tbody>
     </table>
@@ -114,6 +124,18 @@ if (in_array('provider', $user->permissions)) {
     <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
   </div>
 </div>
+
+<script type="text/javascript">
+var products=<?php echo $productsJS;?>;
+ window.onload = function () {
+    document.getElementById("submit").addEventListener("click", validateProducts); 
+  }
+  function validateProducts() {      
+    if(products.length==0){
+      document.getElementById("products").setCustomValidity('<?php echo __('Requires at least one product','clipe')?>');
+    }
+  }
+</script>
 <?php
 get_sidebar('clipe');
 get_footer();

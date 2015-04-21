@@ -897,7 +897,7 @@ class pedidosOnline {
     }
     $html = "";
     foreach ($products as $product) {
-      $html.='<option ' . $selected . ' value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
+      $html.='<option value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
     }
     return $html;
   }
