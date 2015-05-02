@@ -55,6 +55,8 @@ class pedidosOnline {
     $this->pages['31'] = 'order_cancel.php';
     $this->pages['32'] = 'batch_client_addition.php';
     $this->pages['33'] = 'validate_user.php';
+    $this->pages['34'] = 'delivery_days_edit.php';
+    $this->pages['35'] = 'batch_product_addition.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -541,12 +543,12 @@ class pedidosOnline {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['file'] = $contenido;
       $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
-      $resultAux = array('status' => $result->status,'message' => $result->data->message);      
+      $resultAux = array('status' => $result->status, 'message' => $result->data->message);
       if ($result->status == 'fail') {
         $resultAux['errors'] = array();
-        foreach ($result->data as $objError) {          
+        foreach ($result->data as $objError) {
           //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
-          $resultAux['errors'][] = sprintf(__('The client %s could not be created by %s','cilpe'),$objError->field,$objError->error->{0}->{0});          
+          $resultAux['errors'][] = sprintf(__('The client %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
         }
       }
       return json_decode(json_encode($resultAux));
@@ -907,7 +909,7 @@ class pedidosOnline {
     $html = "";
     foreach ($offices as $office) {
       $officeAux = $this->get_office($office->Headquarters->id);
-      $html.='<option value="' . $officeAux->HeadquartersProvider->{0}->id . '">' . $officeAux->Headquarters->address . '</option>';
+      $html.='<option value="' . $officeAux->Headquarters->id . '">' . $officeAux->Headquarters->address . '</option>';
     }
     return $html;
   }
@@ -1013,9 +1015,93 @@ class pedidosOnline {
     }
   }
 
+  public function get_delivery_days($clientID, $officeID, $profile) {
+    if ($profile == "provider") {
+      $result = $this->get_client($clientID);
+      foreach ($result->Headquarters as $office) {
+        if ($office->id == $officeID) {
+          return $office->delivery_days;
+        }
+      }
+    } else {
+      if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+        $provider_id = $this->get_admin_provider_id();
+        if ($provider_id == 0) {
+          return array();
+        }
+        $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]), 'provider_id' => $provider_id);
+        $parameters = http_build_query($data);
+        $result = $this->interface->request('api/headquarters/getDeliveryDays/' . $officeID . '.json?' . $parameters);
+        if ($result->status == "success") {
+          return $result->data->delivery_days;
+        }
+      }
+    }
+    return array();
+  }
+
+  public function get_delivery_days_options() {
+    echo '<option value="">'.__('Chose one','clipe').'</option>';
+    if (isset($_POST['client']) && isset($_POST['office']) && isset($_POST['profile'])) {
+      $days = $this->get_delivery_days($_POST['client'], $_POST['office'], $_POST['profile']);
+      $deliveryDays = array();
+      foreach ($days as $day) {
+        switch ($day->day) {
+          case 'Lunes':
+            $deliveryDays[] = 'Monday';
+            break;
+          case 'Martes':
+            $deliveryDays[] = 'Tuesday';
+            break;
+          case 'Miercoles':
+            $deliveryDays[] = 'Wednesday';
+            break;
+          case 'Jueves':
+            $deliveryDays[] = 'Thursday';
+            break;
+          case 'Viernes':
+            $deliveryDays[] = 'Friday';
+            break;
+          case 'Sabado':
+            $deliveryDays[] = 'Saturday';
+            break;
+          case 'Domingo':
+            $deliveryDays[] = 'Sunday';
+            break;
+        }
+      }
+      if (!empty($deliveryDays)) {
+        $date = new DateTime();
+        $numberDays = isset($_POST['numberDays']) ? $_POST['numberDays'] : 5;
+        for ($i = 0; $i < $numberDays;) {
+          $date->add(new DateInterval('P1D'));
+          if (in_array($date->format('l'), $deliveryDays)) {
+            $i++;
+            echo '<option value="' . $date->format('Y-m-d') . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
+          }
+        }
+      }
+    }
+    exit;
+  }
+
+  public function edit_delivery_days($officeID) {
+    $delivery_days = array();
+    if (isset($_POST['delivery_days'])) {
+      $delivery_days = $_POST['delivery_days'];
+    }
+    $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+    $data['delivery_days'] = $delivery_days;
+    $result = $this->interface->request('api/providers/editHeadquarters/' . $officeID . '.json', 'post', $data);
+    return $result;
+  }
+
 }
 
 global $pedidosOnline;
 $pedidosOnline = new pedidosOnline();
+
+add_action('wp_ajax_nopriv_clipe_delivery_days_options', array($pedidosOnline, 'get_delivery_days_options'));
+add_action('wp_ajax_clipe_delivery_days_options', array($pedidosOnline, 'get_delivery_days_options'));
 
 

@@ -23,17 +23,18 @@ get_header();
     <div>
       <label for="headquarters_provider_id"><?php _e('Offices ', 'clipe'); ?></label>
       <select name="headquarters_provider_id" id="headquarters_provider_id">
-<?php echo $pedidosOnline->get_offices_provider_options(); ?>
+        <?php echo $pedidosOnline->get_offices_provider_options(); ?>
       </select>
     </div>
     <div>
       <label for="date"><?php _e('Date', 'clipe'); ?></label>
-      <input type="date" id="date" name="date" required/>
+      <select class="form-control client-product-select" id="date" name="date" required=""></select>
+      <div style="display: none" id="loading-days"><img src="<?php echo get_stylesheet_directory_uri() . '/ajax-loader.gif'; ?>"></div>
     </div>
     <div>
       <label for="products"><?php _e('Products', 'clipe'); ?></label>
       <select id="products" name="products">
-<?php echo $pedidosOnline->get_client_products_options(); ?>
+        <?php echo $pedidosOnline->get_client_products_options(); ?>
       </select>
       <a onclick="clipe_add_product('#product-table', '#products')"><i class="fa fa-plus"></i></a>
     </div>
@@ -60,7 +61,33 @@ get_header();
   var products = [];
   window.onload = function () {
     document.getElementById("submit").addEventListener("click", validateProducts);
+    document.getElementById("headquarters_provider_id").addEventListener("change", getDeliveryDay);
+    getDeliveryDay();
   }
+  function getDeliveryDay() {
+    var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+    var formData = new FormData();
+    formData.append('action', 'clipe_delivery_days_options');
+    formData.append('client', 0);
+    formData.append('profile', 'client');
+    formData.append('office', jQuery("#headquarters_provider_id").val());
+
+    jQuery.ajax({
+      type: 'POST',
+      url: ajaxurl,
+      contentType: false,
+      processData: false,
+      data: formData,
+      beforeSend: function () {
+        //jQuery("#loading-days").show();
+      },
+      success: function (response) {
+        //jQuery("#loading-days").hide();
+        jQuery('#date').html(response);
+      }
+    });
+  }
+
   function validateProducts() {
     if (products.length == 0) {
       document.getElementById("products").setCustomValidity('<?php echo __('Requires at least one product', 'clipe') ?>');

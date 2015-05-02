@@ -45,7 +45,7 @@ if (in_array('provider', $user->permissions)) {
     </div>
     <div>
       <label for="date"><?php _e('Date', 'clipe'); ?></label>
-      <input type="date" id="date" name="date" required value="<?php echo $order->Order->delivery_date; ?>"/>
+      <input readonly="" type="date" id="date" name="date" required value="<?php echo $order->Order->delivery_date; ?>"/>
     </div>
     <div>
       <label for="status"><?php _e('Status', 'clipe'); ?></label>

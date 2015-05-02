@@ -88,8 +88,8 @@ class InterfacePedidos {
     curl_close($ch);
     // get a json file and this is decode and after iterated with this
     $response = json_decode($json_response);
-    //echo "<br> status request: $status ";
-    //echo "<br> json: $json_response <br>";
+   //echo "<br> status request: $status ";
+   //echo "<br> json: $json_response <br>";
     return $response;
   }
 
