@@ -542,14 +542,42 @@ class pedidosOnline {
       $contenido = base64_encode($contenido);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['file'] = $contenido;
-      $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
-      $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+      $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);      
       if ($result->status == 'fail') {
+        $resultAux = array('status' => $result->status, 'message' => $result->message);
         $resultAux['errors'] = array();
         foreach ($result->data as $objError) {
           //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
           $resultAux['errors'][] = sprintf(__('The client %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
         }
+      }else{
+        $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+      }
+      return json_decode(json_encode($resultAux));
+    }
+    return 'validate fields';
+  }
+  
+  public function addition_file_of_products() {
+    if (isset($_FILES['file'])) {
+      $filetmp = fopen($_FILES['file']['tmp_name'], 'r');
+      $contenido = fread($filetmp, $_FILES['file']['size']);
+      fclose($filetmp);
+
+      $contenido = base64_encode($contenido);
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+      $data['file'] = $contenido;
+      $result = $this->interface->request('api/products/addFromFile.json', 'post', $data);
+      
+      if ($result->status == 'fail') {
+        $resultAux = array('status' => $result->status, 'message' => $result->message);
+        $resultAux['errors'] = array();
+        foreach ($result->data as $objError) {
+          //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
+          $resultAux['errors'][] = sprintf(__('The Product %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
+        }
+      }else{
+        $resultAux = array('status' => $result->status, 'message' => $result->data->message);
       }
       return json_decode(json_encode($resultAux));
     }

@@ -5,7 +5,9 @@ $products = $pedidosOnline->get_products();
 get_header();
 ?>
 <div class="clipe-container">
-  <h1><?php _e('Product List', 'clipe'); ?> <a href="<?php echo $pedidosOnline->get_link_page("product_create.php");?>"><i class="fa fa-plus"></i></a></h1>
+  <h1><?php _e('Product List', 'clipe'); ?> <a href="<?php echo $pedidosOnline->get_link_page("product_create.php");?>"><i class="fa fa-plus"></i></a>
+  <a title="<?= __('Add Products in block', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("batch_product_addition.php");?>"><i class="fa fa-file"></i></a>
+  </h1>
   <table class="clipe-table">
     <thead>
       <tr>
