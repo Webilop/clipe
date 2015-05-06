@@ -1137,20 +1137,20 @@ class pedidosOnline {
       $end_date = $dates[1];
       $data['start_date'] = $start_date;
       $data['end_date'] = $end_date;
-      if (isset($_POST['category_id'])) {
-        $data['category_id'] = $_POST['category_id'];
+      if (isset($_POST['client_id'])) {
+        $data['client_id'] = $_POST['client_id'];
       }
       if (isset($_POST['status'])) {
         $data['status'] = $_POST['status'];
       }
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/orders/report.json?' . $parameters, 'get', $data);
-      $mesagge="";
+      $message="";
       $status="success";
       $data=array();
       if (isset($result->status) && $result->status == "error") {
         //error
-        $mesagge=$result->message;
+        $message=$result->message;
         $status="error";
       } else {
         $orders = $result->data;        
@@ -1167,11 +1167,11 @@ class pedidosOnline {
           }
         } else {
           //error
-          $mesagge=__('Not Results','clipe');
+          $message=__('Not Results','clipe');
           $status="error";
         }
       }
-      return array('status'=>$status,'mesagge'=>$mesagge,'data'=>$data);
+      return array('status'=>$status,'message'=>$message,'data'=>$data);
     }
     return 'validate fields';
   }
