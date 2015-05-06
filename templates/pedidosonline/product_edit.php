@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $pedidosOnline->edit_product($_GET['id']);
 }
 $product = $pedidosOnline->get_product($_GET['id']);
-print_r($product);
 
 get_header();
 ?>
@@ -51,6 +50,23 @@ get_header();
     <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
   </div>
 </div>
+<script type="text/javascript">//se requiere para el js 
+  window.onload = function () {
+    document.getElementById("submit").addEventListener("click", validateCategory);
+    document.getElementById("category_name").addEventListener("change", validateCategory);
+    document.getElementById("category_id").addEventListener("change", validateCategory);
+  }
+  function validateCategory() {
+    new_category=jQuery.trim(jQuery("#category_name").val());
+    var clients = jQuery('#category_id').val(); 
+    if (clients.length == 0 && new_category=="") {
+      document.getElementById("category_name").setCustomValidity('<?php echo __('Requires at least one category', 'clipe') ?>');
+      return false;
+    }
+    document.getElementById("category_name").setCustomValidity('<?php echo __('', 'clipe') ?>');
+    return true;
+  }
+</script>
 <?php
 get_sidebar('clipe');
 get_footer();

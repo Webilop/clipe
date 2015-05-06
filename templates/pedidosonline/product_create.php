@@ -5,16 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->create_product();
   if (isset($result->status) && $result->status == "success") {
     $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
-  }
-  elseif (isset($result->status) && $result->status == "fail") {
+    wp_redirect($pedidosOnline->get_link_page('product_list.php'));
+    exit();
+  } elseif (isset($result->status) && $result->status == "fail") {
     $message = array_values(get_object_vars($result->data));
     $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));
   }
-  else {
-    $pedidosOnline->add_flash_message($result);
-  }
-  wp_redirect($pedidosOnline->get_link_page('product_list.php'));
-  exit();
 }
 
 get_header();
@@ -37,15 +33,14 @@ get_header();
     <div>
       <label for="category_id"><?php _e('Category', 'clipe'); ?></label>
       <select id="category_id" name="category_id" >
-        <option value="">----------</option>
-        <?php echo $pedidosOnline->get_categories_options();?>
+        <option value=""></option>
+        <?php echo $pedidosOnline->get_categories_options(); ?>
       </select>
     </div>
     <div>
       <label for="client_id"><?php _e('Clients', 'clipe'); ?></label>
       <select id="client_id" name="client_id[]" multiple>
-        <option value=""><?php _e('None', 'clipe'); ?></option>
-        <?php echo $pedidosOnline->get_clients_options();?>
+        <?php echo $pedidosOnline->get_clients_options(); ?>
       </select>
     </div>
     <input type="submit" value="<?php _e('Create', 'clipe'); ?>" class="" id="submit" name="submit">
@@ -56,6 +51,24 @@ get_header();
     <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
   </div>
 </div>
+<script type="text/javascript">//se requiere para el js 
+  window.onload = function () {
+    document.getElementById("submit").addEventListener("click", validateCategory);
+    document.getElementById("category_name").addEventListener("change", validateCategory);
+    document.getElementById("category_id").addEventListener("change", validateCategory);
+  }
+  function validateCategory() {
+    new_category=jQuery.trim(jQuery("#category_name").val());
+    var clients = jQuery('#category_id').val(); 
+    if (clients.length == 0 && new_category=="") {
+      document.getElementById("category_name").setCustomValidity('<?php echo __('Requires at least one category', 'clipe') ?>');
+      return false;
+    }
+    document.getElementById("category_name").setCustomValidity('<?php echo __('', 'clipe') ?>');
+    return true;
+  }
+</script>
+
 <?php
 get_sidebar('clipe');
 get_footer();
