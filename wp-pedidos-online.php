@@ -57,6 +57,7 @@ class pedidosOnline {
     $this->pages['33'] = 'validate_user.php';
     $this->pages['34'] = 'delivery_days_edit.php';
     $this->pages['35'] = 'batch_product_addition.php';
+    $this->pages['36'] = 'report_orders.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -519,6 +520,10 @@ class pedidosOnline {
     return $html;
   }
 
+  /*
+   * clientes asociados al provedor, el api filtra epor provedor.
+   */
+
   public function get_clients($options = array()) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
@@ -542,7 +547,7 @@ class pedidosOnline {
       $contenido = base64_encode($contenido);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['file'] = $contenido;
-      $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);      
+      $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
       if ($result->status == 'fail') {
         $resultAux = array('status' => $result->status, 'message' => $result->message);
         $resultAux['errors'] = array();
@@ -550,14 +555,14 @@ class pedidosOnline {
           //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
           $resultAux['errors'][] = sprintf(__('The client %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
         }
-      }else{
+      } else {
         $resultAux = array('status' => $result->status, 'message' => $result->data->message);
       }
       return json_decode(json_encode($resultAux));
     }
     return 'validate fields';
   }
-  
+
   public function addition_file_of_products() {
     if (isset($_FILES['file'])) {
       $filetmp = fopen($_FILES['file']['tmp_name'], 'r');
@@ -568,7 +573,7 @@ class pedidosOnline {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['file'] = $contenido;
       $result = $this->interface->request('api/products/addFromFile.json', 'post', $data);
-      
+
       if ($result->status == 'fail') {
         $resultAux = array('status' => $result->status, 'message' => $result->message);
         $resultAux['errors'] = array();
@@ -576,7 +581,7 @@ class pedidosOnline {
           //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
           $resultAux['errors'][] = sprintf(__('The Product %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
         }
-      }else{
+      } else {
         $resultAux = array('status' => $result->status, 'message' => $result->data->message);
       }
       return json_decode(json_encode($resultAux));
@@ -943,9 +948,9 @@ class pedidosOnline {
   }
 
   public function create_order() {
-    if (isset($_POST['headquarters_provider_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    if (isset($_POST['headquarters_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $data['headquarters_provider_id'] = $_POST['headquarters_provider_id'];
+      $data['headquarters_id'] = $_POST['headquarters_id'];
       $data['date'] = $_POST['date'];
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
@@ -1069,7 +1074,7 @@ class pedidosOnline {
   }
 
   public function get_delivery_days_options() {
-    echo '<option value="">'.__('Chose one','clipe').'</option>';
+    echo '<option value="">' . __('Chose one', 'clipe') . '</option>';
     if (isset($_POST['client']) && isset($_POST['office']) && isset($_POST['profile'])) {
       $days = $this->get_delivery_days($_POST['client'], $_POST['office'], $_POST['profile']);
       $deliveryDays = array();
@@ -1122,6 +1127,53 @@ class pedidosOnline {
     $data['delivery_days'] = $delivery_days;
     $result = $this->interface->request('api/providers/editHeadquarters/' . $officeID . '.json', 'post', $data);
     return $result;
+  }
+
+  public function report_orders() {
+    if (isset($_POST['dates']) && (isset($_POST['client_id']))) {
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+      $dates = explode(" to ", $_POST['dates']);
+      $start_date = $dates[0];
+      $end_date = $dates[1];
+      $data['start_date'] = $start_date;
+      $data['end_date'] = $end_date;
+      if (isset($_POST['category_id'])) {
+        $data['category_id'] = $_POST['category_id'];
+      }
+      if (isset($_POST['status'])) {
+        $data['status'] = $_POST['status'];
+      }
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/orders/report.json?' . $parameters, 'get', $data);
+      $mesagge="";
+      $status="success";
+      $data=array();
+      if (isset($result->status) && $result->status == "error") {
+        //error
+        $mesagge=$result->message;
+        $status="error";
+      } else {
+        $orders = $result->data;        
+        if (!empty($orders)) {
+          foreach ($orders as $order) {
+            $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['sedes'][$order->Headquarters->id] = $order->Headquarters->address;
+            foreach ($order->OrdersProduct as $product) {
+              if (isset($data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id]['sedes'][$order->Headquarters->id])) {
+                $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id]['sedes'][$order->Headquarters->id]+=$product->quantity;
+              } else {
+                $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id] = array('name' => $product->name, 'sedes' => array($order->Headquarters->id => $product->quantity));
+              }
+            }
+          }
+        } else {
+          //error
+          $mesagge=__('Not Results','clipe');
+          $status="error";
+        }
+      }
+      return array('status'=>$status,'mesagge'=>$mesagge,'data'=>$data);
+    }
+    return 'validate fields';
   }
 
 }

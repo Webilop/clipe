@@ -21,8 +21,8 @@ get_header();
   <h1><?php _e('Create Order', 'clipe'); ?></h1>
   <form method="POST">
     <div>
-      <label for="headquarters_provider_id"><?php _e('Offices ', 'clipe'); ?></label>
-      <select name="headquarters_provider_id" id="headquarters_provider_id">
+      <label for="headquarters_id"><?php _e('Offices ', 'clipe'); ?></label>
+      <select name="headquarters_id" id="headquarters_id">
         <?php echo $pedidosOnline->get_offices_provider_options(); ?>
       </select>
     </div>
@@ -61,7 +61,7 @@ get_header();
   var products = [];
   window.onload = function () {
     document.getElementById("submit").addEventListener("click", validateProducts);
-    document.getElementById("headquarters_provider_id").addEventListener("change", getDeliveryDay);
+    document.getElementById("headquarters_id").addEventListener("change", getDeliveryDay);
     getDeliveryDay();
   }
   function getDeliveryDay() {
@@ -70,7 +70,7 @@ get_header();
     formData.append('action', 'clipe_delivery_days_options');
     formData.append('client', 0);
     formData.append('profile', 'client');
-    formData.append('office', jQuery("#headquarters_provider_id").val());
+    formData.append('office', jQuery("#headquarters_id").val());
 
     jQuery.ajax({
       type: 'POST',
