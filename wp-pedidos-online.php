@@ -470,13 +470,15 @@ class pedidosOnline {
    */
   public function get_flash_messages($flush = true) {
     //get current messages
-    $currentMessages = $_SESSION[$this->flashMessageSession];
+    if (isset($_SESSION[$this->flashMessageSession])) {
+      $currentMessages = $_SESSION[$this->flashMessageSession];
 
-    //delete messages
-    if ($flush)
-      $_SESSION[$this->flashMessageSession] = array();
+      //delete messages
+      if ($flush)
+        $_SESSION[$this->flashMessageSession] = array();
 
-    return $currentMessages;
+      return $currentMessages;
+    }
   }
 
   /**
@@ -877,6 +879,21 @@ class pedidosOnline {
       return $office_orders;
     }
   }
+  
+  public function get_office_zone($id) {
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);      
+      if ($result->status == "success") {
+        $provider_id = $this->get_admin_provider_id();        
+        $zone=$result->data->Zone;
+        return $zone;        
+      } else {
+        return array();
+      }
+    }
+  }
 
   public function get_office($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
@@ -976,7 +993,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     } elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
-      $data['date'] = $_POST['date'];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+      if($_POST['beforeDate']!=$_POST['date']){
+        $data['date'] = $_POST['date'];
+      }
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
       $data['status'] = $_POST['status'];
@@ -1046,15 +1066,19 @@ class pedidosOnline {
         return array();
       }
     }
-  }
-
+  }  
   public function get_delivery_days($clientID, $officeID, $profile) {
     if ($profile == "provider") {
+      //if client is 0 consult by $office
+      if($clientID!=0){
       $result = $this->get_client($clientID);
       foreach ($result->Headquarters as $office) {
         if ($office->id == $officeID) {
           return $office->delivery_days;
         }
+      }
+      }else{
+        
       }
     } else {
       if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
@@ -1113,6 +1137,11 @@ class pedidosOnline {
             echo '<option value="' . $date->format('Y-m-d') . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
           }
         }
+        //show a option selected
+        if ($_POST['date']) {
+          $date = new DateTime($_POST['date']);
+          echo '<option selected value="' . $date->format('Y-m-d') . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
+        }
       }
     }
     exit;
@@ -1122,6 +1151,9 @@ class pedidosOnline {
     $delivery_days = array();
     if (isset($_POST['delivery_days'])) {
       $delivery_days = $_POST['delivery_days'];
+    }
+    if (isset($_POST['zone'])) {      
+      $data['zone'] = $_POST['zone'];
     }
     $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
     $data['delivery_days'] = $delivery_days;
@@ -1145,15 +1177,15 @@ class pedidosOnline {
       }
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/orders/report.json?' . $parameters, 'get', $data);
-      $message="";
-      $status="success";
-      $data=array();
+      $message = "";
+      $status = "success";
+      $data = array();
       if (isset($result->status) && $result->status == "error") {
         //error
-        $message=$result->message;
-        $status="error";
+        $message = $result->message;
+        $status = "error";
       } else {
-        $orders = $result->data;        
+        $orders = $result->data;
         if (!empty($orders)) {
           foreach ($orders as $order) {
             $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['sedes'][$order->Headquarters->id] = $order->Headquarters->address;
@@ -1167,11 +1199,11 @@ class pedidosOnline {
           }
         } else {
           //error
-          $message=__('Not Results','clipe');
-          $status="error";
+          $message = __('Not Results', 'clipe');
+          $status = "error";
         }
       }
-      return array('status'=>$status,'message'=>$message,'data'=>$data);
+      return array('status' => $status, 'message' => $message, 'data' => $data);
     }
     return 'validate fields';
   }

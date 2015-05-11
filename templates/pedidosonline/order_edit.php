@@ -5,12 +5,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->edit_order($_GET['id']);
   if (isset($result->status) && $result->status == "success") {
     $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
-  }
-  elseif (isset($result->status) && $result->status == "fail") {
+  } elseif (isset($result->status) && $result->status == "fail") {
     $message = array_values(get_object_vars($result->data));
     $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));
-  }
-  else {
+  } else {
     $pedidosOnline->add_flash_message($result);
   }
   wp_redirect($pedidosOnline->get_link_page('order_list.php') . '&profile=' . $_GET['profile']);
@@ -27,6 +25,8 @@ if (in_array('provider', $user->permissions)) {
   $optionsStatus = array("Pendiente", "Cancelado", "En progreso", "Completado");
   $b_update = true;
   $b_provider = true;
+  echo '<br>******';
+  print_r($order);
 } else {
   if ($order->Order->status == "Pendiente") {
     $optionsStatus = array("Pendiente", "Cancelado");
@@ -43,9 +43,29 @@ if (in_array('provider', $user->permissions)) {
         <?php echo $order->Order->address ?>
       </span>
     </div>
+    <?php
+    if ($_GET['profile'] == 'provider') {
+      wp_enqueue_script('moment', "//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js", array('jquery'));
+      wp_enqueue_script('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js", array('jquery'));
+      wp_enqueue_style('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css");
+      ?>
+      <script type="text/javascript">
+        jQuery(document).ready(function () {
+          jQuery('#date').daterangepicker(
+                  {
+                    format: 'YYYY-MM-DD',
+                    singleDatePicker: true,
+                  }
+          );
+        });
+      </script>
+      <?php
+    }
+    ?>
     <div>
       <label for="date"><?php _e('Date', 'clipe'); ?></label>
       <input readonly="" type="date" id="date" name="date" required value="<?php echo $order->Order->delivery_date; ?>"/>
+      <input type="hidden" id="date" name="beforeDate" value="<?php echo $order->Order->delivery_date; ?>"/>
     </div>
     <div>
       <label for="status"><?php _e('Status', 'clipe'); ?></label>
@@ -89,27 +109,32 @@ if (in_array('provider', $user->permissions)) {
         </tr>
       </thead>
       <tbody>
-        <?php 
-        $productsJS="[";
-        $b_firts=true;
+        <?php
+        $productsJS = "[";
+        $b_firts = true;
         foreach ($order->Product as $product) {
-          if($b_firts){
+          if ($b_firts) {
             $productsJS.="$product->id";
-            $b_firts=false;
-          }else{
+            $b_firts = false;
+          } else {
             $productsJS.=",$product->id";
           }
           ?>
           <tr>
             <td><?php echo $product->name; ?><input type="hidden" value="<?php echo $product->id; ?>" name="product_id[]"/></td>
-            <td><input value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" name="quantity[]"/ <?php if (!$b_update) { echo "readonly";}?>></td>
+            <td><input value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" name="quantity[]"/ <?php
+              if (!$b_update) {
+                echo "readonly";
+              }
+              ?>></td>
             <td>
               <?php if ($b_update) { ?>
                 <a onclick="clipe_remove_product(this,<?php echo $product->id; ?>);"><i class="fa fa-trash-o"></i></a>
               <?php } ?>
             </td>
           </tr>
-        <?php }
+          <?php
+        }
         $productsJS.="]";
         ?>
       </tbody>
@@ -126,13 +151,13 @@ if (in_array('provider', $user->permissions)) {
 </div>
 
 <script type="text/javascript">
-var products=<?php echo $productsJS;?>;
- window.onload = function () {
-    document.getElementById("submit").addEventListener("click", validateProducts); 
+  var products =<?php echo $productsJS; ?>;
+  window.onload = function () {
+    document.getElementById("submit").addEventListener("click", validateProducts);
   }
-  function validateProducts() {      
-    if(products.length==0){
-      document.getElementById("products").setCustomValidity('<?php echo __('Requires at least one product','clipe')?>');
+  function validateProducts() {
+    if (products.length == 0) {
+      document.getElementById("products").setCustomValidity('<?php echo __('Requires at least one product', 'clipe') ?>');
     }
   }
 </script>

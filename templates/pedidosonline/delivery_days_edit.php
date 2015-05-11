@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['office'])) {
 
 if (isset($_GET['client']) && isset($_GET['office'])) {
   $delivery_days = $pedidosOnline->get_delivery_days($_GET['client'], $_GET['office'], 'provider');
+  $zone = $pedidosOnline->get_office_zone($_GET['office']);
   $delivery_days = (array) $delivery_days;
 } elseif (empty($_GET['id']) || empty($user)) {
   wp_redirect($pedidosOnline->get_link_page('index.php'));
@@ -40,24 +41,29 @@ get_header();
           <label for=""><?php echo $value; ?></label>
           <input type="checkbox"  id="<?php echo $key ?>" <?php echo $checked ?> name="delivery_days[]" value="<?php echo $key ?>"/>
         </div>
-      <?php } ?>                
+      <?php } ?>  
+      <div>
+        <label for=""><?php echo __('Zone','clipe'); ?></label>
+        <input type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name: ''; ?>"/>
+      </div>
+
       <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="button" id="submit" name="submit">
       <script type="text/javascript">
         window.onload = function () {
           document.getElementById("submit").onclick = requiredDays;
         }
         function requiredDays() {
-          b_error=true;
-          jQuery("input[name='delivery_days[]']:checked").each(function() {            
-            b_error=false;
-            return false;            
+          b_error = true;
+          jQuery("input[name='delivery_days[]']:checked").each(function () {
+            b_error = false;
+            return false;
           });
-          if(b_error){
-            document.getElementById("Domingo").setCustomValidity('<?php _e('required to select at least one','clipe')?>');
-          }else{
+          if (b_error) {
+            document.getElementById("Domingo").setCustomValidity('<?php _e('required to select at least one', 'clipe') ?>');
+          } else {
             document.getElementById("Domingo").setCustomValidity('');
           }
-          return true;          
+          return true;
         }
       </script>
     </form>
