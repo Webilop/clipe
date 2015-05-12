@@ -1191,7 +1191,7 @@ class pedidosOnline {
         $message = $result->message;
         $status = "error";
       } else {
-        $orders = $result->data;
+        $orders = $result->data->Orders;
         if (!empty($orders)) {
           foreach ($orders as $order) {
             $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['sedes'][$order->Headquarters->id] = $order->Headquarters->address;
