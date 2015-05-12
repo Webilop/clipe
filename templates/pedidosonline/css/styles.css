@@ -39,3 +39,9 @@
 .clipe-flash-messages{
   margin-top: 10px;
 }
+
+.clipe-container .checkbox input{
+  width: auto;
+  height: auto;
+  margin-top: 0;
+}

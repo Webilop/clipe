@@ -30,6 +30,7 @@ get_header();
     <h1><?php _e('Delivery days', 'clipe'); ?></h1>
     <form method="POST">
       <input type="hidden" name="client_id" value="<?php echo 8 ?>"/>
+      <div class="form-group">
       <?php
       foreach ($days as $key => $value) {
         $checked = "";
@@ -37,12 +38,15 @@ get_header();
           $checked = "checked";
         }
         ?>
-        <div>
-          <label for=""><?php echo $value; ?></label>
+        <div class="checkbox">
+          <label for="">
           <input type="checkbox"  id="<?php echo $key ?>" <?php echo $checked ?> name="delivery_days[]" value="<?php echo $key ?>"/>
+          <?php echo $value; ?>
+          </label>
         </div>
       <?php } ?>  
-      <div>
+      </div>
+      <div class="form-group">
         <label for=""><?php echo __('Zone','clipe'); ?></label>
         <input type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name: ''; ?>"/>
       </div>

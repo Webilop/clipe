@@ -56,7 +56,7 @@ get_header();
         foreach ($days as $key => $value) {
           ?>
           <div class="checkbox">
-            <label >
+            <label>
             <input type="checkbox"  id="<?php echo $key ?>" name="delivery_days[]" value="<?php echo $key ?>"/>
             <?php echo $value; ?>
             </label>
