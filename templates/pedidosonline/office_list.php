@@ -1,12 +1,14 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
-$offices = $pedidosOnline->get_offices();
-print_r($offices);
+$active = isset($_GET['page']) ? $_GET['page'] : 1;
+$numberRows = 5;
+$result = $pedidosOnline->get_offices(array('page' => $active, 'limit' => $numberRows, 'order_by' => 'address'));
+$offices = $result->headquarters;
 get_header();
 ?>
 <div class="clipe-container">
-  <h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php");?>"><i class="fa fa-plus"></i></a></h1>
+  <h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php"); ?>"><i class="fa fa-plus"></i></a></h1>
   <table class="clipe-table">
     <thead>
       <tr>
@@ -20,12 +22,12 @@ get_header();
       foreach ($offices as $office) {
         ?>
         <tr>
-          <td><?php echo $office->Headquarters->address;  ?></td>
-          <td><?php echo $office->Headquarters->created;  ?></td>
+          <td><?php echo $office->Headquarters->address; ?></td>
+          <td><?php echo $office->Headquarters->created; ?></td>
           <td>
-            <a href="<?php echo $pedidosOnline->get_link_page("office_view.php").'&id='.$office->Headquarters->id.'&profile='.$_GET['profile']; ?>"><i class="fa fa-eye"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("office_edit.php").'&id='.$office->Headquarters->id.'&profile='.$_GET['profile'];?>"><i class="fa fa-pencil-square-o"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("office_delete.php").'&id='.$office->Headquarters->id;?>"><i class="fa fa-trash-o"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("office_view.php") . '&id=' . $office->Headquarters->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-eye"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("office_edit.php") . '&id=' . $office->Headquarters->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-pencil-square-o"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("office_delete.php") . '&id=' . $office->Headquarters->id; ?>"><i class="fa fa-trash-o"></i></a>
           </td>
         </tr>
         <?php
@@ -33,6 +35,11 @@ get_header();
       ?>
     </tbody>
   </table>
+  <div class="text-center">
+    <?php
+    $pedidosOnline->print_pagination($result->rows, $numberRows);
+    ?>
+  </div>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
     <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>

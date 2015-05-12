@@ -1,7 +1,10 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
-$categories = $pedidosOnline->get_categories();
+$active = isset($_GET['page']) ? $_GET['page'] : 1;
+$numberRows=5;
+$result = $pedidosOnline->get_categories(array('page'=>$active,'limit' => $numberRows, 'order_by' => 'name'));
+$categories = $result->productCategories;
 
 get_header();
 ?>
@@ -33,6 +36,11 @@ get_header();
       ?>
     </tbody>
   </table>
+  <div class="text-center">
+      <?php
+      $pedidosOnline->print_pagination($result->rows,$numberRows);
+      ?>
+    </div>
   <div class="clipe-links">
     <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
     <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>

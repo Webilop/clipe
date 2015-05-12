@@ -510,7 +510,7 @@ class pedidosOnline {
    */
 
   public function get_clients_options($previusClients = array(), $options = array()) {
-    $clients = $this->get_clients($options);
+    $clients = $this->get_clients($options)->clients;
     $html = "";
     foreach ($clients as $client) {
       $selected = "";
@@ -533,7 +533,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/clients/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data->clients;
+        return $result->data;
       } else {
         return array();
       }
@@ -688,7 +688,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/products/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data->Products;
+        return $result->data;
       } else {
         return array();
       }
@@ -778,7 +778,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/product_categories/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data->productCategories;
+        return $result->data;
       } else {
         return array();
       }
@@ -799,7 +799,7 @@ class pedidosOnline {
   }
 
   public function get_categories_options($id = 0, $options = array()) {
-    $categories = $this->get_categories($options);
+    $categories = $this->get_categories($options)->productCategories;
     $htmlCategories = "";
     foreach ($categories as $category) {
       $selected = "";
@@ -858,7 +858,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/headquarters/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data->headquarters;
+        return $result->data;
       } else {
         return array();
       }
@@ -867,7 +867,7 @@ class pedidosOnline {
 
   public function get_office_orders($id, $profile = 'client') {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $orders = $this->get_orders(array('profile' => $profile));
+      $orders = $this->get_orders(array('profile' => $profile))->Orders;
       $office_orders = array();
       foreach ($orders as $order) {
         if ($order) {
@@ -879,16 +879,16 @@ class pedidosOnline {
       return $office_orders;
     }
   }
-  
+
   public function get_office_zone($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
-      $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);      
+      $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);
       if ($result->status == "success") {
-        $provider_id = $this->get_admin_provider_id();        
-        $zone=$result->data->Zone;
-        return $zone;        
+        $provider_id = $this->get_admin_provider_id();
+        $zone = $result->data->Zone;
+        return $zone;
       } else {
         return array();
       }
@@ -943,7 +943,7 @@ class pedidosOnline {
     if (isset($options['headquarter_id'])) {
       $office = $this->get_office($options['headquarter_id']);
       $clientID = $office->Headquarters->client_id;
-      $products = $this->get_products(array('clientId' => $clientID));
+      $products = $this->get_products(array('clientId' => $clientID))->Products;
     } else {
       $products = $this->get_client_products($options);
     }
@@ -955,7 +955,7 @@ class pedidosOnline {
   }
 
   public function get_offices_provider_options($options = array()) {
-    $offices = $this->get_offices($options);
+    $offices = $this->get_offices($options)->headquarters;
     $html = "";
     foreach ($offices as $office) {
       $officeAux = $this->get_office($office->Headquarters->id);
@@ -994,7 +994,7 @@ class pedidosOnline {
       return $result;
     } elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      if($_POST['beforeDate']!=$_POST['date']){
+      if ($_POST['beforeDate'] != $_POST['date']) {
         $data['date'] = $_POST['date'];
       }
       $data['product_id'] = $_POST['product_id'];
@@ -1013,7 +1013,7 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/orders/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data->Orders;
+        return $result->data;
       } else {
         return array();
       }
@@ -1066,18 +1066,19 @@ class pedidosOnline {
         return array();
       }
     }
-  }  
+  }
+
   public function get_delivery_days($clientID, $officeID, $profile) {
     if ($profile == "provider") {
       //if client is 0 consult by $office
-      if($clientID!=0){
-      $result = $this->get_client($clientID);
-      foreach ($result->Headquarters as $office) {
-        if ($office->id == $officeID) {
-          return $office->delivery_days;
+      if ($clientID != 0) {
+        $result = $this->get_client($clientID);
+        foreach ($result->Headquarters as $office) {
+          if ($office->id == $officeID) {
+            return $office->delivery_days;
+          }
         }
-      }
-      }else{
+      } else {
         
       }
     } else {
@@ -1152,7 +1153,7 @@ class pedidosOnline {
     if (isset($_POST['delivery_days'])) {
       $delivery_days = $_POST['delivery_days'];
     }
-    if (isset($_POST['zone'])) {      
+    if (isset($_POST['zone'])) {
       $data['zone'] = $_POST['zone'];
     }
     $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
@@ -1206,6 +1207,38 @@ class pedidosOnline {
       return array('status' => $status, 'message' => $message, 'data' => $data);
     }
     return 'validate fields';
+  }
+
+  public function print_pagination($totalRows, $numberRows = 10) {
+    ?>
+    <nav>
+      <ul class="pagination">
+        <?php
+        $active = isset($_GET['page']) ? $_GET['page'] : 1;
+        $numberPages = ceil($totalRows / $numberRows);
+        $previewUrl = $_SERVER['REQUEST_URI'];
+        $previewUrl = preg_replace('/&page=(\d)+/', '', $previewUrl);
+        ?>
+        <li class="<?php echo ($active == 1) ? 'disabled' : ''; ?>">
+          <a href="<?php echo $previewUrl; ?>&page=<?php echo $active-1 ?>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <?php
+        for ($i = 1; $i <= $numberPages; $i++) {
+          ?>
+          <li class="<?php echo ($i == $active) ? 'active' : ''; ?>"><a href="<?php echo $previewUrl; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
+          <?php
+        }
+        ?>          
+        <li class="<?php echo ($active == $numberPages) ? 'disabled' : ''; ?>">
+          <a href="<?php echo $previewUrl; ?>&page=<?php echo $active + 1 ?>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <?php
   }
 
 }
