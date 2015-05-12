@@ -10,7 +10,7 @@ if (isset($result->status) && $result->status == "success") {
 }
 elseif (isset($result->status) && $result->status == "fail") {
   $message = array_values(get_object_vars($result->data));
-  $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));
+  $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));  
 }
 else {
   $pedidosOnline->add_flash_message($result);

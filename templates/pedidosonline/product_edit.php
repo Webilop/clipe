@@ -2,7 +2,17 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $pedidosOnline->edit_product($_GET['id']);
+  $result = $pedidosOnline->edit_product($_GET['id']);
+  if (isset($result->status) && $result->status == "success") {
+    $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
+    wp_redirect($pedidosOnline->get_link_page('product_list.php'));
+    exit();
+  } elseif (isset($result->status) && $result->status == "fail") {
+    $message = array_values(get_object_vars($result->data));
+    $pedidosOnline->add_flash_message(__($message[0][0], 'clipe'));
+  } else {
+    $pedidosOnline->add_flash_message($result);
+  }
 }
 $product = $pedidosOnline->get_product($_GET['id']);
 
@@ -34,13 +44,13 @@ get_header();
       <?php
       $clients = array();
       foreach ($product->Client as $client) {
-        $clients[]=$client->id;
+        $clients[] = $client->id;
       }
       ?>
       <label for="client_id"><?php _e('Clients', 'clipe'); ?></label>
       <select id="client_id" name="client_id[]" multiple>
         <option value=""><?php _e('None', 'clipe'); ?></option>
-          <?php echo $pedidosOnline->get_clients_options($clients); ?>
+        <?php echo $pedidosOnline->get_clients_options($clients); ?>
       </select>
     </div>
     <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="" id="submit" name="submit">
@@ -57,9 +67,9 @@ get_header();
     document.getElementById("category_id").addEventListener("change", validateCategory);
   }
   function validateCategory() {
-    new_category=jQuery.trim(jQuery("#category_name").val());
-    var clients = jQuery('#category_id').val(); 
-    if (clients.length == 0 && new_category=="") {
+    new_category = jQuery.trim(jQuery("#category_name").val());
+    var clients = jQuery('#category_id').val();
+    if (clients.length == 0 && new_category == "") {
       document.getElementById("category_name").setCustomValidity('<?php echo __('Requires at least one category', 'clipe') ?>');
       return false;
     }

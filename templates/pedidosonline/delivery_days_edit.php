@@ -20,7 +20,7 @@ if (isset($_GET['client']) && isset($_GET['office'])) {
 } elseif (empty($_GET['id']) || empty($user)) {
   wp_redirect($pedidosOnline->get_link_page('index.php'));
 }
-$days = array('Lunes' => __('Monday', 'clipe'), 'Martes' => __('Tuesday', 'clipe'), 'Miercoles' => __('Wednesday', 'clipe'), 'Jueves' => __('Thursday', 'clipe'), 'Viernes' => __('Friday', 'clipe'), 'Sabado' => __('Saturday', 'clipe'), 'Domingo' => __('Sunday', 'clipe'));
+$days = $pedidosOnline->days;
 get_header();
 ?>
 <div class="clipe-container">

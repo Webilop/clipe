@@ -19,6 +19,7 @@ class pedidosOnline {
   private $pluginDir = "templates/pedidosonline/";
   private $cookieName = "wp_clipe";
   private $flashMessageSession = "clipeFlashMessages";
+  public $days;//array of delivery days with traduction.
 
   public function pedidosOnline() {
     //pages of plugin with respective template.
@@ -58,6 +59,7 @@ class pedidosOnline {
     $this->pages['34'] = 'delivery_days_edit.php';
     $this->pages['35'] = 'batch_product_addition.php';
     $this->pages['36'] = 'report_orders.php';
+    $this->days = array('Lunes' => __('Monday', 'clipe'), 'Martes' => __('Tuesday', 'clipe'), 'Miercoles' => __('Wednesday', 'clipe'), 'Jueves' => __('Thursday', 'clipe'), 'Viernes' => __('Friday', 'clipe'), 'Sabado' => __('Saturday', 'clipe'), 'Domingo' => __('Sunday', 'clipe'));
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -592,13 +594,16 @@ class pedidosOnline {
   }
 
   public function create_client() {
-    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['code'])) {
+    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['zone'])) {
       $data = array('email' => $_POST['email']);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
-      $data['code'] = $_POST['code'];
+      $data['code'] = isset($_POST['code']) ? $_POST['code'] : '';
+      $data['short_name'] = isset($_POST['short_name']) ? $_POST['short_name'] : '';
+      $data['delivery_days'] = isset($_POST['delivery_days']) ? $_POST['delivery_days'] : array();
+      $data['zone'] = $_POST['zone'];      
       $result = $this->interface->request('api/clients/add.json', 'post', $data);
       return $result;
     }

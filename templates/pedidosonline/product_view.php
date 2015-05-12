@@ -2,7 +2,6 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $product = $pedidosOnline->get_product($_GET['id']);
-print_r($product);
 get_header();
 ?>
 <div class="clipe-container">
