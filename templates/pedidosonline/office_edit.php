@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   else {
     $pedidosOnline->add_flash_message($result);
   }
-  wp_redirect($pedidosOnline->get_link_page('office_list.php'));
+  wp_redirect($pedidosOnline->get_link_page('office_list.php').'&profile=client');
   exit();
 }
 get_header();
