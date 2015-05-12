@@ -392,7 +392,7 @@ class pedidosOnline {
       }
       return true;
     }
-    return false;
+    $this->add_flash_message(__($result->data->message, 'clipe'));
   }
 
   public function logout() {
