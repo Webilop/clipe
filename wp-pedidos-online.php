@@ -1080,7 +1080,11 @@ class pedidosOnline {
         $result = $this->get_client($clientID);
         foreach ($result->Headquarters as $office) {
           if ($office->id == $officeID) {
-            return $office->delivery_days;
+            if(isset($office->delivery_days)){
+             return $office->delivery_days; 
+            }else{
+             return array(); 
+            }            
           }
         }
       } else {

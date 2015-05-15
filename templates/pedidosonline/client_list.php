@@ -2,7 +2,7 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $active = isset($_GET['page']) ? $_GET['page'] : 1;
-$numberRows=5;
+$numberRows=10;
 $result = $pedidosOnline->get_clients(array('page'=>$active,'limit' => $numberRows, 'order_by' => 'name'));
 $clients = $result->clients;
 

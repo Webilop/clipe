@@ -3,7 +3,7 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 if (isset($_GET['profile'])) {
   $active = isset($_GET['page']) ? $_GET['page'] : 1;
-  $numberRows = 5;
+  $numberRows = 10;
   $result = $pedidosOnline->get_orders(array('profile' => $_GET['profile'], 'page' => $active, 'limit' => $numberRows, 'order_by' => 'delivery_date', 'order_direction' => 'DESC'));
   $orders = $result->Orders;
 }
