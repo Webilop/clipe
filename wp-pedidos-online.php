@@ -284,17 +284,18 @@ class pedidosOnline {
         'email' => $new_input['email'],
         'password' => $new_input['password']
     ));
-    $access_token = $response->data->access_token;
-    if (!$access_token) {
-      add_settings_error(
-              'email', 'invalid_credentials', 'Email or password incorrects. If you don\'t have an account,
-        create a new free account
-        <a href="http://clipe.co/register" target="_blank"> here.</a>', 'error');
+    if (isset($response->data->access_token)) {
+      $access_token = $response->data->access_token;
+      //Update provider URL
+      $data['access_token'] = $access_token;
+      $data['url'] = get_bloginfo('url');
+      $result = $this->interface->request('api/providers/setURL.json', 'post', $data);
     }
-    //Update provider URL
-    $data['access_token'] = $access_token;
-    $data['url'] = get_bloginfo('url');
-    $result = $this->interface->request('api/providers/setURL.json', 'post', $data);
+    else {
+      add_settings_error('email', 'invalid_credentials', 'Email or password
+          incorrects. If you don\'t have an account, create a new free account
+          <a href="http://clipe.co/register" target="_blank"> here.</a>', 'error');
+    }
     delete_option('pediodosonline_provider');
 
     return $new_input;
@@ -603,7 +604,7 @@ class pedidosOnline {
       $data['code'] = isset($_POST['code']) ? $_POST['code'] : '';
       $data['short_name'] = isset($_POST['short_name']) ? $_POST['short_name'] : '';
       $data['delivery_days'] = isset($_POST['delivery_days']) ? $_POST['delivery_days'] : array();
-      $data['zone'] = $_POST['zone'];      
+      $data['zone'] = $_POST['zone'];
       $result = $this->interface->request('api/clients/add.json', 'post', $data);
       return $result;
     }
@@ -1081,14 +1082,14 @@ class pedidosOnline {
         foreach ($result->Headquarters as $office) {
           if ($office->id == $officeID) {
             if(isset($office->delivery_days)){
-             return $office->delivery_days; 
+             return $office->delivery_days;
             }else{
-             return array(); 
-            }            
+             return array();
+            }
           }
         }
       } else {
-        
+
       }
     } else {
       if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
@@ -1239,7 +1240,7 @@ class pedidosOnline {
           <li class="<?php echo ($i == $active) ? 'active' : ''; ?>"><a href="<?php echo $previewUrl; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
           <?php
         }
-        ?>          
+        ?>
         <li class="<?php echo ($active == $numberPages) ? 'disabled' : ''; ?>">
           <a href="<?php echo $previewUrl; ?>&page=<?php echo $active + 1 ?>" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
