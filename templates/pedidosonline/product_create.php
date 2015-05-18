@@ -64,7 +64,7 @@ get_header();
       document.getElementById("category_name").setCustomValidity('<?php echo __('Requires at least one category', 'clipe') ?>');
       return false;
     }
-    document.getElementById("category_name").setCustomValidity('<?php echo __('', 'clipe') ?>');
+    document.getElementById("category_name").setCustomValidity('');
     return true;
   }
 </script>

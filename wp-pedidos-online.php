@@ -1,8 +1,9 @@
 <?php
 /**
- * Plugin Name: Pedidos Online
- * Description: This plugin allows you to connect to the service of  Pedidos Online.
- * Version: 1
+ * Plugin Name: Clipe
+ * Description: Clipe plugin add features to manage your clients and their supply orders in your WordPress website.
+ * Version: 0.5
+ * Text Domain: clipe
  * Author: Webilop
  * Author URI: http://www.webilop.com/
  * License: GPL2
@@ -65,6 +66,7 @@ class pedidosOnline {
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
     add_action('clipe-flash-messages', array($this, 'display_flash_messages'), 1);
     add_action('wp_head', array($this, 'clipe_head_section'));
+    add_action('plugins_loaded', array($this, 'load_translations'));
 
     add_filter('template_include', array($this, 'template_function'));
     add_action('template_redirect', array($this, 'validAdminAccess'));
@@ -178,6 +180,13 @@ class pedidosOnline {
       }
     }
     return $template_path;
+  }
+
+  /**
+   * Load translations for the plugin
+   */
+  public function load_translations(){
+    load_plugin_textdomain( 'clipe', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
   }
 
   // Add options page
