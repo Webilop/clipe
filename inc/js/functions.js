@@ -27,8 +27,8 @@ function clipe_add_product(table, select) {
     products[products.length] = productID;
     row = '<tr>' +
             '<td>' + jQuery(select + " option:selected").text() + '<input type="hidden" value="' + productID + '" name="product_id[]"/></td>' +
-            '<td><input value="1" type="number" name="quantity[]"/></td>' +
-            '<td>' +
+            '<td class="quantity"><input class="form-control quantity-input" value="1" type="number" name="quantity[]"/></td>' +
+            '<td class="actions">' +
             '<a onclick="clipe_remove_product(this,'+ productID +');"><i class="fa fa-trash-o"></i></a>' +
             '</td>' +
             '</tr>';
