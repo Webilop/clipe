@@ -29,7 +29,7 @@ get_header();
     ?>
     <h1><?php _e('Delivery days', 'clipe'); ?></h1>
     <form method="POST">
-      <input type="hidden" name="client_id" value="<?php echo 8 ?>"/>
+      <input type="hidden" name="client_id" value="<?= $_GET['client']; ?>"/>
       <div class="form-group">
       <?php
       foreach ($days as $key => $value) {
