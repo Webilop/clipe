@@ -19,6 +19,7 @@ class pedidosOnline {
   private $themeDir = "pedidosonline/";
   private $pluginDir = "templates/pedidosonline/";
   private $cookieName = "wp_clipe";
+  private $gaTrackingCode = 'UA-63078862-3'; //-2 is production, -3 is dev
   private $flashMessageSession = "clipeFlashMessages";
   public $days;//array of delivery days with traduction.
 
@@ -269,6 +270,16 @@ class pedidosOnline {
             'pedidosonline-settings', // Page
             'pediodosonline_admin' // Section
     );
+    add_settings_field(
+            'collect-stats-data', // ID
+            __('Allow collection of statistic data in Clipe', 'clipe'), // Title
+            array($this, 'checkbox_field_callback'), // Callback
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin', // Section
+            array(
+              'optionName' => 'collect-stats-data'
+            )
+    );
   }
 
   /**
@@ -374,6 +385,19 @@ class pedidosOnline {
       }
       ?>
     </select>
+    <?php
+  }
+
+  /**
+  * Output the input for checkbox fields
+  *
+  * @param $args array associative array with arguments to create the field.
+  */
+  public function checkbox_field_callback($args) {
+    $selected = !isset($this->options[$args['optionName']]) or 0 != $this->options[$args['optionName']];
+    ?>
+    <input value="0" name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="hidden"/>
+    <input value="1" <?php checked(1, $selected); ?> name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="checkbox"/>
     <?php
   }
 
@@ -514,6 +538,28 @@ class pedidosOnline {
       confirmCancelMessage = "<?= __('Are you sure you want to cancel the order?', 'clipe'); ?>";
     </script>
     <?php
+
+    //check if user is in a Clipe page
+    if (isset($_SERVER['QUERY_STRING']) && false !== strpos($_SERVER['QUERY_STRING'], $this->suffixPages)):
+
+      //addition of GA tracking code
+      $options = get_option('pediodosonline_option_name');
+      if(!isset($options['collect-stats-data']) or 0 != $options['collect-stats-data']): ?>
+      <script type="text/javascript">
+      //load universal GA if it not loaded
+      if(!window.ga || !ga.create) {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      }
+      ga('create', '<?= $this->gaTrackingCode; ?>', 'auto', {'name': 'clipe'});
+      ga('clipe.send', 'pageview');
+      </script>
+      <?php
+      endif; //addition of GA tracking code
+
+    endif; //if user is in a clipe page
   }
 
   /*
