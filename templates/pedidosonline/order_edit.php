@@ -25,8 +25,6 @@ if (in_array('provider', $user->permissions)) {
   $optionsStatus = array("Pendiente", "Cancelado", "En progreso", "Completado");
   $b_update = true;
   $b_provider = true;
-  echo '<br>******';
-  print_r($order);
 } else {
   if ($order->Order->status == "Pendiente") {
     $optionsStatus = array("Pendiente", "Cancelado");
