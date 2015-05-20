@@ -21,7 +21,7 @@ class pedidosOnline {
   private $cookieName = "wp_clipe";
   private $gaTrackingCode = 'UA-63078862-3'; //-2 is production, -3 is dev
   private $flashMessageSession = "clipeFlashMessages";
-  public $days;//array of delivery days with traduction.
+  public $days; //array of delivery days with traduction.
 
   public function pedidosOnline() {
     //pages of plugin with respective template.
@@ -186,8 +186,8 @@ class pedidosOnline {
   /**
    * Load translations for the plugin
    */
-  public function load_translations(){
-    load_plugin_textdomain( 'clipe', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+  public function load_translations() {
+    load_plugin_textdomain('clipe', false, dirname(plugin_basename(__FILE__)) . '/languages');
   }
 
   // Add options page
@@ -277,7 +277,7 @@ class pedidosOnline {
             'pedidosonline-settings', // Page
             'pediodosonline_admin', // Section
             array(
-              'optionName' => 'collect-stats-data'
+        'optionName' => 'collect-stats-data'
             )
     );
   }
@@ -310,8 +310,7 @@ class pedidosOnline {
       $data['access_token'] = $access_token;
       $data['url'] = get_bloginfo('url');
       $result = $this->interface->request('api/providers/setURL.json', 'post', $data);
-    }
-    else {
+    } else {
       add_settings_error('email', 'invalid_credentials', 'Email or password
           incorrects. If you don\'t have an account, create a new free account
           <a href="http://clipe.co/register" target="_blank"> here.</a>', 'error');
@@ -389,10 +388,10 @@ class pedidosOnline {
   }
 
   /**
-  * Output the input for checkbox fields
-  *
-  * @param $args array associative array with arguments to create the field.
-  */
+   * Output the input for checkbox fields
+   *
+   * @param $args array associative array with arguments to create the field.
+   */
   public function checkbox_field_callback($args) {
     $selected = !isset($this->options[$args['optionName']]) or 0 != $this->options[$args['optionName']];
     ?>
@@ -538,25 +537,32 @@ class pedidosOnline {
       confirmCancelMessage = "<?= __('Are you sure you want to cancel the order?', 'clipe'); ?>";
     </script>
     <?php
-
     //check if user is in a Clipe page
     if (isset($_SERVER['QUERY_STRING']) && false !== strpos($_SERVER['QUERY_STRING'], $this->suffixPages)):
 
       //addition of GA tracking code
       $options = get_option('pediodosonline_option_name');
-      if(!isset($options['collect-stats-data']) or 0 != $options['collect-stats-data']): ?>
-      <script type="text/javascript">
-      //load universal GA if it not loaded
-      if(!window.ga || !ga.create) {
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      }
-      ga('create', '<?= $this->gaTrackingCode; ?>', 'auto', {'name': 'clipe'});
-      ga('clipe.send', 'pageview');
-      </script>
-      <?php
+      if (!isset($options['collect-stats-data']) or 0 != $options['collect-stats-data']):
+        ?>
+        <script type="text/javascript">
+        //load universal GA if it not loaded
+          if (!window.ga || !ga.create) {
+            (function (i, s, o, g, r, a, m) {
+              i['GoogleAnalyticsObject'] = r;
+              i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+              }, i[r].l = 1 * new Date();
+              a = s.createElement(o),
+                      m = s.getElementsByTagName(o)[0];
+              a.async = 1;
+              a.src = g;
+              m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+          }
+          ga('create', '<?= $this->gaTrackingCode; ?>', 'auto', {'name': 'clipe'});
+          ga('clipe.send', 'pageview');
+        </script>
+        <?php
       endif; //addition of GA tracking code
 
     endif; //if user is in a clipe page
@@ -1136,15 +1142,15 @@ class pedidosOnline {
         $result = $this->get_client($clientID);
         foreach ($result->Headquarters as $office) {
           if ($office->id == $officeID) {
-            if(isset($office->delivery_days)){
-             return $office->delivery_days;
-            }else{
-             return array();
+            if (isset($office->delivery_days)) {
+              return $office->delivery_days;
+            } else {
+              return array();
             }
           }
         }
       } else {
-
+        
       }
     } else {
       if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
@@ -1204,7 +1210,7 @@ class pedidosOnline {
           }
         }
         //show a option selected
-        if ($_POST['date']) {
+        if (isset($_POST['date'])) {
           $date = new DateTime($_POST['date']);
           echo '<option selected value="' . $date->format('Y-m-d') . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
         }
@@ -1278,14 +1284,14 @@ class pedidosOnline {
     ?>
     <nav>
       <ul class="pagination">
-        <?php
-        $active = isset($_GET['page']) ? $_GET['page'] : 1;
-        $numberPages = ceil($totalRows / $numberRows);
-        $previewUrl = $_SERVER['REQUEST_URI'];
-        $previewUrl = preg_replace('/&page=(\d)+/', '', $previewUrl);
-        ?>
+    <?php
+    $active = isset($_GET['page']) ? $_GET['page'] : 1;
+    $numberPages = ceil($totalRows / $numberRows);
+    $previewUrl = $_SERVER['REQUEST_URI'];
+    $previewUrl = preg_replace('/&page=(\d)+/', '', $previewUrl);
+    ?>
         <li class="<?php echo ($active == 1) ? 'disabled' : ''; ?>">
-          <a href="<?php echo $previewUrl; ?>&page=<?php echo $active-1 ?>" aria-label="Previous">
+          <a href="<?php echo $previewUrl; ?>&page=<?php echo $active - 1 ?>" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
@@ -1293,9 +1299,9 @@ class pedidosOnline {
         for ($i = 1; $i <= $numberPages; $i++) {
           ?>
           <li class="<?php echo ($i == $active) ? 'active' : ''; ?>"><a href="<?php echo $previewUrl; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
-          <?php
-        }
-        ?>
+      <?php
+    }
+    ?>
         <li class="<?php echo ($active == $numberPages) ? 'disabled' : ''; ?>">
           <a href="<?php echo $previewUrl; ?>&page=<?php echo $active + 1 ?>" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
@@ -1304,6 +1310,18 @@ class pedidosOnline {
       </ul>
     </nav>
     <?php
+  }
+  /*
+   * redirect if the user not have the permission.
+   */
+  public function validatePermission($permission) {
+    $userId = $this->get_user_id();
+    $user = $this->get_user($userId);
+    if (!in_array($permission, $user->permissions)) {
+      $this->add_flash_message(__('the user does not have permission for the page', 'clipe'));
+      wp_redirect($this->get_link_page('index.php'));
+      exit();
+    }
   }
 
 }
