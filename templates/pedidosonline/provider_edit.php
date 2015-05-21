@@ -1,6 +1,7 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('provider');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['provider_id'])) {
   $result = $pedidosOnline->edit_provider($_POST['provider_id']);
   $type = in_array($result->status, array('error', 'fail')) ? 'danger' : 'success';

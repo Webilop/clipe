@@ -1,6 +1,7 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('client');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['client_id'])) {
   $result = $pedidosOnline->edit_client($_POST['client_id']);
   if (isset($result->status) && $result->status == "success") {

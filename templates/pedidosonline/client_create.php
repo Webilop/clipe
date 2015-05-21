@@ -1,6 +1,7 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('provider');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->create_client();
   if (isset($result->status) && $result->status == "success") {

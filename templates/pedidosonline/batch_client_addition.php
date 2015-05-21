@@ -1,6 +1,7 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('provider');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   //show message is uploading.exit;
   $result = $pedidosOnline->addition_file_of_clients();

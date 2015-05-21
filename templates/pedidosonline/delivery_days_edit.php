@@ -1,6 +1,7 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('provider');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['office'])) {
   $result = $pedidosOnline->edit_delivery_days($_GET['office']);
   if (isset($result->status) && $result->status == "success") {

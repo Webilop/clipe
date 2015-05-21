@@ -1,6 +1,7 @@
 <?php
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('client');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->create_order();
   if (isset($result->status) && $result->status == "success") {

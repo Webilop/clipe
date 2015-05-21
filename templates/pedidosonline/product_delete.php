@@ -4,6 +4,7 @@
  */
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
+$pedidosOnline->validatePermission('provider');
 $result=$pedidosOnline->delete_product($_GET['id']);
 if (isset($result->status) && $result->status == "success") {
   $pedidosOnline->add_flash_message(__($result->data->message, 'clipe'), 'success');
