@@ -1227,6 +1227,9 @@ class pedidosOnline {
     if (isset($_POST['zone'])) {
       $data['zone'] = $_POST['zone'];
     }
+    if (isset($_POST['code'])) {
+      $data['code'] = $_POST['code'];
+    }
     $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
     $data['delivery_days'] = $delivery_days;
     $result = $this->interface->request('api/providers/editHeadquarters/' . $officeID . '.json', 'post', $data);

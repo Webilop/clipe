@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['office'])) {
 
 if (isset($_GET['client']) && isset($_GET['office'])) {
   $delivery_days = $pedidosOnline->get_delivery_days($_GET['client'], $_GET['office'], 'provider');
-  $zone = $pedidosOnline->get_office_zone($_GET['office']);
+  $office = $pedidosOnline->get_office($_GET['office']);
+  $zone = $office->Zone;
+  $code = isset($office->HeadquartersProvider->{0}->code) ? $office->HeadquartersProvider->{0}->code : '';
   $delivery_days = (array) $delivery_days;
 } elseif (empty($_GET['id']) || empty($user)) {
   wp_redirect($pedidosOnline->get_link_page('index.php'));
@@ -32,24 +34,32 @@ get_header();
     <form method="POST">
       <input type="hidden" name="client_id" value="<?= $_GET['client']; ?>"/>
       <div class="form-group">
-      <?php
-      foreach ($days as $key => $value) {
-        $checked = "";
-        if (in_array($key, $delivery_days)) {
-          $checked = "checked";
-        }
-        ?>
-        <div class="checkbox">
-          <label for="">
-          <input type="checkbox"  id="<?php echo $key ?>" <?php echo $checked ?> name="delivery_days[]" value="<?php echo $key ?>"/>
-          <?php echo $value; ?>
-          </label>
-        </div>
-      <?php } ?>  
+        <label class="required" for=""><?php echo __('Zone', 'clipe'); ?></label>
+        <input class="form-control" type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name : ''; ?>"/>
       </div>
       <div class="form-group">
-        <label for=""><?php echo __('Zone','clipe'); ?></label>
-        <input type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name: ''; ?>"/>
+        <label for=""><?php echo __('Code', 'clipe'); ?></label>
+        <input class="form-control" type="text"  name="code" value="<?php echo $code; ?>"/>
+      </div>
+      <div class="form-group">
+        <?php
+        foreach ($days as $key => $value) {
+          $checked = "";
+          if (in_array($key, $delivery_days)) {
+            $checked = "checked";
+          }
+          ?>
+          <div class="checkbox">
+            <label for="">
+              <input type="checkbox"  id="<?php echo $key ?>" <?php echo $checked ?> name="delivery_days[]" value="<?php echo $key ?>"/>
+              <?php echo $value; ?>
+            </label>
+          </div>
+        <?php } ?>  
+      </div>
+      <div class="form-group">
+        <label for=""><?php echo __('Zone', 'clipe'); ?></label>
+        <input type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name : ''; ?>"/>
       </div>
 
       <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="button" id="submit" name="submit">
