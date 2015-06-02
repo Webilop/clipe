@@ -962,12 +962,15 @@ class pedidosOnline {
     }
   }
 
+  /*
+   * $b_provider filter offieces by provider
+   */
   public function get_office($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);
-      if ($result->status == "success") {
+      if ($result->status == "success") {        
         return $result->data;
       } else {
         return array();
@@ -975,7 +978,7 @@ class pedidosOnline {
     }
   }
 
-  public function get_providers_client_options($id = 0, $options = array()) {
+  /*public function get_providers_client_options($id = 0, $options = array()) {
     $providers = array(0 => array("id" => 1, "name" => 'testingwebilop->quemado'));
     $providers = json_decode(json_encode($providers), FALSE);
     $htmlProviders = "";
@@ -987,7 +990,7 @@ class pedidosOnline {
       $htmlProviders.='<option ' . $selected . ' value="' . $provider->id . '">' . $provider->name . '</option>';
     }
     return $htmlProviders;
-  }
+  }*/
 
   public function get_client_products($options = array()) {
     $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
@@ -1024,15 +1027,24 @@ class pedidosOnline {
   public function get_offices_provider_options($options = array()) {
     $offices = $this->get_offices($options)->headquarters;
     $html = "";
+    $provider_id=$this->get_admin_provider_id();
     foreach ($offices as $office) {
       $officeAux = $this->get_office($office->Headquarters->id);
-      $html.='<option value="' . $officeAux->Headquarters->id . '">' . $officeAux->Headquarters->address . '</option>';
+      if(isset($officeAux->HeadquartersProvider)){
+        foreach ($officeAux->HeadquartersProvider as $HeadquartersProvider) {
+          if($HeadquartersProvider->provider_id==$provider_id){
+            $html.='<option value="' . $officeAux->Headquarters->id . '">' . $officeAux->Headquarters->address . '</option>';
+            break;
+          }
+        }      
+      }
     }
     return $html;
   }
 
   public function create_order() {
     if (isset($_POST['headquarters_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+      $data['provider_id']= $this->get_admin_provider_id();
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_id'] = $_POST['headquarters_id'];
       $data['date'] = $_POST['date'];
