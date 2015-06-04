@@ -724,7 +724,8 @@ class pedidosOnline {
   public function delete_product($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $result = $this->interface->request('api/products/delete/' . $id . '.json', 'post', $data);
+      $parameters = http_build_query(array('access_token'=>$data['access_token']));
+      $result = $this->interface->request('api/products/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -822,7 +823,8 @@ class pedidosOnline {
   public function delete_category($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $result = $this->interface->request('api/product_categories/delete/' . $id . '.json', 'post', $data);
+      $parameters = http_build_query(array('access_token'=>$data['access_token']));
+      $result = $this->interface->request('api/product_categories/delete/' . $id . '.json?'.$parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -900,7 +902,8 @@ class pedidosOnline {
   public function delete_office($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $result = $this->interface->request('api/headquarters/delete/' . $id . '.json', 'post', $data);
+      $parameters = http_build_query(array('access_token'=>$data['access_token']));
+      $result = $this->interface->request('api/headquarters/delete/' . $id . '.json?'.$parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -970,7 +973,7 @@ class pedidosOnline {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);
-      if ($result->status == "success") {        
+      if ($result->status == "success") {
         return $result->data;
       } else {
         return array();
@@ -1036,7 +1039,7 @@ class pedidosOnline {
             $html.='<option value="' . $officeAux->Headquarters->id . '">' . $officeAux->Headquarters->address . '</option>';
             break;
           }
-        }      
+        }
       }
     }
     return $html;
@@ -1059,7 +1062,8 @@ class pedidosOnline {
   public function delete_order($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $result = $this->interface->request('api/orders/delete/' . $id . '.json', 'post', $data);
+      $parameters = http_build_query(array('access_token'=>$data['access_token']));
+      $result = $this->interface->request('api/orders/delete/' . $id . '.json?'.$parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -1162,7 +1166,7 @@ class pedidosOnline {
           }
         }
       } else {
-        
+
       }
     } else {
       if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {

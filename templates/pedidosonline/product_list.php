@@ -25,9 +25,11 @@ get_header();
         ?>
         <tr>
           <td><?php echo $product->Product->name; ?></td>
-          <td><a href="<?php echo $pedidosOnline->get_link_page("product_view.php") . '&id=' . $product->Product->id ?>"><i class="fa fa-eye"></i></a>
+          <td class="actions">
+            <a href="<?php echo $pedidosOnline->get_link_page("product_view.php") . '&id=' . $product->Product->id ?>"><i class="fa fa-eye"></i></a>
             <a href="<?php echo $pedidosOnline->get_link_page("product_edit.php") . '&id=' . $product->Product->id ?>"><i class="fa fa-pencil-square-o"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("product_delete.php") . '&id=' . $product->Product->id ?>"><i class="fa fa-trash-o"></i></a></td>
+            <a href="<?php echo $pedidosOnline->get_link_page("product_delete.php") . '&id=' . $product->Product->id ?>" class="delete"><i class="fa fa-trash-o"></i></a>
+          </td>
         </tr>
         <?php
       }

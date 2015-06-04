@@ -16,7 +16,7 @@ elseif (isset($result->status) && $result->status == "fail") {
 else {
   $pedidosOnline->add_flash_message($result);
 }
-wp_redirect($pedidosOnline->get_link_page('office_list.php'));
+wp_redirect($pedidosOnline->get_link_page('office_list.php'). '&profile=' . $_GET['profile']);
 exit();
 ?>
 ?>

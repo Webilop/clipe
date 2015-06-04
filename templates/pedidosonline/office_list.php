@@ -9,7 +9,7 @@ $offices = $result->headquarters;
 get_header();
 ?>
 <div class="clipe-container">
-  <h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php"); ?>"><i class="fa fa-plus"></i></a></h1>
+  <h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php"). '&profile=' . $_GET['profile']; ?>"><i class="fa fa-plus"></i></a></h1>
   <table class="clipe-table">
     <thead>
       <tr>
@@ -25,10 +25,10 @@ get_header();
         <tr>
           <td><?php echo $office->Headquarters->address; ?></td>
           <td><?php echo $office->Headquarters->created; ?></td>
-          <td>
+          <td class="actions">
             <a href="<?php echo $pedidosOnline->get_link_page("office_view.php") . '&id=' . $office->Headquarters->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-eye"></i></a>
             <a href="<?php echo $pedidosOnline->get_link_page("office_edit.php") . '&id=' . $office->Headquarters->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-pencil-square-o"></i></a>
-            <a href="<?php echo $pedidosOnline->get_link_page("office_delete.php") . '&id=' . $office->Headquarters->id; ?>"><i class="fa fa-trash-o"></i></a>
+            <a href="<?php echo $pedidosOnline->get_link_page("office_delete.php") . '&id=' . $office->Headquarters->id . '&profile=' . $_GET['profile'];?>" class="delete"><i class="fa fa-trash-o"></i></a>
           </td>
         </tr>
         <?php
