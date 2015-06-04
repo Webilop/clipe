@@ -75,7 +75,6 @@ class InterfacePedidos {
 
       case "delete":
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         break;
     }
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
