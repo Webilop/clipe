@@ -88,7 +88,7 @@ class InterfacePedidos {
     // get a json file and this is decode and after iterated with this
     $response = json_decode($json_response);
     if($status==302){
-      echo "<h1>".__("an error 302 has occurred in the service of clipe, please try later or contact with admistrador service.","clipe")."</h1>";
+      echo "<h1>".__("An error 302 has occurred in the service of clipe, please try later or contact with admistrador service.","clipe")."</h1>";
       exit;
     }
    //echo "<br> status request: $status ";

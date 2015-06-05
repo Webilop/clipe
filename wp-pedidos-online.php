@@ -1337,7 +1337,7 @@ class pedidosOnline {
     $userId = $this->get_user_id();
     $user = $this->get_user($userId);
     if (!in_array($permission, $user->permissions)) {
-      $this->add_flash_message(__('the user does not have permission for the page', 'clipe'));
+      $this->add_flash_message(__('The user does not have permission to access this page', 'clipe'));
       wp_redirect($this->get_link_page('index.php'));
       exit();
     }

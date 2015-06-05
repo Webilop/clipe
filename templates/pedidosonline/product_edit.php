@@ -31,7 +31,7 @@ get_header();
       <input type="text" id="measure_type" name="measure_type" required value="<?php echo $product->Product->measure_type; ?>"/>
     </div>
     <div>
-      <label for="category_name"><?php _e('For New Category', 'clipe'); ?></label>
+      <label for="category_name"><?php _e('New Category', 'clipe'); ?></label>
       <input type="text" id="category_name" name="category_name" value=""/>
     </div>
     <div>
