@@ -1086,7 +1086,7 @@ class pedidosOnline {
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    return (object)array('status'=>'error','message'=>'verify that the order has products or delivery date');
   }
 
   public function get_orders($options = array()) {
