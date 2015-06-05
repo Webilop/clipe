@@ -37,7 +37,7 @@ get_header();
     function requiredFile(){
       ext=jQuery('#file').val().split('.').pop().toLowerCase();
       if(jQuery.inArray(ext, ['xls','xlsx','xlsm','csv','ods']) == -1) {
-          document.getElementById("file").setCustomValidity("<?php _e("the file is not supported, check it xls, xlsx, xlsm, csv or ods.", "clipe"); ?>");
+          document.getElementById("file").setCustomValidity("<?php _e("The file is not supported, supported formats are: xls, xlsx, xlsm, csv or ods.", "clipe"); ?>");
       }else{
         document.getElementById("file").setCustomValidity('');
       }      

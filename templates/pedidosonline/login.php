@@ -29,7 +29,7 @@ if ($pedidosOnline->is_login()) {
           <input type="password" id="login_password" name="password" required/>
         </div>
         <input type="submit" value="<?php _e('Login', 'clipe'); ?>" class="button" id="submit" name="submit">
-        <a class="button" href="<?php echo $pedidosOnline->get_link_page('recovery_password.php'); ?>"><?php _e('Recovery Password', 'clipe'); ?></a>
+        <a class="button" href="<?php echo $pedidosOnline->get_link_page('recovery_password.php'); ?>"><?php _e('Password Recovery', 'clipe'); ?></a>
       </form>
     </div>
   </div>
