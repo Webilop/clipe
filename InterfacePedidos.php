@@ -6,10 +6,19 @@ class InterfacePedidos {
   //private $server = 'http://pedidos-online/';
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
-  private $salt="jjuhyfhjkkyftñyyuvyvyjd";
 
   public function InterfacePedidos() {
 
+  }
+
+  /**
+  * Create a private key to be used in encryption of data. It uses config var SECURE_AUTH_SALT as key.
+  *
+  * @return string Key string.
+  */
+  private function createPrivateKey(){
+    $key = SECURE_AUTH_SALT . 'Ma7G1n0XJZZfCLiIy0cdMqt4yNgSrIRv';
+    return substr($key, 0, 32);
   }
 
   public function verifyConnection() {
@@ -104,7 +113,7 @@ class InterfacePedidos {
     }
     $iv = base64_decode($iv);
     // Encrypt $string
-    $encrypt_password = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->salt, $token, MCRYPT_MODE_CBC, $iv);
+    $encrypt_password = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->createPrivateKey(), $token, MCRYPT_MODE_CBC, $iv);
     return base64_encode($encrypt_password);
   }
 
@@ -118,7 +127,7 @@ class InterfacePedidos {
     } else {
       return $token; //not iv save. should not happen, but just in case.
     }
-    $decrypted_string = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->salt, base64_decode($token), MCRYPT_MODE_CBC, $iv));
+    $decrypted_string = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->createPrivateKey(), base64_decode($token), MCRYPT_MODE_CBC, $iv));
     return $decrypted_string;
   }
 

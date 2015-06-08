@@ -425,6 +425,10 @@ class pedidosOnline {
       }
       return true;
     }
+    //remove other flash messages
+    $this->get_flash_messages();
+
+    //add error message
     $this->add_flash_message(__($result->data->message, 'clipe'));
   }
 
