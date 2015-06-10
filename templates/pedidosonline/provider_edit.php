@@ -22,7 +22,7 @@ get_header();
   if (isset($_GET['id'])) {
     $user = $pedidosOnline->get_user($_GET['id']);
     ?>
-    <h1><?php _e('My Provider Account', 'clipe'); ?></h1>
+    <h1><?php _e('Provider Account', 'clipe'); ?></h1>
     <?php if (in_array('provider', $user->permissions)) { ?>
       <form method="POST">
         <input type="hidden" name="provider_id" value="<?php echo $user->Provider->id; ?>"/>

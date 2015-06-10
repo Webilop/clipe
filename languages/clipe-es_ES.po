@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Clipe 0.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-05 12:59-0500\n"
-"PO-Revision-Date: 2015-06-05 13:00-0500\n"
+"POT-Creation-Date: 2015-06-09 09:35-0500\n"
+"PO-Revision-Date: 2015-06-09 09:42-0500\n"
 "Last-Translator: Carlos Guzman <carlos.guzman@webilop.com>\n"
 "Language-Team: Webilop <support@webilop.com>\n"
 "Language: \n"
@@ -77,7 +77,7 @@ msgid "Allow collection of statistic data in Clipe"
 msgstr "Permitir a Clipe obtener datos estadísticos"
 
 #: wp-pedidos-online.php:352
-#: wp-pedidos-online.php:895
+#: wp-pedidos-online.php:899
 msgid "There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress"
 msgstr "Clipe no está configurado correctamente en este sitio"
 
@@ -85,41 +85,41 @@ msgstr "Clipe no está configurado correctamente en este sitio"
 msgid "Clipe Sidebar"
 msgstr "Barra Lateral de Clipe"
 
-#: wp-pedidos-online.php:536
+#: wp-pedidos-online.php:540
 msgid "Are you sure?"
 msgstr "Está seguro?"
 
-#: wp-pedidos-online.php:537
+#: wp-pedidos-online.php:541
 msgid "Are you sure you want to cancel the order?"
 msgstr "Está seguro que quiere cancelar este pedido?"
 
-#: wp-pedidos-online.php:622
+#: wp-pedidos-online.php:626
 #, php-format
 msgid "The client %s could not be created by %s"
 msgstr "El cliente %s no pudo ser creado por %s"
 
-#: wp-pedidos-online.php:648
+#: wp-pedidos-online.php:652
 #, php-format
 msgid "The Product %s could not be created by %s"
 msgstr "El producto %s no pudo ser creado por %s"
 
-#: wp-pedidos-online.php:1059
+#: wp-pedidos-online.php:1063
 msgid "Order couldn't be created. Please verify fields"
 msgstr "El pedido no pudo ser creado. Por favor revise los campos."
 
-#: wp-pedidos-online.php:1189
+#: wp-pedidos-online.php:1193
 msgid "Chose one"
 msgstr "Escoja una opción"
 
-#: wp-pedidos-online.php:1293
+#: wp-pedidos-online.php:1297
 msgid "Not Results"
 msgstr "No hay resultados"
 
-#: wp-pedidos-online.php:1340
+#: wp-pedidos-online.php:1344
 msgid "The user does not have permission to access this page"
 msgstr "No tiene permiso para ingresar a esta página"
 
-#: InterfacePedidos.php:91
+#: InterfacePedidos.php:100
 msgid "An error 302 has occurred in the service of clipe, please try later or contact with admistrador service."
 msgstr "Se ha presentado un error en Clipe, por favor intenta más tarde o contáctate con el administrador del sitio."
 
@@ -139,7 +139,7 @@ msgstr "Fecha"
 
 #: templates/pedidosonline/order_create.php:36
 #: templates/pedidosonline/order_edit.php:87
-#: templates/pedidosonline/product_list.php:18
+#: templates/pedidosonline/product_list.php:23
 msgid "Products"
 msgstr "Productos"
 
@@ -157,7 +157,7 @@ msgstr "Cantidad"
 #: templates/pedidosonline/order_edit.php:106
 #: templates/pedidosonline/client_view.php:27
 #: templates/pedidosonline/provider_list.php:14
-#: templates/pedidosonline/product_list.php:19
+#: templates/pedidosonline/product_list.php:24
 #: templates/pedidosonline/office_list.php:18
 msgid "Actions"
 msgstr "Acciones"
@@ -276,6 +276,15 @@ msgstr "Lista de productos"
 msgid "Add Products in block"
 msgstr "Agregar productos en bloque"
 
+#: templates/pedidosonline/product_list.php:17
+#, php-format
+msgid "There are no products, create your first product %s"
+msgstr "No hay productos, crea el primer producto %s"
+
+#: templates/pedidosonline/product_list.php:17
+msgid "here"
+msgstr "aquí"
+
 #: templates/pedidosonline/office_list.php:12
 msgid "Office List"
 msgstr "Lista de sucursales"
@@ -368,7 +377,7 @@ msgid "Edit Product"
 msgstr "Editar producto"
 
 #: templates/pedidosonline/provider_edit.php:25
-msgid "My Provider Account"
+msgid "Provider Account"
 msgstr "Cuenta de proveedor"
 
 #: templates/pedidosonline/provider_edit.php:38
@@ -406,6 +415,11 @@ msgstr "Lista de clientes"
 #: templates/pedidosonline/client_list.php:14
 msgid "Add clients in block"
 msgstr "Agregar clientes en lote"
+
+#: templates/pedidosonline/client_list.php:18
+#, php-format
+msgid "There are no clients, create your first client %s"
+msgstr "No hay clientes, crea el primer cliente %s"
 
 #: templates/pedidosonline/recovery_password.php:28
 msgid "Recovery"
@@ -449,8 +463,8 @@ msgstr "Sección de proveedores"
 
 #: templates/pedidosonline/index.php:18
 #: templates/pedidosonline/index.php:27
-msgid "My Account"
-msgstr "Mi cuenta"
+msgid "Account"
+msgstr "Cuenta"
 
 #: templates/pedidosonline/index.php:19
 msgid "List of Client"
@@ -463,6 +477,23 @@ msgstr "Lista de categorías"
 #: templates/pedidosonline/index.php:26
 msgid "Section Client"
 msgstr "Sección de Cliente"
+
+#: templates/pedidosonline/index.php:40
+msgid "Last Orders"
+msgstr "Últimos pedidos"
+
+#: templates/pedidosonline/index.php:43
+msgid "There are not orders for next days"
+msgstr "No hay pedidos para los siguientes días"
+
+#: templates/pedidosonline/index.php:64
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/pedidosonline/index.php:66
+#: templates/pedidosonline/order_list.php:48
+msgid "Cancel"
+msgstr "Cancelar"
 
 #: templates/pedidosonline/client_create.php:46
 msgid "Short Name"
@@ -477,7 +508,7 @@ msgid "Clipe is not correctly configured in this website."
 msgstr "Clipe no está configurado correctamente en este sitio"
 
 #: templates/pedidosonline/client_edit.php:32
-msgid "My Client Account"
+msgid "Client Account"
 msgstr "Cuenta de cliente"
 
 #: templates/pedidosonline/category_list.php:13
@@ -496,9 +527,14 @@ msgstr "Adición de productos en lote"
 msgid "Order List"
 msgstr "Lista de pedidos"
 
-#: templates/pedidosonline/order_list.php:37
-msgid "Cancel"
-msgstr "Cancelar"
+#: templates/pedidosonline/order_list.php:19
+#, php-format
+msgid "There are no orders, create your first order %s"
+msgstr "No hay pedidos, crea el primer pedido %s"
+
+#: templates/pedidosonline/order_list.php:21
+msgid "There are no orders, invite your clients to make their first orders"
+msgstr "No hay pedido, invita a tus clientes a hacer su primer pedido"
 
 #~ msgid "Recovery Password"
 #~ msgstr "Recuperar contraseña"

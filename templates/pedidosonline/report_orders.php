@@ -25,7 +25,7 @@ wp_enqueue_script('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepick
 wp_enqueue_style('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css");
 ?>
 <div class="clipe-container">
-  <h1><?php echo __("Report Orders"); ?></h1>
+  <h1><?php echo __("Report Orders", 'clipe'); ?></h1>
   <form method="POST">
     <div>
       <label for="client_id"><?php _e('Client', 'clipe'); ?></label>
