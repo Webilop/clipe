@@ -35,7 +35,7 @@ get_header();
       <input type="hidden" name="client_id" value="<?= $_GET['client']; ?>"/>
       <div class="form-group">
         <label class="required" for=""><?php echo __('Zone', 'clipe'); ?></label>
-        <input class="form-control" type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name : ''; ?>"/>
+        <input required class="form-control" type="text" name="zone" value="<?php echo isset($zone->name) ? $zone->name : ''; ?>"/>
       </div>
       <div class="form-group">
         <label for=""><?php echo __('Code', 'clipe'); ?></label>
