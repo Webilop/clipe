@@ -62,10 +62,6 @@ get_header();
           <label for="phone"><?php _e('Phone', 'clipe'); ?></label>
           <input type="text" id="phone" name="phone" value="<?php echo $user->Provider->phone; ?>"/>
         </div>
-        <div>
-          <label for="url"><?php _e('Url', 'clipe'); ?></label>
-          <input type="url" id="url" name="url" value="<?php echo $user->Provider->url; ?>"/>
-        </div>
         <input type="submit" value="<?php _e('Update', 'clipe'); ?>" class="button" id="submit" name="submit">
         <script type="text/javascript">
           window.onload = function () {
