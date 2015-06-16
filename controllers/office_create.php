@@ -10,8 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   else
     $pedidosOnline->add_flash_message($result->message, $type);
   
-  wp_redirect($pedidosOnline->get_link_page('office_list.php'). '&profile=' . $_GET['profile']);
-  exit();
+  if('success' == $result->status){
+    wp_redirect($pedidosOnline->get_link_page('office_list.php'). '&profile=' . $_GET['profile']);
+    exit();
+  }
 }
 
 ?>
