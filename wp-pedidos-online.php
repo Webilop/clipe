@@ -18,10 +18,14 @@ class pedidosOnline {
   private $suffixPages = "clipe=";
   private $themeDir = "pedidosonline/";
   private $pluginDir = "templates/pedidosonline/";
+  private $pluginControllerDir = "controllers/";
   private $cookieName = "wp_clipe";
   private $gaTrackingCode = 'UA-63078862-3'; //-2 is production, -3 is dev
   private $flashMessageSession = "clipeFlashMessages";
   public $days; //array of delivery days with traduction.
+  public $layout = "clipe-layout.php";
+  public $view; //store the view file to be displayed in the request
+  public $controller;
 
   public function pedidosOnline() {
     //pages of plugin with respective template.
@@ -146,6 +150,30 @@ class pedidosOnline {
     return $template_path;
   }
 
+  /**
+   * Search and load a contoller file.
+   *
+   * @param $controller string filename of the controller to load. If it is null, then the controller loaded is used.
+   *
+   * @return boolean true on succes, otherwise it returns false.
+   */
+  function load_controller($controller = null) {
+    if(empty($controller))
+      $controller = $this->controller;
+
+    //get the path of the controller
+    $controller_path = plugin_dir_path(__FILE__) . $this->pluginControllerDir . $controller;
+
+    //load the controller
+    if(!empty($controller_path)){
+      require_once $controller_path;
+      $this->controller_vars = get_defined_vars();
+      return true;
+    }
+
+    return false;
+  }
+
   /*
    * load the template
    */
@@ -165,7 +193,18 @@ class pedidosOnline {
           wp_enqueue_script('clipe-functions', plugins_url('inc/js/functions.js', __FILE__), array('jquery'));
           wp_enqueue_style('font-awesome', plugins_url('lib/font-awesome/font-awesome.min.css', __FILE__));
           wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
-          $template_path = $this->search_template($this->pages[$key]);
+          //$template_path = $this->search_template($this->pages[$key]);
+
+          //load the layour of the plugin
+          $template_path = $this->search_template($this->layout);
+
+          //set the view to display
+          $this->view = $value;
+          $this->controller = $value;
+
+          /*echo '<pre>'; print_r($template_path); echo '</pre>';
+          echo '<pre>'; print_r($key); echo '</pre>';
+          echo '<pre>'; print_r($value); echo '</pre>';*/
           return $template_path;
         }
       }
@@ -181,6 +220,33 @@ class pedidosOnline {
       }
     }
     return $template_path;
+  }
+
+  /**
+   * Load the content of a view from plugin tempates. It tries to load the view from theme files first.
+   * If the view file is not in theme files, then it is loaded from plugin files.
+   *
+   * @param $view string name of the view file to load. If it is null, then the view loaded in the request is used.
+   *
+   * @return boolean true on success, otherwise false.
+   */
+  public function load_view($view = null){
+    if(empty($view))
+      $view = $this->view;
+
+    //get the file path of thew view
+    $view_path = $this->search_template($view);
+
+    //if the file really exists
+    if(file_exists($view_path)){
+      //load controller vars
+      if(!empty($this->controller_vars))
+        extract($this->controller_vars);
+      require_once $view_path;
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -794,7 +860,7 @@ class pedidosOnline {
   }
 
   public function edit_provider($id) {
-    if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['url'])) {
+    if (isset($_POST['email']) && isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['address'])) {
       $data = array('email' => $_POST['email']);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
@@ -802,7 +868,6 @@ class pedidosOnline {
       $data['last_name'] = $_POST['last_name'];
       $data['phone'] = $_POST['phone'];
       $data['address'] = $_POST['address'];
-      $data['url'] = $_POST['url'];
       if (isset($_POST['password']) && isset($_POST['confirm_password']) && isset($_POST['current_password'])) {
         $data['password'] = $_POST['password'];
         $data['confirm_password'] = $_POST['confirm_password'];
@@ -1334,7 +1399,7 @@ class pedidosOnline {
     </nav>
     <?php
   }
-  /*
+  /**
    * redirect if the user not have the permission.
    */
   public function validatePermission($permission) {
@@ -1347,6 +1412,63 @@ class pedidosOnline {
     }
   }
 
+  /**
+   * Create HTML code of inputs and add error messages for each input that failed in a recent saving request.
+   *
+   * @param $htmlAtts array HTML attributes for the input tag. If type is select or textarea, then the tag is changed accordingly.
+   * @param $options array additional options to consider in the input creation.
+   *
+   * @return string HTML code for the input.
+   */
+  public function input($htmlAtts, $options = null){
+    $htmlAtts = array_merge(array(
+      'type' => 'text'
+    ), $htmlAtts);
+    switch ($htmlAtts['type']) {
+      case 'select':
+        # code...
+        break;
+
+      case 'textarea':
+        # code...
+        break;
+      
+      default:
+        $tag = 'input';
+        # code...
+        break;
+    }
+    $atts = array_walk($htmlAtts, function($val, $key){
+      $val = $key . '="' . addslashes($val) . '"';
+    });
+
+    ob_start();
+    ?>
+    <input <?= implode(' ', $atts); ?> >
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+  }
+
+  /**
+   * This is a temporal function to create an error message from field validations after some request.
+   * The error message is used in the flash message.
+   *
+   * @param $data array this is the data returned by a request with fail status.
+   *
+   * @return string error message.
+   */
+  public function get_request_error_message($data){
+    if(empty($data))
+      return false;
+    $message = "<ul style='margin: 0;'>";
+    foreach($data as $field => $errors)
+      foreach($errors as $error)
+        $message .= "<li>$error</li>";
+    $message .= "</ul>";
+    return $message;
+  }
 }
 
 global $pedidosOnline;

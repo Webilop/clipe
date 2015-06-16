@@ -6,14 +6,14 @@ global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $pedidosOnline->validatePermission('provider');
 $result=$pedidosOnline->delete_category($_GET['id']);
-if (isset($result->status) && $result->status == "success") {
-    $pedidosOnline->add_flash_message(__('Category deleted successfully', 'clipe'), 'success');
-  }
-  else {
-    $pedidosOnline->add_flash_message($result);
-  }
+$type = in_array($result->status, array('error', 'fail')) ? 'danger' : 'success';
+if('fail' == $result->status && !empty($result->data))
+  $pedidosOnline->add_flash_message($pedidosOnline->get_request_error_message($result->data), $type);
+else
+  $pedidosOnline->add_flash_message($result->message, $type);
+
 wp_redirect($pedidosOnline->get_link_page('category_list.php'));
 exit();
 ?>
-?>
+
 

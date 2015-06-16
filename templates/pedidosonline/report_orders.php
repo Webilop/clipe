@@ -1,57 +1,30 @@
-<?php
-global $pedidosOnline;
-$pedidosOnline->is_login(true);
-$pedidosOnline->validatePermission('provider');
+<h1><?php echo __("Report Orders", 'clipe'); ?></h1>
+<form method="POST">
+  <div>
+    <label for="client_id"><?php _e('Client', 'clipe'); ?></label>
+    <select id="client_id" name="client_id[]" required="" multiple="">
+      <?php echo $pedidosOnline->get_clients_options(); ?>
+    </select>
+  </div>  
+  <div>
+    <label for="status"><?php _e('Status', 'clipe'); ?></label>
+    <select id="status" name="status[]" multiple="">        
+      <?php
+      $status = array('Pendiente', 'Completed');
+      foreach ($status as $value) {
+        echo ' <option value="' . $value . '">' . $value . '</option>';
+      }
+      ?>
+    </select>
+  </div>
+  <div>
+    <label for="dates"><?php _e('Date Range', 'clipe'); ?></label>
+    <input type="text" name="dates" id="dates" value="" required readonly=""/>
+  </div>
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $result = $pedidosOnline->report_orders();
-  $objClients = $pedidosOnline->get_clients();
-  $objClients=$objClients->clients;
-  $clientNames = array();
-  $reports = array();
-  foreach ($objClients as $client) {
-    $clientNames[$client->Client->id] = $client->Client->name;
-  }
-  if ($result['status'] == "error") {
-    $pedidosOnline->add_flash_message($result['message']);
-  } else {
-    $reports = $result['data'];
-  }
-}
+  <input type="submit" value="<?php _e('Create', 'clipe'); ?>" class="" id="submit" name="submit">
+</form>
 
-get_header();
-wp_enqueue_script('moment', "//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js", array('jquery'));
-wp_enqueue_script('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js", array('jquery'));
-wp_enqueue_style('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css");
-?>
-<div class="clipe-container">
-  <h1><?php echo __("Report Orders", 'clipe'); ?></h1>
-  <form method="POST">
-    <div>
-      <label for="client_id"><?php _e('Client', 'clipe'); ?></label>
-      <select id="client_id" name="client_id[]" required="" multiple="">
-        <?php echo $pedidosOnline->get_clients_options(); ?>
-      </select>
-    </div>  
-    <div>
-      <label for="status"><?php _e('Status', 'clipe'); ?></label>
-      <select id="status" name="status[]" multiple="">        
-        <?php
-        $status = array('Pendiente', 'Completed');
-        foreach ($status as $value) {
-          echo ' <option value="' . $value . '">' . $value . '</option>';
-        }
-        ?>
-      </select>
-    </div>
-    <div>
-      <label for="dates"><?php _e('Date Range', 'clipe'); ?></label>
-      <input type="text" name="dates" id="dates" value="" required readonly=""/>
-    </div>
-
-    <input type="submit" value="<?php _e('Create', 'clipe'); ?>" class="" id="submit" name="submit">
-  </form>
-</div>
 <div class="clipe-links">    
   <a href="<?php echo $pedidosOnline->get_link_page('reports_list.php'); ?>"><i class="fa fa-arrow-left"></i></a>
   <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
@@ -153,7 +126,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($reports)) {
   </script>
   <?php
 }
-get_sidebar('clipe');
-get_footer();
 ?>
 
