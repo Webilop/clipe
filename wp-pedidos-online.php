@@ -512,7 +512,7 @@ class pedidosOnline {
     $this->get_flash_messages();
 
     //add error message
-    $this->add_flash_message(__($result->data->message, 'clipe'));
+    $this->add_flash_message($this->get_request_error_message($result->data));
   }
 
   public function logout() {
@@ -530,8 +530,10 @@ class pedidosOnline {
     $result = $this->interface->request('api/users/activateAccount.json', 'post', $data);
     if ($result->status == 'success') {
       $this->add_flash_message($result->message, 'success');
+    } else if('error' == $result->status) {
+      $this->add_flash_message($result->message, 'danger');
     } else {
-      $this->add_flash_message($result->message);
+      $this->add_flash_message($this->get_request_error_message($result->data), 'danger');
     }
   }
 
