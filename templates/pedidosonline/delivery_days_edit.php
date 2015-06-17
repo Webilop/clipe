@@ -1,4 +1,4 @@
-<h1><?php _e('Delivery days', 'clipe'); ?></h1>
+<h1><?php _e('Edit client headquarters', 'clipe'); ?></h1>
 <form method="POST">
   <input type="hidden" name="client_id" value="<?= $_GET['client']; ?>"/>
   <div class="form-group">

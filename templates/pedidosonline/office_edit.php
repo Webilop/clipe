@@ -1,4 +1,4 @@
-<h1><?php _e('Edit Office', 'clipe'); ?></h1>
+<h1><?php _e('Edit Headquarters', 'clipe'); ?></h1>
 <form method="POST">
   <div>
     <label for="address"><?php _e('Address', 'clipe'); ?></label>

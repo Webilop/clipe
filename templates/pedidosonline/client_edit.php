@@ -1,4 +1,4 @@
-<h1><?php _e('Client Account', 'clipe'); ?></h1>
+<h1><?php _e('Edit Client', 'clipe'); ?></h1>
 <?php if (in_array('client', $user->permissions)) { ?>
   <form method="POST">
     <input type="hidden" name="client_id" value="<?php echo $user->Client->id; ?>"/>
@@ -49,7 +49,7 @@
           document.getElementById("current_password").setCustomValidity('');
         }
         if (confirm_password != password) {
-          document.getElementById("password").setCustomValidity("<?php _e('Password and confirm password Don't Match', 'clipe'); ?>");
+          document.getElementById("password").setCustomValidity("<?php _e('Password and confirm password Don\'t Match', 'clipe'); ?>");
         }
         else {
           document.getElementById("password").setCustomValidity('');

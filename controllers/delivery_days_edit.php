@@ -21,6 +21,6 @@ if (isset($_GET['client']) && isset($_GET['office'])) {
 } elseif (empty($_GET['id']) || empty($user) || empty($_GET['client']) || empty($_GET['office'])) {
   wp_redirect($pedidosOnline->get_link_page('index.php'));
 }
-$days = $pedidosOnline->days;
 
+$days = $pedidosOnline->get_days();
 ?>

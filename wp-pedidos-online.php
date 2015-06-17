@@ -65,7 +65,6 @@ class pedidosOnline {
     $this->pages['34'] = 'delivery_days_edit.php';
     $this->pages['35'] = 'batch_product_addition.php';
     $this->pages['36'] = 'report_orders.php';
-    $this->days = array('Lunes' => __('Monday', 'clipe'), 'Martes' => __('Tuesday', 'clipe'), 'Miercoles' => __('Wednesday', 'clipe'), 'Jueves' => __('Thursday', 'clipe'), 'Viernes' => __('Friday', 'clipe'), 'Sabado' => __('Saturday', 'clipe'), 'Domingo' => __('Sunday', 'clipe'));
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -81,6 +80,24 @@ class pedidosOnline {
     if (!session_id()) {
       session_start();
     }
+  }
+
+  /**
+   * This function returns the available days in the system. It can not be in the constructore due to languages
+   * are not loaded when the plugin class is created.
+   *
+   * @return array days available.
+   */
+  public function get_days(){
+    return array(
+      'Lunes' => __('Monday', 'clipe'),
+      'Martes' => __('Tuesday', 'clipe'),
+      'Miercoles' => __('Wednesday', 'clipe'),
+      'Jueves' => __('Thursday', 'clipe'),
+      'Viernes' => __('Friday', 'clipe'),
+      'Sabado' => __('Saturday', 'clipe'),
+      'Domingo' => __('Sunday', 'clipe')
+    );
   }
 
   /*
@@ -512,9 +529,9 @@ class pedidosOnline {
     $data = array('id' => $id, 'token' => $token);
     $result = $this->interface->request('api/users/activateAccount.json', 'post', $data);
     if ($result->status == 'success') {
-      $this->add_flash_message(__($result->data->message, 'clipe'), 'success');
+      $this->add_flash_message($result->message, 'success');
     } else {
-      $this->add_flash_message(__($result->message, 'clipe'));
+      $this->add_flash_message($result->message);
     }
   }
 

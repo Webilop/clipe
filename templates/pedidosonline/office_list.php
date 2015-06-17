@@ -1,8 +1,8 @@
-<h1><?php _e('Office List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php"). '&profile=' . $_GET['profile']; ?>"><i class="fa fa-plus"></i></a></h1>
+<h1><?php _e('Headquarters List', 'clipe'); ?>  <a href="<?php echo $pedidosOnline->get_link_page("office_create.php"). '&profile=' . $_GET['profile']; ?>"><i class="fa fa-plus"></i></a></h1>
 <table class="clipe-table">
   <thead>
     <tr>
-      <th><?php _e('Offices', 'clipe'); ?></th>
+      <th><?php _e('Headquarters', 'clipe'); ?></th>
       <th><?php _e('Created', 'clipe'); ?></th>
       <th><?php _e('Actions', 'clipe'); ?></th>
     </tr>

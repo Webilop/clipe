@@ -1,4 +1,4 @@
-<h1>Create Product</h1>
+<h1><?= __('Create Product', 'clipe'); ?></h1>
 <form method="POST">
   <div>
     <label for="name"><?php _e('Name', 'clipe'); ?></label>

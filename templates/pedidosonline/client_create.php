@@ -1,4 +1,4 @@
-<h1>Create of Client</h1>
+<h1><?= __("Create Client", "clipe") ?></h1>
 <form method="POST">
   <div>
     <label for="name"><?php _e('Name', 'clipe'); ?></label>
@@ -31,7 +31,6 @@
     <div class="form-group">
       <label class="required" for="delivery_days"><?php _e('Delivery Days', 'clipe'); ?></label>
       <?php
-      $days = $pedidosOnline->days;
       foreach ($days as $key => $value) {
         ?>
         <div class="checkbox">
