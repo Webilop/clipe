@@ -1094,7 +1094,7 @@ class pedidosOnline {
     $parameters = http_build_query($data);
     $result = $this->interface->request('api/clients/getProducts.json?' . $parameters);
     if ($result->status == "success") {
-      return $result->data->Orders;
+      return $result->data->Products;
     } else {
       return array();
     }
