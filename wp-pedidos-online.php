@@ -1168,7 +1168,11 @@ class pedidosOnline {
       }
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
-      $data['status'] = $_POST['status'];
+      if ($_GET['profile'] == 'client' && $_POST['status']=='Cancelado'){
+        $data['status'] = $_POST['status'];
+      }elseif ($_GET['profile'] == 'provider'){
+        $data['status'] = $_POST['status'];
+      }
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
@@ -1449,7 +1453,7 @@ class pedidosOnline {
       case 'textarea':
         # code...
         break;
-      
+
       default:
         $tag = 'input';
         # code...
