@@ -24,13 +24,13 @@ $b_update = false;
 $b_provider = false;
 $b_update_products = false;
 if (in_array('provider', $user->permissions)) {
-  $optionsStatus = array("Pendiente", "Cancelado", "En progreso", "Completado");
+  $optionsStatus = $pedidosOnline->get_status();
   $b_update = true;
   $b_update_products = true;
   $b_provider = true;
 } else {
-  if ($order->Order->status == "Pendiente") {
-    $optionsStatus = array("Pendiente", "Cancelado");
+  if ($order->Order->status == 1) {
+    $optionsStatus = array(1=>__("Pending","clipe"), 2=>__("Cancelled","clipe"));
     $b_update = true;
     $b_update_products = true;
     /*wp_enqueue_script('moment', "//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js", array('jquery'));

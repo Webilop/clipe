@@ -100,6 +100,16 @@ class pedidosOnline {
     );
   }
 
+  /**
+   * This function returns the available status in the system.
+   * @return array days available.
+   */
+  public function get_status() {
+    return array(
+        1 => __('Pending', 'clipe'), 2 => __('Cancelled', 'clipe'), 3 => __('In progress', 'clipe'), 4 => __('Completed', 'clipe')
+    );
+  }
+
   /*
    * return the link to a page, page is the name of the template if no exist return false
    */
@@ -1160,7 +1170,7 @@ class pedidosOnline {
   public function edit_order($id, $cancel = false) {
     if ($cancel) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $data['status'] = 'Cancelado';
+      $data['status'] = 2;
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     } elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
@@ -1170,7 +1180,7 @@ class pedidosOnline {
       }
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
-      if ($_GET['profile'] == 'client' && $_POST['status'] == 'Cancelado') {
+      if ($_GET['profile'] == 'client' && $_POST['status'] == 2) {
         $data['status'] = $_POST['status'];
       } elseif ($_GET['profile'] == 'provider') {
         $data['status'] = $_POST['status'];
@@ -1281,8 +1291,8 @@ class pedidosOnline {
     if (isset($_POST['beforeDate'])) {
       $date = new DateTime($_POST['beforeDate']);
       echo '<option value="' . $_POST['beforeDate'] . '">* ' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
-    }else{
-     echo '<option value="">' . __('Chose one', 'clipe') . '</option>';
+    } else {
+      echo '<option value="">' . __('Chose one', 'clipe') . '</option>';
     }
     if (isset($_POST['client']) && isset($_POST['office']) && isset($_POST['profile'])) {
       $days = $this->get_delivery_days($_POST['client'], $_POST['office'], $_POST['profile']);

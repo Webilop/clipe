@@ -46,7 +46,7 @@ $nextOrders = isset($result->Orders) ? $result->Orders: array();
       <tr>
         <td><?= date_format(date_create_from_format('Y-m-d', $order->Order->delivery_date), 'M d, Y'); ?></td>
         <td><?= $order->Order->address; ?></td>
-        <td><?= $order->Order->status; ?></td>
+        <td><?= $status[$order->Order->status]; ?></td>
         <td class="actions">
           <input type="hidden" id='id' value="<?php echo $order->Order->id ?>" />
           <a title="<?= __('View', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("order_view.php") . '&id=' . $order->Order->id . '&profile=' . $profile; ?>"><i class="fa fa-eye"></i></a>
