@@ -70,22 +70,29 @@ class InterfacePedidos {
     echo "<br> request:" . $this->server . "$request <br> type:$type <br>";*/
     //echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $this->server . $request);
+    $options = get_option('pediodosonline_option_name');
+    if(!isset($options['language']) || empty($options['language'])){
+      $options['language']='eng';
+    }
     switch ($type) {
       case "post":
         curl_setopt($ch, CURLOPT_POST, 1);
+        $data['lang']=$options['language'];
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
         break;
 
       case "get":
+        $request.="&lang=".$options['language'];
         curl_setopt($ch, CURLOPT_TIMEOUT, 120);
         break;
 
       case "delete":
+        $request.="&lang=".$options['language'];
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         break;
     }
+    curl_setopt($ch, CURLOPT_URL, $this->server . $request);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $json_response = curl_exec($ch);
@@ -98,7 +105,7 @@ class InterfacePedidos {
     $response = json_decode($json_response);
     if($status==302){
       echo "<h1>".__("An error 302 has occurred in the service of clipe, please try later or contact with admistrador service.","clipe")."</h1>";
-      //echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
+      echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
       exit;
     }
    //echo "<br> status request: $status ";

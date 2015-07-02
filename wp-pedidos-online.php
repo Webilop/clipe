@@ -372,6 +372,16 @@ class pedidosOnline {
         'optionName' => 'collect-stats-data'
             )
     );
+    add_settings_field(
+            'language', // ID
+            __('Language API responses', 'clipe'), // Title
+            array($this, 'lenguage_callback'), // Callback
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin', // Section
+            array(
+        'optionName' => 'language'
+            )
+    );
   }
 
   /**
@@ -391,6 +401,9 @@ class pedidosOnline {
 
     if (!empty($input['password']))
       $new_input['password'] = sanitize_text_field($input['password']);
+
+    if (!empty($input['language']))
+      $new_input['language'] = sanitize_text_field($input['language']);
 
     $response = $this->interface->request('api/users/login.json', 'post', array(
         'email' => $new_input['email'],
@@ -460,7 +473,6 @@ class pedidosOnline {
 
   public function login_page_callback() {
     ?>
-
     <select id="app_edition_page" name="pediodosonline_option_name[login_page]" required>
       <option value="">-------------------</option>
       <?php
@@ -489,6 +501,29 @@ class pedidosOnline {
     ?>
     <input value="0" name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="hidden"/>
     <input value="1" <?php checked(1, $selected); ?> name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="checkbox"/>
+    <?php
+  }
+
+  /**
+   * Output the input for checkbox fields
+   *
+   * @param $args array associative array with arguments to create the field.
+   */
+  public function lenguage_callback($args) {
+    $lenguages=array(array('id'=>'eng','text'=>'English'),array('id'=>'spa','text'=>'Spanish'));
+    ?>
+    <select  name="pediodosonline_option_name[<?= $args['optionName']; ?>]" required>
+      <?php
+      $value = isset($this->options[$args['optionName']]) ? esc_attr($this->options[$args['optionName']]) : 'spa';
+        foreach ($lenguages as $lenguage) {
+          $selected="";
+          if ($lenguage['id'] == $value) {
+            $selected='selected="selected"';
+          }
+          echo '<option value="' . $lenguage['id'] . '"  '.$selected.'>' . __($lenguage['text'],'clipe') . '</option>';
+        }
+      ?>
+    </select>
     <?php
   }
 
@@ -564,7 +599,7 @@ class pedidosOnline {
     $b_login = false;
     // error_log($_COOKIE[$this->cookieName]);
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $result = $this->interface->request('api/users/checkAccessToken/' . $this->interface->decrypt($_COOKIE[$this->cookieName]) . '.json');
+      $result = $this->interface->request('api/users/checkAccessToken/' . $this->interface->decrypt($_COOKIE[$this->cookieName]) . '.json?');
       if ($result->status == "success") {
         $b_login = true;
       } else {
@@ -978,11 +1013,11 @@ class pedidosOnline {
   }
 
   public function create_office() {
-    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
+    if (isset($_POST['address']) && isset($_POST['phone'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
-      $data['email'] = $_POST['email'];
+      //$data['email'] = $_POST['email'];
       $provider_id = $this->get_admin_provider_id();
       if ($provider_id != 0) {
         $data['provider_id'] = $provider_id;
@@ -1007,7 +1042,7 @@ class pedidosOnline {
   }
 
   public function edit_office($id) {
-    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
+    if (isset($_POST['address']) && isset($_POST['phone'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
