@@ -23,6 +23,7 @@ $optionsStatus = array();
 $b_update = false;
 $b_provider = false;
 $b_update_products = false;
+$b_update_notes = false;
 if (in_array('provider', $user->permissions)) {
   $optionsStatus = $pedidosOnline->get_status();
   $b_update = true;
@@ -33,6 +34,15 @@ if (in_array('provider', $user->permissions)) {
     $optionsStatus = array(1=>__("Pending","clipe"), 2=>__("Cancelled","clipe"));
     $b_update = true;
     $b_update_products = true;
+    $b_update_notes= true;
+    /*wp_enqueue_script('moment', "//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js", array('jquery'));
+    wp_enqueue_script('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js", array('jquery'));
+    wp_enqueue_style('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css");*/
+  }elseif ($order->Order->status == 5) {
+    $optionsStatus = array(5=>__("New","clipe"), 2=>__("Cancelled","clipe"));
+    $b_update = true;
+    $b_update_products = true;
+    $b_update_notes=true;
     /*wp_enqueue_script('moment', "//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js", array('jquery'));
     wp_enqueue_script('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js", array('jquery'));
     wp_enqueue_style('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css");*/

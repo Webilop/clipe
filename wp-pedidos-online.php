@@ -65,6 +65,7 @@ class pedidosOnline {
     $this->pages['34'] = 'delivery_days_edit.php';
     $this->pages['35'] = 'batch_product_addition.php';
     $this->pages['36'] = 'report_orders.php';
+    $this->pages['37'] = 'client_delete.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -106,7 +107,7 @@ class pedidosOnline {
    */
   public function get_status() {
     return array(
-        1 => __('Pending', 'clipe'), 2 => __('Cancelled', 'clipe'), 3 => __('In progress', 'clipe'), 4 => __('Completed', 'clipe')
+        1 => __('Pending', 'clipe'), 2 => __('Cancelled', 'clipe'), 3 => __('In progress', 'clipe'), 4 => __('Completed', 'clipe'), 5 => __('New', 'clipe')
     );
   }
 
@@ -510,18 +511,18 @@ class pedidosOnline {
    * @param $args array associative array with arguments to create the field.
    */
   public function lenguage_callback($args) {
-    $lenguages=array(array('id'=>'eng','text'=>'English'),array('id'=>'spa','text'=>'Spanish'));
+    $lenguages = array(array('id' => 'eng', 'text' => 'English'), array('id' => 'spa', 'text' => 'Spanish'));
     ?>
     <select  name="pediodosonline_option_name[<?= $args['optionName']; ?>]" required>
       <?php
       $value = isset($this->options[$args['optionName']]) ? esc_attr($this->options[$args['optionName']]) : 'spa';
-        foreach ($lenguages as $lenguage) {
-          $selected="";
-          if ($lenguage['id'] == $value) {
-            $selected='selected="selected"';
-          }
-          echo '<option value="' . $lenguage['id'] . '"  '.$selected.'>' . __($lenguage['text'],'clipe') . '</option>';
+      foreach ($lenguages as $lenguage) {
+        $selected = "";
+        if ($lenguage['id'] == $value) {
+          $selected = 'selected="selected"';
         }
+        echo '<option value="' . $lenguage['id'] . '"  ' . $selected . '>' . __($lenguage['text'], 'clipe') . '</option>';
+      }
       ?>
     </select>
     <?php
@@ -800,6 +801,20 @@ class pedidosOnline {
       $data['delivery_days'] = isset($_POST['delivery_days']) ? $_POST['delivery_days'] : array();
       $data['zone'] = $_POST['zone'];
       $result = $this->interface->request('api/clients/add.json', 'post', $data);
+      return $result;
+    }
+    return 'validate fields';
+  }
+
+  /*
+   * delete client by provider
+   */
+
+  public function delete_client($id) {
+    if (isset($id)) {
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+      $parameters = http_build_query(array('access_token' => $data['access_token']));
+      $result = $this->interface->request('/api/providers/deleteClient/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -1179,13 +1194,14 @@ class pedidosOnline {
   }
 
   public function create_order() {
-    if (isset($_POST['headquarters_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['provider_id'] = $this->get_admin_provider_id();
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_id'] = $_POST['headquarters_id'];
-      $data['date'] = $_POST['date'];
+      $data['delivery_date'] = $_POST['delivery_date'];
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
+      $data['client_notes'] = $_POST['client_notes'];
       $result = $this->interface->request('api/orders/add.json', 'post', $data);
       return $result;
     }
@@ -1208,13 +1224,16 @@ class pedidosOnline {
       $data['status'] = 2;
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
-    } elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    } elseif (isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      if ($_POST['beforeDate'] != $_POST['date']) {
-        $data['date'] = $_POST['date'];
+      if ($_POST['beforeDate'] != $_POST['delivery_date']) {
+        $data['delivery_date'] = $_POST['delivery_date'];
       }
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
+      if(isset($_POST['client_notes'])){
+        $data['client_notes'] = $_POST['client_notes'];
+      }
       if ($_GET['profile'] == 'client' && $_POST['status'] == 2) {
         $data['status'] = $_POST['status'];
       } elseif ($_GET['profile'] == 'provider') {
