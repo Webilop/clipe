@@ -386,6 +386,16 @@ class pedidosOnline {
         'optionName' => 'language'
             )
     );
+    add_settings_field(
+            'change_new_status', // ID
+            __('Change status of new orders to in progess automatically when review their details', 'clipe'), // Title
+            array($this, 'change_new_status_callback'), // Callback
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin', // Section
+            array(
+        'optionName' => 'change_new_status'
+            )
+    );
   }
 
   /**
@@ -408,6 +418,9 @@ class pedidosOnline {
 
     if (!empty($input['language']))
       $new_input['language'] = sanitize_text_field($input['language']);
+
+    if (!empty($input['change_new_status']))
+      $new_input['change_new_status'] = sanitize_text_field($input['change_new_status']);
 
     $response = $this->interface->request('api/users/login.json', 'post', array(
         'email' => $new_input['email'],
@@ -504,6 +517,18 @@ class pedidosOnline {
     $selected = !isset($this->options[$args['optionName']]) or 0 != $this->options[$args['optionName']];
     ?>
     <input value="0" name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="hidden"/>
+    <input value="1" <?php checked(1, $selected); ?> name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="checkbox"/>
+    <?php
+  }
+
+  /**
+   * Output the input for checkbox fields
+   *
+   * @param $args array associative array with arguments to create the field.
+   */
+  public function change_new_status_callback($args) {
+    $selected = isset($this->options[$args['optionName']])? $this->options[$args['optionName']] : 0;
+    ?>
     <input value="1" <?php checked(1, $selected); ?> name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="checkbox"/>
     <?php
   }
@@ -1246,6 +1271,16 @@ class pedidosOnline {
       return $result;
     }
     return (object) array('status' => 'error', 'message' => 'verify that the order has products or delivery date');
+  }
+
+  /*
+   * update to in progress.
+   */
+  public function update_new_status_order($id) {
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+      $data['status'] = 3;
+      $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
+      return $result;
   }
 
   public function get_orders($options = array()) {

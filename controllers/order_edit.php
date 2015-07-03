@@ -26,6 +26,9 @@ $b_update_products = false;
 $b_update_notes = false;
 if (in_array('provider', $user->permissions)) {
   $optionsStatus = $pedidosOnline->get_status();
+  if($order->Order->status!=5){
+    unset($optionsStatus[5]);
+  }
   $b_update = true;
   $b_update_products = true;
   $b_provider = true;
