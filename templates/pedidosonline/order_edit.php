@@ -27,7 +27,7 @@
   ?>
   <div>
     <label for="date"><?php _e('Date', 'clipe'); ?></label>
-    <input readonly="" type="date" id="date" name="date" required value="<?php echo $order->Order->delivery_date; ?>"/>
+    <input type="date" id="date" name="date" required value="<?php echo $order->Order->delivery_date; ?>"/>
     <input type="hidden" id="date" name="beforeDate" value="<?php echo $order->Order->delivery_date; ?>"/>
   </div>
   <div>

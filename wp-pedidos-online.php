@@ -74,6 +74,9 @@ class pedidosOnline {
     add_action('plugins_loaded', array($this, 'load_translations'));
 
     add_filter('template_include', array($this, 'template_function'));
+
+    // Prevent HTML title "not found" in POST with errors and 404, HTML title always be Wordpress site name
+    add_filter('wp_title', function(){ return "";});
     add_action('template_redirect', array($this, 'validAdminAccess'));
     $this->interface = new InterfacePedidos();
 
