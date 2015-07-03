@@ -9,5 +9,6 @@ $user = $pedidosOnline->get_user($userId);
 $profile=in_array( 'client',$user->permissions) ? 'client' : 'provider';
 $result = $pedidosOnline->get_orders(array('profile' => $profile, 'limit' => 5, 'order_by' => 'delivery_date', 'order_direction' => 'DESC'));
 $nextOrders = isset($result->Orders) ? $result->Orders: array();
+$status=$pedidosOnline->get_status();
 
 ?>

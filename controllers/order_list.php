@@ -9,6 +9,7 @@ if (isset($_GET['profile'])) {
 }
 
 $createOrderUrl = $pedidosOnline->get_link_page("order_create.php") . '&profile=' . $_GET['profile'];
+$status=$pedidosOnline->get_status();
 $userId = $pedidosOnline->get_user_id();
 $user = $pedidosOnline->get_user($userId);
 

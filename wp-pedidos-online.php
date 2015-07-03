@@ -88,15 +88,25 @@ class pedidosOnline {
    *
    * @return array days available.
    */
-  public function get_days(){
+  public function get_days() {
     return array(
-      'Lunes' => __('Monday', 'clipe'),
-      'Martes' => __('Tuesday', 'clipe'),
-      'Miercoles' => __('Wednesday', 'clipe'),
-      'Jueves' => __('Thursday', 'clipe'),
-      'Viernes' => __('Friday', 'clipe'),
-      'Sabado' => __('Saturday', 'clipe'),
-      'Domingo' => __('Sunday', 'clipe')
+        'Lunes' => __('Monday', 'clipe'),
+        'Martes' => __('Tuesday', 'clipe'),
+        'Miercoles' => __('Wednesday', 'clipe'),
+        'Jueves' => __('Thursday', 'clipe'),
+        'Viernes' => __('Friday', 'clipe'),
+        'Sabado' => __('Saturday', 'clipe'),
+        'Domingo' => __('Sunday', 'clipe')
+    );
+  }
+
+  /**
+   * This function returns the available status in the system.
+   * @return array days available.
+   */
+  public function get_status() {
+    return array(
+        1 => __('Pending', 'clipe'), 2 => __('Cancelled', 'clipe'), 3 => __('In progress', 'clipe'), 4 => __('Completed', 'clipe')
     );
   }
 
@@ -175,14 +185,14 @@ class pedidosOnline {
    * @return boolean true on succes, otherwise it returns false.
    */
   function load_controller($controller = null) {
-    if(empty($controller))
+    if (empty($controller))
       $controller = $this->controller;
 
     //get the path of the controller
     $controller_path = plugin_dir_path(__FILE__) . $this->pluginControllerDir . $controller;
 
     //load the controller
-    if(!empty($controller_path)){
+    if (!empty($controller_path)) {
       require_once $controller_path;
       $this->controller_vars = get_defined_vars();
       return true;
@@ -211,7 +221,6 @@ class pedidosOnline {
           wp_enqueue_style('font-awesome', plugins_url('lib/font-awesome/font-awesome.min.css', __FILE__));
           wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
           //$template_path = $this->search_template($this->pages[$key]);
-
           //load the layour of the plugin
           $template_path = $this->search_template($this->layout);
 
@@ -219,9 +228,9 @@ class pedidosOnline {
           $this->view = $value;
           $this->controller = $value;
 
-          /*echo '<pre>'; print_r($template_path); echo '</pre>';
-          echo '<pre>'; print_r($key); echo '</pre>';
-          echo '<pre>'; print_r($value); echo '</pre>';*/
+          /* echo '<pre>'; print_r($template_path); echo '</pre>';
+            echo '<pre>'; print_r($key); echo '</pre>';
+            echo '<pre>'; print_r($value); echo '</pre>'; */
           return $template_path;
         }
       }
@@ -247,17 +256,17 @@ class pedidosOnline {
    *
    * @return boolean true on success, otherwise false.
    */
-  public function load_view($view = null){
-    if(empty($view))
+  public function load_view($view = null) {
+    if (empty($view))
       $view = $this->view;
 
     //get the file path of thew view
     $view_path = $this->search_template($view);
 
     //if the file really exists
-    if(file_exists($view_path)){
+    if (file_exists($view_path)) {
       //load controller vars
-      if(!empty($this->controller_vars))
+      if (!empty($this->controller_vars))
         extract($this->controller_vars);
       require_once $view_path;
       return true;
@@ -363,6 +372,16 @@ class pedidosOnline {
         'optionName' => 'collect-stats-data'
             )
     );
+    add_settings_field(
+            'language', // ID
+            __('Language API responses', 'clipe'), // Title
+            array($this, 'lenguage_callback'), // Callback
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin', // Section
+            array(
+        'optionName' => 'language'
+            )
+    );
   }
 
   /**
@@ -382,6 +401,9 @@ class pedidosOnline {
 
     if (!empty($input['password']))
       $new_input['password'] = sanitize_text_field($input['password']);
+
+    if (!empty($input['language']))
+      $new_input['language'] = sanitize_text_field($input['language']);
 
     $response = $this->interface->request('api/users/login.json', 'post', array(
         'email' => $new_input['email'],
@@ -451,7 +473,6 @@ class pedidosOnline {
 
   public function login_page_callback() {
     ?>
-
     <select id="app_edition_page" name="pediodosonline_option_name[login_page]" required>
       <option value="">-------------------</option>
       <?php
@@ -480,6 +501,29 @@ class pedidosOnline {
     ?>
     <input value="0" name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="hidden"/>
     <input value="1" <?php checked(1, $selected); ?> name="pediodosonline_option_name[<?= $args['optionName']; ?>]" type="checkbox"/>
+    <?php
+  }
+
+  /**
+   * Output the input for checkbox fields
+   *
+   * @param $args array associative array with arguments to create the field.
+   */
+  public function lenguage_callback($args) {
+    $lenguages=array(array('id'=>'eng','text'=>'English'),array('id'=>'spa','text'=>'Spanish'));
+    ?>
+    <select  name="pediodosonline_option_name[<?= $args['optionName']; ?>]" required>
+      <?php
+      $value = isset($this->options[$args['optionName']]) ? esc_attr($this->options[$args['optionName']]) : 'spa';
+        foreach ($lenguages as $lenguage) {
+          $selected="";
+          if ($lenguage['id'] == $value) {
+            $selected='selected="selected"';
+          }
+          echo '<option value="' . $lenguage['id'] . '"  '.$selected.'>' . __($lenguage['text'],'clipe') . '</option>';
+        }
+      ?>
+    </select>
     <?php
   }
 
@@ -530,7 +574,7 @@ class pedidosOnline {
     $result = $this->interface->request('api/users/activateAccount.json', 'post', $data);
     if ($result->status == 'success') {
       $this->add_flash_message($result->message, 'success');
-    } else if('error' == $result->status) {
+    } else if ('error' == $result->status) {
       $this->add_flash_message($result->message, 'danger');
     } else {
       $this->add_flash_message($this->get_request_error_message($result->data), 'danger');
@@ -555,7 +599,7 @@ class pedidosOnline {
     $b_login = false;
     // error_log($_COOKIE[$this->cookieName]);
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $result = $this->interface->request('api/users/checkAccessToken/' . $this->interface->decrypt($_COOKIE[$this->cookieName]) . '.json');
+      $result = $this->interface->request('api/users/checkAccessToken/' . $this->interface->decrypt($_COOKIE[$this->cookieName]) . '.json?');
       if ($result->status == "success") {
         $b_login = true;
       } else {
@@ -634,7 +678,7 @@ class pedidosOnline {
       if (!isset($options['collect-stats-data']) or 0 != $options['collect-stats-data']):
         ?>
         <script type="text/javascript">
-        //load universal GA if it not loaded
+          //load universal GA if it not loaded
           if (!window.ga || !ga.create) {
             (function (i, s, o, g, r, a, m) {
               i['GoogleAnalyticsObject'] = r;
@@ -813,7 +857,7 @@ class pedidosOnline {
   public function delete_product($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $parameters = http_build_query(array('access_token'=>$data['access_token']));
+      $parameters = http_build_query(array('access_token' => $data['access_token']));
       $result = $this->interface->request('api/products/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
@@ -911,8 +955,8 @@ class pedidosOnline {
   public function delete_category($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $parameters = http_build_query(array('access_token'=>$data['access_token']));
-      $result = $this->interface->request('api/product_categories/delete/' . $id . '.json?'.$parameters, 'delete');
+      $parameters = http_build_query(array('access_token' => $data['access_token']));
+      $result = $this->interface->request('api/product_categories/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -969,11 +1013,11 @@ class pedidosOnline {
   }
 
   public function create_office() {
-    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
+    if (isset($_POST['address']) && isset($_POST['phone'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
-      $data['email'] = $_POST['email'];
+      //$data['email'] = $_POST['email'];
       $provider_id = $this->get_admin_provider_id();
       if ($provider_id != 0) {
         $data['provider_id'] = $provider_id;
@@ -990,15 +1034,15 @@ class pedidosOnline {
   public function delete_office($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $parameters = http_build_query(array('access_token'=>$data['access_token']));
-      $result = $this->interface->request('api/headquarters/delete/' . $id . '.json?'.$parameters, 'delete');
+      $parameters = http_build_query(array('access_token' => $data['access_token']));
+      $result = $this->interface->request('api/headquarters/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
     return 'validate fields';
   }
 
   public function edit_office($id) {
-    if (isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['email'])) {
+    if (isset($_POST['address']) && isset($_POST['phone'])) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
@@ -1056,6 +1100,7 @@ class pedidosOnline {
   /*
    * $b_provider filter offieces by provider
    */
+
   public function get_office($id) {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
@@ -1069,19 +1114,19 @@ class pedidosOnline {
     }
   }
 
-  /*public function get_providers_client_options($id = 0, $options = array()) {
+  /* public function get_providers_client_options($id = 0, $options = array()) {
     $providers = array(0 => array("id" => 1, "name" => 'testingwebilop->quemado'));
     $providers = json_decode(json_encode($providers), FALSE);
     $htmlProviders = "";
     foreach ($providers as $provider) {
-      $selected = "";
-      if ($id == $provider->id) {
-        $selected = 'selected';
-      }
-      $htmlProviders.='<option ' . $selected . ' value="' . $provider->id . '">' . $provider->name . '</option>';
+    $selected = "";
+    if ($id == $provider->id) {
+    $selected = 'selected';
+    }
+    $htmlProviders.='<option ' . $selected . ' value="' . $provider->id . '">' . $provider->name . '</option>';
     }
     return $htmlProviders;
-  }*/
+    } */
 
   public function get_client_products($options = array()) {
     $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
@@ -1118,12 +1163,12 @@ class pedidosOnline {
   public function get_offices_provider_options($options = array()) {
     $offices = $this->get_offices($options)->headquarters;
     $html = "";
-    $provider_id=$this->get_admin_provider_id();
+    $provider_id = $this->get_admin_provider_id();
     foreach ($offices as $office) {
       $officeAux = $this->get_office($office->Headquarters->id);
-      if(isset($officeAux->HeadquartersProvider)){
+      if (isset($officeAux->HeadquartersProvider)) {
         foreach ($officeAux->HeadquartersProvider as $HeadquartersProvider) {
-          if($HeadquartersProvider->provider_id==$provider_id){
+          if ($HeadquartersProvider->provider_id == $provider_id) {
             $html.='<option value="' . $officeAux->Headquarters->id . '">' . $officeAux->Headquarters->address . '</option>';
             break;
           }
@@ -1135,7 +1180,7 @@ class pedidosOnline {
 
   public function create_order() {
     if (isset($_POST['headquarters_id']) && isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
-      $data['provider_id']= $this->get_admin_provider_id();
+      $data['provider_id'] = $this->get_admin_provider_id();
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_id'] = $_POST['headquarters_id'];
       $data['date'] = $_POST['date'];
@@ -1150,8 +1195,8 @@ class pedidosOnline {
   public function delete_order($id) {
     if (isset($id)) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $parameters = http_build_query(array('access_token'=>$data['access_token']));
-      $result = $this->interface->request('api/orders/delete/' . $id . '.json?'.$parameters, 'delete');
+      $parameters = http_build_query(array('access_token' => $data['access_token']));
+      $result = $this->interface->request('api/orders/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
     return 'validate fields';
@@ -1160,7 +1205,7 @@ class pedidosOnline {
   public function edit_order($id, $cancel = false) {
     if ($cancel) {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $data['status'] = 'Cancelado';
+      $data['status'] = 2;
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     } elseif (isset($_POST['date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
@@ -1170,11 +1215,15 @@ class pedidosOnline {
       }
       $data['product_id'] = $_POST['product_id'];
       $data['quantity'] = $_POST['quantity'];
-      $data['status'] = $_POST['status'];
+      if ($_GET['profile'] == 'client' && $_POST['status'] == 2) {
+        $data['status'] = $_POST['status'];
+      } elseif ($_GET['profile'] == 'provider') {
+        $data['status'] = $_POST['status'];
+      }
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return (object)array('status'=>'error','message'=>'verify that the order has products or delivery date');
+    return (object) array('status' => 'error', 'message' => 'verify that the order has products or delivery date');
   }
 
   public function get_orders($options = array()) {
@@ -1274,7 +1323,12 @@ class pedidosOnline {
   }
 
   public function get_delivery_days_options() {
-    echo '<option value="">' . __('Chose one', 'clipe') . '</option>';
+    if (isset($_POST['beforeDate'])) {
+      $date = new DateTime($_POST['beforeDate']);
+      echo '<option value="' . $_POST['beforeDate'] . '">* ' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
+    } else {
+      echo '<option value="">' . __('Chose one', 'clipe') . '</option>';
+    }
     if (isset($_POST['client']) && isset($_POST['office']) && isset($_POST['profile'])) {
       $days = $this->get_delivery_days($_POST['client'], $_POST['office'], $_POST['profile']);
       $deliveryDays = array();
@@ -1391,12 +1445,12 @@ class pedidosOnline {
     ?>
     <nav>
       <ul class="pagination">
-    <?php
-    $active = isset($_GET['page']) ? $_GET['page'] : 1;
-    $numberPages = ceil($totalRows / $numberRows);
-    $previewUrl = $_SERVER['REQUEST_URI'];
-    $previewUrl = preg_replace('/&page=(\d)+/', '', $previewUrl);
-    ?>
+        <?php
+        $active = isset($_GET['page']) ? $_GET['page'] : 1;
+        $numberPages = ceil($totalRows / $numberRows);
+        $previewUrl = $_SERVER['REQUEST_URI'];
+        $previewUrl = preg_replace('/&page=(\d)+/', '', $previewUrl);
+        ?>
         <li class="<?php echo ($active == 1) ? 'disabled' : ''; ?>">
           <a href="<?php echo $previewUrl; ?>&page=<?php echo $active - 1 ?>" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
@@ -1406,9 +1460,9 @@ class pedidosOnline {
         for ($i = 1; $i <= $numberPages; $i++) {
           ?>
           <li class="<?php echo ($i == $active) ? 'active' : ''; ?>"><a href="<?php echo $previewUrl; ?>&page=<?php echo $i ?>"><?php echo $i ?></a></li>
-      <?php
-    }
-    ?>
+          <?php
+        }
+        ?>
         <li class="<?php echo ($active == $numberPages) ? 'disabled' : ''; ?>">
           <a href="<?php echo $previewUrl; ?>&page=<?php echo $active + 1 ?>" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
@@ -1418,6 +1472,7 @@ class pedidosOnline {
     </nav>
     <?php
   }
+
   /**
    * redirect if the user not have the permission.
    */
@@ -1439,10 +1494,10 @@ class pedidosOnline {
    *
    * @return string HTML code for the input.
    */
-  public function input($htmlAtts, $options = null){
+  public function input($htmlAtts, $options = null) {
     $htmlAtts = array_merge(array(
-      'type' => 'text'
-    ), $htmlAtts);
+        'type' => 'text'
+            ), $htmlAtts);
     switch ($htmlAtts['type']) {
       case 'select':
         # code...
@@ -1451,13 +1506,13 @@ class pedidosOnline {
       case 'textarea':
         # code...
         break;
-      
+
       default:
         $tag = 'input';
         # code...
         break;
     }
-    $atts = array_walk($htmlAtts, function($val, $key){
+    $atts = array_walk($htmlAtts, function($val, $key) {
       $val = $key . '="' . addslashes($val) . '"';
     });
 
@@ -1478,16 +1533,17 @@ class pedidosOnline {
    *
    * @return string error message.
    */
-  public function get_request_error_message($data){
-    if(empty($data))
+  public function get_request_error_message($data) {
+    if (empty($data))
       return false;
     $message = "<ul style='margin: 0;'>";
-    foreach($data as $field => $errors)
-      foreach($errors as $error)
+    foreach ($data as $field => $errors)
+      foreach ($errors as $error)
         $message .= "<li>$error</li>";
     $message .= "</ul>";
     return $message;
   }
+
 }
 
 global $pedidosOnline;
