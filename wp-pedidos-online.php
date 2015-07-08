@@ -1379,7 +1379,15 @@ class pedidosOnline {
     return array();
   }
 
-  public function get_delivery_days_options() {
+  public function get_delivery_days_options($beforeDate=null,$client=null,$office=null,$profile=null) {
+    //echo '----'.print_r(func_get_args());exit;
+    if(!is_null($office)){
+      //echo 'algo'.  var_dump($office);exit;
+      $_POST['beforeDate']=$beforeDate;
+      $_POST['client']=$client;
+      $_POST['office']=$office;
+      $_POST['profile']=$profile;
+    }
     if (isset($_POST['beforeDate'])) {
       $date = new DateTime($_POST['beforeDate']);
       echo '<option value="' . $_POST['beforeDate'] . '">* ' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
@@ -1431,7 +1439,9 @@ class pedidosOnline {
         }
       }
     }
-    exit;
+    if(is_null($office)){
+      exit;
+    }
   }
 
   public function edit_delivery_days($officeID) {
