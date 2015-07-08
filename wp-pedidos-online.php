@@ -172,11 +172,17 @@ class pedidosOnline {
    * search template in the theme, if not exist  get the templates in plugin.
    */
 
-  function search_template($page) {
+  function search_template($page,$theme='') {
+    $pluginDir=$this->pluginDir;
+    if(!empty($theme)){
+      if($theme=='bootstrap'){
+        $pluginDir='templates/bootstrap/';
+      }
+    }
     if ($theme_file = locate_template(array($this->themeDir . $page))) {
       $template_path = $theme_file;
     } else {
-      $template_path = plugin_dir_path(__FILE__) . $this->pluginDir . $page;
+      $template_path = plugin_dir_path(__FILE__) . $pluginDir . $page;
     }
     return $template_path;
   }
@@ -210,7 +216,9 @@ class pedidosOnline {
    */
 
   function template_function($template_path) {
+    $options = get_option('pediodosonline_option_name');
     if (isset($_SERVER['QUERY_STRING'])) {
+      $theme=isset($options['theme']) ? $options['theme'] : '';
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
       if ($page == $this->suffixPages . "logout") {
@@ -226,7 +234,7 @@ class pedidosOnline {
           wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
           //$template_path = $this->search_template($this->pages[$key]);
           //load the layour of the plugin
-          $template_path = $this->search_template($this->layout);
+          $template_path = $this->search_template($this->layout,$theme);
 
           //set the view to display
           $this->view = $value;
@@ -239,8 +247,6 @@ class pedidosOnline {
         }
       }
     }
-
-    $options = get_option('pediodosonline_option_name');
     if (isset($options['login_page']) && !empty($options['login_page'])) {
       $id = $options['login_page'];
       if (is_page($id)) {
@@ -264,8 +270,10 @@ class pedidosOnline {
     if (empty($view))
       $view = $this->view;
 
+    $options = get_option('pediodosonline_option_name');
+    $theme=isset($options['theme']) ? $options['theme'] : '';
     //get the file path of thew view
-    $view_path = $this->search_template($view);
+    $view_path = $this->search_template($view,$theme);
 
     //if the file really exists
     if (file_exists($view_path)) {
@@ -396,6 +404,16 @@ class pedidosOnline {
         'optionName' => 'change_new_status'
             )
     );
+    add_settings_field(
+            'theme', // ID
+            __('Theme Templates', 'clipe'), // Title
+            array($this, 'theme_callback'), // Callback
+            'pedidosonline-settings', // Page
+            'pediodosonline_admin', // Section
+            array(
+        'optionName' => 'theme'
+            )
+    );
   }
 
   /**
@@ -418,6 +436,9 @@ class pedidosOnline {
 
     if (!empty($input['language']))
       $new_input['language'] = sanitize_text_field($input['language']);
+
+    if (!empty($input['theme']))
+      $new_input['theme'] = sanitize_text_field($input['theme']);
 
     if (!empty($input['change_new_status']))
       $new_input['change_new_status'] = sanitize_text_field($input['change_new_status']);
@@ -533,11 +554,6 @@ class pedidosOnline {
     <?php
   }
 
-  /**
-   * Output the input for checkbox fields
-   *
-   * @param $args array associative array with arguments to create the field.
-   */
   public function lenguage_callback($args) {
     $lenguages = array(array('id' => 'eng', 'text' => 'English'), array('id' => 'spa', 'text' => 'Spanish'));
     ?>
@@ -550,6 +566,24 @@ class pedidosOnline {
           $selected = 'selected="selected"';
         }
         echo '<option value="' . $lenguage['id'] . '"  ' . $selected . '>' . __($lenguage['text'], 'clipe') . '</option>';
+      }
+      ?>
+    </select>
+    <?php
+  }
+
+  public function theme_callback($args) {
+    $themes = array('default' => 'Default', 'bootstrap' => 'Twitter Bootstrap');
+    ?>
+    <select  name="pediodosonline_option_name[<?= $args['optionName']; ?>]" required>
+      <?php
+      $value = isset($this->options[$args['optionName']]) ? esc_attr($this->options[$args['optionName']]) : 'default';
+      foreach ($themes as $key => $theme) {
+        $selected = "";
+        if ($key == $value) {
+          $selected = 'selected="selected"';
+        }
+        echo '<option value="' . $key . '"  ' . $selected . '>' . __($theme, 'clipe') . '</option>';
       }
       ?>
     </select>
