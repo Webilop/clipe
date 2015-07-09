@@ -26,7 +26,7 @@
         <div class="form-group">
           <label for="products"><?php _e('Products', 'clipe'); ?></label>
           <select class="form-control" id="products" name="products">
-            <?php echo $pedidosOnline->get_client_products_options(); ?>
+            <?php echo $products?>
           </select>
           <div>
             <a onclick="clipe_add_product('#product-table', '#products')" class="btn btn-default login-submit pull-right">

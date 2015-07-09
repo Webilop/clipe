@@ -1215,7 +1215,7 @@ class pedidosOnline {
     $data = array_merge($data, $options);
     $parameters = http_build_query($data);
     $result = $this->interface->request('api/clients/getProducts.json?' . $parameters);
-    if ($result->status == "success") {
+    if ($result->status == "success" && isset($result->data->Products)) {
       return $result->data->Products;
     } else {
       return array();
