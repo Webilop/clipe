@@ -14,7 +14,7 @@
   <div>
     <label for="products"><?php _e('Products', 'clipe'); ?></label>
     <select id="products" name="products">
-      <?php echo $pedidosOnline->get_client_products_options(); ?>
+      <?php echo $products?>
     </select>
     <a onclick="clipe_add_product('#product-table', '#products')"><i class="fa fa-plus"></i></a>
   </div>
@@ -37,7 +37,7 @@
   <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
 </div>
 
-<script type="text/javascript">//se requiere para el js 
+<script type="text/javascript">//se requiere para el js
   var products = [];
   window.onload = function () {
     document.getElementById("submit").addEventListener("click", validateProducts);
