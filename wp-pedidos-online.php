@@ -217,8 +217,9 @@ class pedidosOnline {
 
   function template_function($template_path) {
     $options = get_option('pediodosonline_option_name');
+    $theme = isset($options['theme']) ? $options['theme'] : '';
     if (isset($_SERVER['QUERY_STRING'])) {
-      $theme=isset($options['theme']) ? $options['theme'] : '';
+
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
       if ($page == $this->suffixPages . "logout") {
@@ -232,9 +233,9 @@ class pedidosOnline {
           wp_enqueue_script('clipe-functions', plugins_url('inc/js/functions.js', __FILE__), array('jquery'));
           wp_enqueue_style('font-awesome', plugins_url('lib/font-awesome/font-awesome.min.css', __FILE__));
           wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
-          //$template_path = $this->search_template($this->pages[$key]);
+
           //load the layour of the plugin
-          $template_path = $this->search_template($this->layout,$theme);
+          $template_path = $this->search_template($this->layout, $theme);
 
           //set the view to display
           $this->view = $value;
@@ -252,7 +253,7 @@ class pedidosOnline {
       if (is_page($id)) {
         wp_enqueue_script('login_js', plugins_url('templates/pedidosonline/js/login.js', __FILE__), array('jquery'));
         wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
-        $template_path = $this->search_template('login.php');
+        $template_path = $this->search_template('login.php', $theme);
       }
     }
     return $template_path;
@@ -271,9 +272,9 @@ class pedidosOnline {
       $view = $this->view;
 
     $options = get_option('pediodosonline_option_name');
-    $theme=isset($options['theme']) ? $options['theme'] : '';
+    $theme = isset($options['theme']) ? $options['theme'] : '';
     //get the file path of thew view
-    $view_path = $this->search_template($view,$theme);
+    $view_path = $this->search_template($view, $theme);
 
     //if the file really exists
     if (file_exists($view_path)) {
@@ -718,7 +719,9 @@ class pedidosOnline {
    * @param $flush boolean true if messages should be deleted.
    */
   public function display_flash_messages($flush = true) {
-    include $this->search_template('flash_messages.php');
+    $options = get_option('pediodosonline_option_name');
+    $theme = isset($options['theme']) ? $options['theme'] : '';
+    include $this->search_template('flash_messages.php', $theme);
   }
 
   /**
