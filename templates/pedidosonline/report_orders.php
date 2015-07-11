@@ -9,12 +9,9 @@
   <div>
     <label for="status"><?php _e('Status', 'clipe'); ?></label>
     <select id="status" name="status[]" multiple="">        
-      <?php
-      $status = array('Pendiente', 'Completed');
-      foreach ($status as $value) {
-        echo ' <option value="' . $value . '">' . $value . '</option>';
-      }
-      ?>
+    <?php foreach ($statusOptions as $key => $value): ?>
+      <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+    <?php endforeach; ?>
     </select>
   </div>
   <div>
