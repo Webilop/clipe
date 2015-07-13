@@ -7,14 +7,10 @@
 <form method="POST">
   <div class="row">
     <div class="col-md-6">
-      <div class="form-group">
-        <label class="required" for="address"><?php _e('Address', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="address" name="address" value="<?php echo $office->Headquarters->address;?>" required/>
-      </div>
-      <div class="form-group">
-        <label class="required" for="phone"><?php _e('Phone', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="phone" name="phone" value="<?php echo $office->Headquarters->phone;?>" required/>
-      </div>
+      <?php
+      $pedidosOnline->html->create('address',array('value'=>$office->Headquarters->address,'label_text'=>'Address','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('phone',array('value'=>$office->Headquarters->phone,'label_text'=>'Phone','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      ?>
     </div>
   </div>
   <button type="submit" class="btn btn-default pull-left login-submit" id="submit">

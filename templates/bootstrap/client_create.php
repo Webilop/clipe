@@ -6,49 +6,16 @@
 
 <div class="row">
   <form method="POST" class="col-md-6">
-    <div class="form-group">
-      <label class="required" for="name"><?php _e('Name', 'clipe'); ?></label>
-      <input class="form-control" type="name" id="name" name="name" required/>
-    </div>
-    <div class="form-group">
-      <label class="required" for="email"><?php _e('Email', 'clipe'); ?></label>
-      <input class="form-control" type="email" id="email" name="email" required/>
-    </div>
-    <div class="form-group">
-      <label class="required" for="address"><?php _e('Address', 'clipe'); ?></label>
-      <input class="form-control" type="address" id="address" name="address" required/>
-    </div>
-    <div class="form-group">
-      <label class="required" for="phone"><?php _e('Phone', 'clipe'); ?></label>
-      <input class="form-control" type="phone" id="phone" name="phone" required/>
-    </div>
-    <div class="form-group">
-      <label for="code"><?php _e('Code', 'clipe'); ?></label>
-      <input class="form-control" type="text" id="code" name="code"/>
-    </div>
-    <div class="form-group">
-      <label for="short_name"><?php _e('Short Name', 'clipe'); ?></label>
-      <input class="form-control" type="text" id="short_name" name="short_name"/>
-    </div>
-    <div class="form-group">
-      <label class="required" for="zone"><?php _e('Zone', 'clipe'); ?></label>
-      <input class="form-control" type="text" id="zone" name="zone" required=""/>
-    </div>
-    <div class="form-group">
-      <label class="required" for="delivery_days"><?php _e('Delivery Days', 'clipe'); ?></label>
-      <?php
-      foreach ($days as $key => $value) {
-        ?>
-        <div class="checkbox">
-          <label >
-          <input type="checkbox"  id="<?php echo $key ?>" name="delivery_days[]" value="<?php echo $key ?>"/>
-          <?php echo $value; ?>
-          </label>
-        </div>
-        <?php
-      }
-      ?>
-    </div>
+    <?php
+      $pedidosOnline->html->create('name',array('label_text'=>'Name','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('email',array('label_text'=>'Email','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('address',array('label_text'=>'Adress','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('phone',array('label_text'=>'Phone','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('Code',array('label_text'=>'Code','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('short_name',array('label_text'=>'Short Name','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('zone',array('label_text'=>'Zone','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('delivery_days',array('type'=>'checkbox','options'=>$days,'label_text'=>'Delivery Days','class'=>'form-control','div_class'=>'form-group','required'=>true));
+    ?>
     <button type="submit" class="btn btn-default pull-left login-submit" id="submit">
       <?php _e('Create', 'clipe'); ?>
     </button>

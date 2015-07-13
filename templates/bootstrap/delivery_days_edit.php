@@ -8,31 +8,11 @@
 <div class="row">
   <form method="POST" class="col-md-6">
     <input type="hidden" name="client_id" value="<?= $_GET['client']; ?>"/>
-    <div class="form-group">
-      <label class="required" for=""><?php echo __('Zone', 'clipe'); ?></label>
-      <input required class="form-control" type="text"  name="zone" value="<?php echo isset($zone->name) ? $zone->name : ''; ?>"/>
-    </div>
-    <div class="form-group">
-      <label for=""><?php echo __('Code', 'clipe'); ?></label>
-      <input class="form-control" type="text"  name="code" value="<?php echo $code; ?>"/>
-    </div>
-    <div class="form-group">
-      <label class="required"><?php _e('Delivery days', 'clipe'); ?></label>
-      <?php
-      foreach ($days as $key => $value) {
-        $checked = "";
-        if (in_array($key, $delivery_days)) {
-          $checked = "checked";
-        }
-        ?>
-        <div class="checkbox">
-          <label for="">
-            <input type="checkbox"  id="<?php echo $key ?>" <?php echo $checked ?> name="delivery_days[]" value="<?php echo $key ?>"/>
-            <?php echo __($value,'clipe'); ?>
-          </label>
-        </div>
-      <?php } ?>
-    </div>
+    <?php
+    $pedidosOnline->html->create('zone',array('value'=>(isset($zone->name) ? $zone->name : ''),'label_text'=>'Zone','class'=>'form-control','div_class'=>'form-group','required'=>true));
+    $pedidosOnline->html->create('Code',array('value'=>$code,'label_text'=>'Code','class'=>'form-control','div_class'=>'form-group','required'=>true));
+    $pedidosOnline->html->create('delivery_days',array('value'=>$delivery_days,'type'=>'checkbox','options'=>$days,'label_text'=>'Delivery Days','class'=>'form-control','div_class'=>'form-group','required'=>true));
+    ?>
     <button type="submit" class="btn btn-default pull-left login-submit" id="submit">
       <?php _e('Update', 'clipe'); ?>
     </button>

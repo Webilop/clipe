@@ -8,16 +8,12 @@
   <form method="POST">
     <div class="row">
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="headquarters"><?php _e('Headquarters', 'clipe'); ?></label>
-          <input type="hidden" class="form-control" readonly="" name="headquarters_id" id="headquarters_id" value="<?= $order->HeadquartersProvider->headquarter_id; ?>">
-          <input class="form-control" readonly="" name="headquarter" id="headquarters" value="<?= $order->Order->address; ?>">
-        </div>
-        <div class="form-group">
-          <label for="client_notes"><?php _e('Observations', 'clipe'); ?></label>
-          <textarea class="form-control" name="<?= $b_update_notes ? 'client_notes': '';?>" id="client_notes" <?= $b_update_notes ? '': 'readonly';?>><?= $order->Order->client_notes; ?></textarea>
-        </div>
-        <?php if($_GET['profile'] == 'provider'){ ?>
+        <input type="hidden" class="form-control" readonly="" name="headquarters_id" id="headquarters_id" value="<?= $order->HeadquartersProvider->headquarter_id; ?>">
+        <?php
+        $pedidosOnline->html->create('headquarters_id', array('value'=>$order->Order->address, 'label_text' => 'Headquarter', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false,'readonly'=>true));
+        $pedidosOnline->html->create('client_notes', array('value'=>$order->Order->client_notes,'type' => 'textarea', 'label_text' => 'Observations', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false,'readonly'=>!$b_update_notes));
+        ?>
+        <?php if ($_GET['profile'] == 'provider') { ?>
           <script type="text/javascript">
             jQuery(document).ready(function () {
               jQuery('#delivery_date').daterangepicker(
@@ -31,13 +27,14 @@
         <?php } ?>
         <div class="form-group">
           <label for="delivery_date"><?php _e('Date', 'clipe'); ?></label>
-          <?php if($_GET['profile'] == 'client' && $b_update ){ ?>
-          <select class="form-control" class="form-control client-product-select" id="delivery_date" name="delivery_date" required="">
-            <?php $pedidosOnline->get_delivery_days_options($order->Order->delivery_date,0,$order->HeadquartersProvider->headquarter_id,'client');?>
-          </select>
-          <div style="display: none" id="loading-days"><img src="<?php echo get_stylesheet_directory_uri() . '/ajax-loader.gif'; ?>"></div>
-          <?php }else{ ?>
-            <input class="form-control" readonly="" type="date" id="delivery_date" name="delivery_date" required value="<?php echo $order->Order->delivery_date; ?>"/>
+          <?php if ($_GET['profile'] == 'client' && $b_update) {
+            ?>
+            <select class="form-control" class="form-control client-product-select" id="delivery_date" name="delivery_date" required="">
+              <?php $pedidosOnline->get_delivery_days_options($order->Order->delivery_date, 0, $order->HeadquartersProvider->headquarter_id, 'client'); ?>
+            </select>
+            <div style="display: none" id="loading-days"><img src="<?php echo get_stylesheet_directory_uri() . '/ajax-loader.gif'; ?>"></div>
+          <?php } else { ?>
+            <input class="form-control" readonly="" type="date" id="delivery_date" name="delivery_date" required value="<?php echo isset($_POST['delivery_date']) ? $_POST['delivery_date'] : $order->Order->delivery_date; ?>"/>
           <?php } ?>
           <input type="hidden" id="beforeDate" name="beforeDate" value="<?php echo $order->Order->delivery_date; ?>"/>
         </div>
@@ -59,17 +56,10 @@
             <input class="form-control" readonly="" type="text" id="status" name="status" required value="<?php echo $order->Order->status; ?>"/>
           <?php } ?>
         </div>
+          <?php
+        $pedidosOnline->html->create('products', array('options' => $products, 'type' => 'select', 'label_text' => 'Products', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+        ?>
         <div class="form-group">
-          <label for="products"><?php _e('Products', 'clipe'); ?></label>
-          <select class="form-control" id="products" name="products">
-            <?php
-            if ($b_provider) {//provider consult
-              echo$pedidosOnline->get_client_products_options(array('headquarter_id' => $order->HeadquartersProvider->headquarter_id));
-            } else {//client consult
-              echo$pedidosOnline->get_client_products_options();
-            }
-            ?>
-          </select>
           <?php if ($b_update_products) { ?>
             <div>
               <a onclick="clipe_add_product('#product-table', '#products')" class="btn btn-default login-submit pull-right">
@@ -96,41 +86,65 @@
               <?php
               $productsJS = "[";
               $b_firts = true;
-              foreach ($order->Product as $product) {
-                if ($b_firts) {
-                  $productsJS.="$product->id";
-                  $b_firts = false;
-                } else {
-                  $productsJS.=",$product->id";
+              if (isset($_POST['product_id'])) {
+                $quantities = $_POST['quantity'];
+                foreach ($_POST['product_id'] as $key => $product) {
+                  if ($b_firts) {
+                    $productsJS.=$product;
+                    $b_firts = false;
+                  } else {
+                    $productsJS.=",$product";
+                  }
+                  ?>
+                  <tr>
+                    <td><?php echo $products[$product];
+              ?><input type="hidden" value="<?php echo $product; ?>" name="product_id[]"/></td>
+                    <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]"></td>
+                    <td class="actions">
+                      <a onclick="clipe_remove_product(this,<?php echo $product; ?>);"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                  </tr>
+                  <?php
                 }
-                ?>
-                <tr>
-                  <td><?php echo $product->name;
-              echo (!$product->active) ? '<span class="error">' . __('this product is no longer available and is automatically deleted when the order is updated', 'clipe') . '</span>' : ''; ?><input type="hidden" value="<?php echo $product->id; ?>" <?php if ($product->active) { ?>name="product_id[]"<?php } ?>/></td>
-                  <td class="quantity"><input class="form-control quantity-input" value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" <?php if ($product->active) { ?>name="quantity[]"<?php } ?>
-                    <?php
-                    if (!$b_update_products) {
-                      echo "readonly";
-                    }
-                    ?>></td>
-                  <td class="actions">
-                    <?php if ($b_update_products) { ?>
-                      <a onclick="clipe_remove_product(this,<?php echo $product->id; ?>);"><i class="fa fa-trash-o"></i></a>
-  <?php } ?>
-                  </td>
-                </tr>
-                <?php
+                $productsJS.="]";
+              } else {
+                foreach ($order->Product as $product) {
+                  if ($b_firts) {
+                    $productsJS.="$product->id";
+                    $b_firts = false;
+                  } else {
+                    $productsJS.=",$product->id";
+                  }
+                  ?>
+                  <tr>
+                    <td><?php echo $product->name;
+              echo (!$product->active) ? '<span class="error">' . __('this product is no longer available and is automatically deleted when the order is updated', 'clipe') . '</span>' : '';
+              ?><input type="hidden" value="<?php echo $product->id; ?>" <?php if ($product->active) { ?>name="product_id[]"<?php } ?>/></td>
+                    <td class="quantity"><input class="form-control quantity-input" value="<?php echo $product->OrdersProduct->quantity; ?>" type="number" <?php if ($product->active) { ?>name="quantity[]"<?php } ?>
+                      <?php
+                      if (!$b_update_products) {
+                        echo "readonly";
+                      }
+                      ?>></td>
+                    <td class="actions">
+                      <?php if ($b_update_products) { ?>
+                        <a onclick="clipe_remove_product(this,<?php echo $product->id; ?>);"><i class="fa fa-trash-o"></i></a>
+                      <?php } ?>
+                    </td>
+                  </tr>
+                  <?php
+                }
               }
               $productsJS.="]";
               ?>
             </tbody>
           </table>
         </div>
-          <?php if ($b_update): ?>
+        <?php if ($b_update): ?>
           <button class="btn btn-default pull-left login-submit" id="submit">
-          <?php _e('Update', 'clipe'); ?>
+            <?php _e('Update', 'clipe'); ?>
           </button>
-<?php endif; ?>
+        <?php endif; ?>
       </div>
     </div>
   </form>
@@ -143,15 +157,14 @@
   function validateProducts() {
     if (products.length == 0) {
       document.getElementById("products").setCustomValidity('<?php echo __('Requires at least one product', 'clipe') ?>');
-    }else{
+    } else {
       document.getElementById("products").setCustomValidity('');
     }
   }
-  }
 </script>
 <style type="text/css">
-.error{
-  color: red;
-  padding-left: 5px;
-}
+  .error{
+    color: red;
+    padding-left: 5px;
+  }
 </style>
