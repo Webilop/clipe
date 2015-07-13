@@ -219,7 +219,8 @@ class pedidosOnline {
     $options = get_option('pediodosonline_option_name');
     $theme = isset($options['theme']) ? $options['theme'] : '';
     if (isset($_SERVER['QUERY_STRING'])) {
-
+      $theme=isset($options['theme']) ? $options['theme'] : '';
+      $clipeStylesURL = 'bootstrap' == $theme ? 'templates/bootstrap/css/styles.css' : 'templates/pedidosonline/css/styles.css';
       $array = explode("&", $_SERVER['QUERY_STRING']);
       $page = $array[0]; //page always firts.
       if ($page == $this->suffixPages . "logout") {
@@ -232,8 +233,7 @@ class pedidosOnline {
         if ($page == $this->suffixPages . $key) {
           wp_enqueue_script('clipe-functions', plugins_url('inc/js/functions.js', __FILE__), array('jquery'));
           wp_enqueue_style('font-awesome', plugins_url('lib/font-awesome/font-awesome.min.css', __FILE__));
-          wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
-
+          wp_enqueue_style('clipe_css', plugins_url($clipeStylesURL, __FILE__));
           //load the layour of the plugin
           $template_path = $this->search_template($this->layout, $theme);
 
@@ -252,7 +252,7 @@ class pedidosOnline {
       $id = $options['login_page'];
       if (is_page($id)) {
         wp_enqueue_script('login_js', plugins_url('templates/pedidosonline/js/login.js', __FILE__), array('jquery'));
-        wp_enqueue_style('clipe_css', plugins_url('templates/pedidosonline/css/styles.css', __FILE__));
+        wp_enqueue_style('clipe_css', plugins_url($clipeStylesURL, __FILE__));
         $template_path = $this->search_template('login.php', $theme);
       }
     }
@@ -1522,15 +1522,17 @@ class pedidosOnline {
         $message = $result->message;
         $status = "error";
       } else {
-        $orders = $result->data->Orders;
-        if (!empty($orders)) {
+        if (!empty($result->data->Orders)) {
+          $orders = $result->data->Orders;
           foreach ($orders as $order) {
-            $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['sedes'][$order->Headquarters->id] = $order->Headquarters->address;
+            $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['sedes'][$order->Headquarters->id] = $order->Headquarters->code ? $order->Headquarters->code : $order->Headquarters->address;
             foreach ($order->OrdersProduct as $product) {
               if (isset($data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id]['sedes'][$order->Headquarters->id])) {
-                $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id]['sedes'][$order->Headquarters->id]+=$product->quantity;
-              } else {
+                $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id]['sedes'][$order->Headquarters->id] += $product->quantity;
+              } elseif(!isset($data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id])) {
                 $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id] = array('name' => $product->name, 'sedes' => array($order->Headquarters->id => $product->quantity));
+              } else{
+                $data[$order->Order->delivery_date][$order->Headquarters->client_id][$order->Headquarters->zone]['products'][$product->product_id]['sedes'][$order->Headquarters->id] = $product->quantity;
               }
             }
           }
