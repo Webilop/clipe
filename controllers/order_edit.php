@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
   }
 }
-
 $order = $pedidosOnline->get_order($_GET['id']);
 $userId = $pedidosOnline->get_user_id();
 $user = $pedidosOnline->get_user($userId);
@@ -51,7 +50,11 @@ if (in_array('provider', $user->permissions)) {
     wp_enqueue_style('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css");*/
   }
 }
-
+if ($b_provider) {//provider consult
+  $products=$pedidosOnline->get_client_products_options(array('headquarter_id' => $order->HeadquartersProvider->headquarter_id));
+} else {//client consult
+  $products=$pedidosOnline->get_client_products_options();
+}
 if ($_GET['profile'] == 'provider') {
   wp_enqueue_script('moment', "//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js", array('jquery'));
   wp_enqueue_script('daterangepicker', "//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js", array('jquery'));

@@ -7,42 +7,21 @@
 <form method="POST">
   <div class="row">
     <div class="col-md-6">
-      <div class="form-group">
-        <label for="name"><?php _e('Name', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="name" name="name" required value="<?php echo $product->Product->name; ?>"/>
-      </div>
-      <div class="form-group">
-        <label for="measure_type"><?php _e('Measure Type', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="measure_type" name="measure_type" required value="<?php echo $product->Product->measure_type; ?>"/>
-      </div>
+      <?php
+      $pedidosOnline->html->create('name',array('label_text'=>'Name','class'=>'form-control','div_class'=>'form-group','required'=>true,'value'=>$product->Product->name));
+      $pedidosOnline->html->create('measure_type',array('label_text'=>'Measure Type','class'=>'form-control','div_class'=>'form-group','required'=>true,'value'=>$product->Product->measure_type));
+      ?>
       <div class="form-group">
         <div class="row">
           <div class="col-md-6">
-            <label for="category_id"><?php _e('Category', 'clipe'); ?></label>
-            <select class="form-control" id="category_id" name="category_id" >
-              <option value="">----------</option>
-              <?php echo $pedidosOnline->get_categories_options($product->ProductCategory->id); ?>
-            </select>
+            <?php $pedidosOnline->html->create('category_id',array('type'=>'select','options'=>$categories,'value'=>$product->ProductCategory->id,'label_text'=>'Category','class'=>'form-control','div_class'=>'form-group','options_empty'=>true));   ?>
           </div>
           <div class="col-md-6">
-            <label for="category_name"><?php _e('For New Category', 'clipe'); ?></label>
-            <input class="form-control" type="text" id="category_name" name="category_name" value=""/>
+            <?php $pedidosOnline->html->create('category_name',array('label_text'=>'New Category','class'=>'form-control','div_class'=>'form-group')); ?>
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <?php
-        $clients = array();
-        foreach ($product->Client as $client) {
-          $clients[] = $client->id;
-        }
-        ?>
-        <label for="client_id"><?php _e('Clients', 'clipe'); ?></label>
-        <select class="form-control" id="client_id" name="client_id[]" multiple>
-          <option value=""><?php _e('None', 'clipe'); ?></option>
-          <?php echo $pedidosOnline->get_clients_options($clients); ?>
-        </select>
-      </div>
+      <?php $pedidosOnline->html->create('client_id',array('multiple'=>true,'type'=>'select','options'=>$clients,'value'=>$selectedClients,'label_text'=>'Clients','class'=>'form-control','div_class'=>'form-group'));   ?>
       <button class="btn btn-default pull-left login-submit" id="submit">
         <?php _e('Update', 'clipe'); ?>
       </button>
@@ -50,7 +29,7 @@
   </div>
 </form>
 
-<script type="text/javascript">//se requiere para el js 
+<script type="text/javascript">//se requiere para el js
   window.onload = function () {
     document.getElementById("submit").addEventListener("click", validateCategory);
     document.getElementById("category_name").addEventListener("change", validateCategory);

@@ -8,44 +8,21 @@
   <div class="row">
     <div class="col-md-6">
       <input type="hidden" name="provider_id" value="<?php echo $user->Provider->id; ?>"/>
-      <div class="form-group">
-        <label class="required" for="email"><?php _e('Email', 'clipe'); ?></label>
-        <input class="form-control" type="email" id="mail" name="email" required type="email" value="<?php echo $user->User->email; ?>"/>
-      </div>
-      <div class="form-group">
-        <label for="password"><?php _e('Password', 'clipe'); ?></label>
-        <input class="form-control" type="password" id="password" name="password" />
-      </div>
-      <div class="form-group">
-        <label for="confirm_password"><?php _e('Confirm Password', 'clipe'); ?></label>
-        <input class="form-control" type="password" id="confirm_password" name="confirm_password"/>
-      </div>
-      <div class="form-group">
-        <label for="current_password"><?php _e('Current Password', 'clipe'); ?></label>
-        <input class="form-control" type="password" id="current_password" name="current_password"/>
-      </div>
+      <?php
+      $pedidosOnline->html->create('email',array('value'=>$user->User->email,'label_text'=>'Email','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('password', array('type' => 'password', 'label_text' => 'Password', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      $pedidosOnline->html->create('confirm_password', array('type' => 'password', 'label_text' => 'Confirm Password', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      $pedidosOnline->html->create('current_password', array('type' => 'password', 'label_text' => 'Current Password', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      ?>
     </div>
     <div class="col-md-6">
-      <div class="form-group">
-        <label for="first_name"><?php _e('First Name', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="first_name" name="first_name" value="<?php echo $user->User->first_name; ?>"/>
-      </div>
-      <div class="form-group">
-        <label for="last_name"><?php _e('Last Name', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="last_name" name="last_name" value="<?php echo $user->User->last_name; ?>"/>
-      </div>
-      <div class="form-group">
-        <label for="name"><?php _e('Business Name', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="name" name="name" value="<?php echo $user->Provider->name; ?>"/>
-      </div>
-      <div class="form-group">
-        <label for="address"><?php _e('Address', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="address" name="address" value="<?php echo $user->Provider->address; ?>"/>
-      </div>
-      <div class="form-group">
-        <label for="phone"><?php _e('Phone', 'clipe'); ?></label>
-        <input class="form-control" type="text" id="phone" name="phone" value="<?php echo $user->Provider->phone; ?>"/>
-      </div>
+      <?php
+      $pedidosOnline->html->create('first_name', array('value'=>$user->User->first_name,'label_text' => 'First Name', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      $pedidosOnline->html->create('last_name', array('value'=>$user->User->last_name,'label_text' => 'Last Name', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      $pedidosOnline->html->create('name', array('value'=>$user->Provider->name,'label_text' => 'Business Name', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      $pedidosOnline->html->create('address', array('value'=>$user->Provider->address,'label_text' => 'Address', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      $pedidosOnline->html->create('phone', array('value'=>$user->Provider->phone,'label_text' => 'Phone', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
+      ?>
     </div>
   </div>
   <div class="row">

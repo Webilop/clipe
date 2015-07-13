@@ -9,10 +9,12 @@
  * License: GPL2
  */
 include_once("InterfacePedidos.php");
+include_once("ClipeHtml.php");
 
 class pedidosOnline {
 
   private $interface = null;
+  public  $html = null;
   private $publish_pages;
   private $pages = array();
   private $suffixPages = "clipe=";
@@ -79,6 +81,7 @@ class pedidosOnline {
     add_filter('wp_title', function(){ return "";});
     add_action('template_redirect', array($this, 'validAdminAccess'));
     $this->interface = new InterfacePedidos();
+    $this->html = new ClipeHtml();
 
     //init session
     if (!session_id()) {
@@ -772,17 +775,14 @@ class pedidosOnline {
    * $previusClients array of ids.
    */
 
-  public function get_clients_options($previusClients = array(), $options = array()) {
+  public function get_clients_options($options = array()) {
     $clients = $this->get_clients($options)->clients;
     $html = "";
+    $options=array();
     foreach ($clients as $client) {
-      $selected = "";
-      if (in_array($client->Client->id, $previusClients)) {
-        $selected = 'selected';
-      }
-      $html.='<option ' . $selected . ' value="' . $client->Client->id . '">' . $client->Client->name . '</option>';
+      $options[$client->Client->id]=$client->Client->name;
     }
-    return $html;
+    return $options;
   }
 
   /*
@@ -1082,14 +1082,11 @@ class pedidosOnline {
   public function get_categories_options($id = 0, $options = array()) {
     $categories = $this->get_categories($options)->productCategories;
     $htmlCategories = "";
+    $options=array();
     foreach ($categories as $category) {
-      $selected = "";
-      if ($id == $category->ProductCategory->id) {
-        $selected = "selected";
-      }
-      $htmlCategories.='<option ' . $selected . ' value="' . $category->ProductCategory->id . '">' . $category->ProductCategory->name . '</option>';
+      $options[$category->ProductCategory->id]=$category->ProductCategory->name;
     }
-    return $htmlCategories;
+    return $options;
   }
 
   public function create_office() {
@@ -1233,33 +1230,34 @@ class pedidosOnline {
     } else {
       $products = $this->get_client_products($options);
     }
-    $html = "";
+    $options=array();
     foreach ($products as $product) {
-      $html.='<option value="' . $product->Product->id . '">' . $product->Product->name . '</option>';
+      $options[$product->Product->id]=$product->Product->name;
     }
-    return $html;
+    return $options;
   }
 
   public function get_offices_provider_options($options = array()) {
     $offices = $this->get_offices($options)->headquarters;
     $html = "";
     $provider_id = $this->get_admin_provider_id();
+    $options=array();
     foreach ($offices as $office) {
       $officeAux = $this->get_office($office->Headquarters->id);
       if (isset($officeAux->HeadquartersProvider)) {
         foreach ($officeAux->HeadquartersProvider as $HeadquartersProvider) {
           if ($HeadquartersProvider->provider_id == $provider_id) {
-            $html.='<option value="' . $officeAux->Headquarters->id . '">' . $officeAux->Headquarters->address . '</option>';
+            $options[$officeAux->Headquarters->id]=$officeAux->Headquarters->address;
             break;
           }
         }
       }
     }
-    return $html;
+    return $options;
   }
 
   public function create_order() {
-    if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    //if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['provider_id'] = $this->get_admin_provider_id();
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_id'] = $_POST['headquarters_id'];
@@ -1269,8 +1267,8 @@ class pedidosOnline {
       $data['client_notes'] = $_POST['client_notes'];
       $result = $this->interface->request('api/orders/add.json', 'post', $data);
       return $result;
-    }
-    return __('Order couldn\'t be created. Please verify fields', 'clipe');
+    //}
+    //return __('Order couldn\'t be created. Please verify fields', 'clipe');
   }
 
   public function delete_order($id) {
@@ -1303,6 +1301,9 @@ class pedidosOnline {
         $data['status'] = $_POST['status'];
       } elseif ($_GET['profile'] == 'provider') {
         $data['status'] = $_POST['status'];
+        if(isset($_POST['client_notes'])){
+          unset($data['client_notes']);
+        }
       }
       $result = $this->interface->request('api/orders/edit/' . $id . '.json', 'post', $data);
       return $result;
@@ -1427,7 +1428,7 @@ class pedidosOnline {
     }
     if (isset($_POST['beforeDate'])) {
       $date = new DateTime($_POST['beforeDate']);
-      echo '<option value="' . $_POST['beforeDate'] . '">* ' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
+      echo '<option value="' . $_POST['beforeDate'] . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
     } else {
       echo '<option value="">' . __('Chose one', 'clipe') . '</option>';
     }
@@ -1466,7 +1467,14 @@ class pedidosOnline {
           $date->add(new DateInterval('P1D'));
           if (in_array($date->format('l'), $deliveryDays)) {
             $i++;
-            echo '<option value="' . $date->format('Y-m-d') . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
+            //$selected="";
+            if(isset($_POST['beforeDate'])){
+              if($date->format('Y-m-d')==$_POST['beforeDate']){
+                continue;
+                //$selected="selected";
+              }
+            }
+            echo '<option '.$selected.' value="' . $date->format('Y-m-d') . '">' . $date->format('Y-m-d ') . __($date->format('l'), 'clipe') . '</option>';
           }
         }
         //show a option selected

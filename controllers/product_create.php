@@ -2,6 +2,9 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $pedidosOnline->validatePermission('provider');
+//global $clients;
+$clients=$pedidosOnline->get_clients_options();
+$categories=$pedidosOnline->get_categories_options();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->create_product();
   $type = in_array($result->status, array('error', 'fail')) ? 'danger' : 'success';

@@ -6,10 +6,7 @@
 <h1><?php _e('Edit Category', 'clipe'); ?></h1>
 <div class="row">
   <form method="POST" class="col-xs-6">
-    <div>
-      <label class="required" for="name"><?php _e('Name', 'clipe'); ?></label>
-      <input class="form-control" type="name" id="name" name="name" required value="<?php echo $category->name;?>"/>
-    </div>
+    <?php $pedidosOnline->html->create('name',array('label_text'=>'Name','class'=>'form-control','div_class'=>'form-group','required'=>true,'value'=>$category->name)); ?>
     <button type="submit" class="btn btn-default pull-left login-submit" id="submit">
       <?php _e('Update', 'clipe'); ?>
     </button>

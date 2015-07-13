@@ -6,6 +6,7 @@ $pedidosOnline->is_login(true);
 //redirect if not client
 $pedidosOnline->validatePermission('client');
 $products = $pedidosOnline->get_client_products_options();
+$headquarters=$pedidosOnline->get_offices_provider_options();
 if (empty($products)) {
   $pedidosOnline->add_flash_message(__('You can not create orders because the provider did not assign you products.','clipe'), 'danger');
   wp_redirect($pedidosOnline->get_link_page('index.php') . '&profile=' . $_GET['profile']);
