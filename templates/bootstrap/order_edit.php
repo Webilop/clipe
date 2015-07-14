@@ -106,7 +106,6 @@
                   </tr>
                   <?php
                 }
-                $productsJS.="]";
               } else {
                 foreach ($order->Product as $product) {
                   if ($b_firts) {

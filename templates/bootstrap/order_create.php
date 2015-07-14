@@ -44,35 +44,35 @@
             <tbody>
               <?php
               $productsJS = "[";
-              if(isset($_POST['product_id'])){
+              if (isset($_POST['product_id'])) {
                 $b_firts = true;
-                $quantities=$_POST['quantity'];
-              foreach ($_POST['product_id'] as $key => $product) {
-                if ($b_firts) {
-                  $productsJS.=$product;
-                  $b_firts = false;
-                } else {
-                  $productsJS.=",$product";
-                }
-                ?>
-                <tr>
-                  <td><?php echo $products[$product];
-                ?><input type="hidden" value="<?php echo $product; ?>" name="product_id[]"/></td>
-                  <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]"></td>
-                  <td class="actions">
+                $quantities = $_POST['quantity'];
+                foreach ($_POST['product_id'] as $key => $product) {
+                  if ($b_firts) {
+                    $productsJS.=$product;
+                    $b_firts = false;
+                  } else {
+                    $productsJS.=",$product";
+                  }
+                  ?>
+                  <tr>
+                    <td><?php echo $products[$product];
+                  ?><input type="hidden" value="<?php echo $product; ?>" name="product_id[]"/></td>
+                    <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]"></td>
+                    <td class="actions">
                       <a onclick="clipe_remove_product(this,<?php echo $product; ?>);"><i class="fa fa-trash-o"></i></a>
-                  </td>
-                </tr>
-                <?php
+                    </td>
+                  </tr>
+                  <?php
+                }
               }
               $productsJS.="]";
-              }
               ?>
             </tbody>
           </table>
         </div>
         <button class="btn btn-default pull-left login-submit" id="submit">
-<?php _e('Create', 'clipe'); ?>
+          <?php _e('Create', 'clipe'); ?>
         </button>
       </div>
     </div>
@@ -81,12 +81,12 @@
 <script type="text/javascript">//se requiere para el js
   var products = <?php echo $productsJS; ?>;
   var beforeDate = '<?php
-if (isset($_POST['delivery_date'])) {
-  echo $_POST['delivery_date'];
-} else {
-  echo '';
-}
-?>';
+          if (isset($_POST['delivery_date'])) {
+            echo $_POST['delivery_date'];
+          } else {
+            echo '';
+          }
+          ?>';
   window.onload = function () {
     document.getElementById("submit").addEventListener("click", validateProducts);
     document.getElementById("headquarters_id").addEventListener("change", deletePostBeforegetDeliveryDay);
