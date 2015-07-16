@@ -1,5 +1,6 @@
 <div class="order-edition">
   <div class="clipe-links pull-right">
+
     <a title="<?= __('Order List', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('order_list.php') . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-list"></i></a>
     <a title="<?= __('Dashboard', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
     <a title="<?= __('Logout', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
@@ -44,49 +45,53 @@
             <tbody>
               <?php
               $productsJS = "[";
-              if(isset($_POST['product_id'])){
+              if (isset($_POST['product_id'])) {
                 $b_firts = true;
-                $quantities=$_POST['quantity'];
-              foreach ($_POST['product_id'] as $key => $product) {
-                if ($b_firts) {
-                  $productsJS.=$product;
-                  $b_firts = false;
-                } else {
-                  $productsJS.=",$product";
-                }
-                ?>
-                <tr>
-                  <td><?php echo $products[$product];
-                ?><input type="hidden" value="<?php echo $product; ?>" name="product_id[]"/></td>
-                  <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]"></td>
-                  <td class="actions">
+                $quantities = $_POST['quantity'];
+                foreach ($_POST['product_id'] as $key => $product) {
+                  if ($b_firts) {
+                    $productsJS.=$product;
+                    $b_firts = false;
+                  } else {
+                    $productsJS.=",$product";
+                  }
+                  ?>
+                  <tr>
+                    <td><?php echo $products[$product];
+                  ?><input type="hidden" value="<?php echo $product; ?>" name="product_id[]"/></td>
+                    <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]"></td>
+                    <td class="actions">
                       <a onclick="clipe_remove_product(this,<?php echo $product; ?>);"><i class="fa fa-trash-o"></i></a>
-                  </td>
-                </tr>
-                <?php
+                    </td>
+                  </tr>
+                  <?php
+                }
               }
               $productsJS.="]";
-              }
               ?>
             </tbody>
           </table>
         </div>
         <button class="btn btn-default pull-left login-submit" id="submit">
-<?php _e('Create', 'clipe'); ?>
+          <?php _e('Create', 'clipe'); ?>
         </button>
+        <a class="btn btn-default login-submit pull-left" onclick="loadPreviousOrder();">
+          <?php _e('Load previous order', 'clipe'); ?>
+        </a>
       </div>
     </div>
   </form>
 </div>
 <script type="text/javascript">//se requiere para el js
   var products = <?php echo $productsJS; ?>;
+  var listPoduct = jQuery.parseJSON('<?php echo json_encode($products) ?>');
   var beforeDate = '<?php
-if (isset($_POST['delivery_date'])) {
-  echo $_POST['delivery_date'];
-} else {
-  echo '';
-}
-?>';
+          if (isset($_POST['delivery_date'])) {
+            echo $_POST['delivery_date'];
+          } else {
+            echo '';
+          }
+          ?>';
   window.onload = function () {
     document.getElementById("submit").addEventListener("click", validateProducts);
     document.getElementById("headquarters_id").addEventListener("change", deletePostBeforegetDeliveryDay);
@@ -126,9 +131,56 @@ if (isset($_POST['delivery_date'])) {
     });
   }
 
+  function loadPreviousOrder() {
+    var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+    var formData = new FormData();
+    formData.append('action', 'clipe_load_previous_order');
+
+    jQuery.ajax({
+      type: 'POST',
+      url: ajaxurl,
+      contentType: false,
+      processData: false,
+      data: formData,
+      dataType: 'json',
+      beforeSend: function () {
+        jQuery("#loading-days").show();
+      },
+      success: function (response) {
+        jQuery("#loading-days").hide();
+        if (response.status == 'success') {
+          previusProducts = response.data.Product;
+          previusProducts.length;
+          products = [];
+          jQuery("#product-table > tbody").html("");
+          for (i = 0; i < previusProducts.length; i++) {
+            productName = listPoduct[previusProducts[i].id];
+            if (undefined !== productName) {
+              if (previusProducts[i].OrdersProduct.name != productName) {
+                productName += '(<?php echo __('Before', 'clipe'); ?>: ' + previusProducts[i].OrdersProduct.name + ')';
+              }
+            } else {
+              continue;
+            }
+            products.push(previusProducts[i].id);
+            row = '<tr>'
+                    + '<td>' + productName
+                    + '<input type="hidden" value="' + previusProducts[i].id + '" name="product_id[]"/></td>'
+                    + '<td class="quantity"><input class="form-control quantity-input" value="' + previusProducts[i].OrdersProduct.quantity + '" type="number" name="quantity[]"></td>'
+                    + '<td class="actions">'
+                    + '<a onclick="clipe_remove_product(this,' + previusProducts[i].id + ');"><i class="fa fa-trash-o"></i></a>'
+                    + '</td>'
+                    + '</tr>';
+            jQuery("#product-table > tbody").append(row);
+          }
+        }
+      },
+      error: function (ajaxContext) {
+        console.error('<?php echo __('Error loading last order', 'clipe'); ?>')
+      }
+    });
+  }
   function validateProducts() {
-    console.log(products);
-    console.log(products.length);
     if (products.length == 0) {
       document.getElementById("products").setCustomValidity('<?php echo __('Requires at least one product', 'clipe') ?>');
     } else {

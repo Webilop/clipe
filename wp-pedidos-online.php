@@ -1417,6 +1417,18 @@ class pedidosOnline {
     return array();
   }
 
+  public function get_load_previous_order(){
+    $provider=$this->get_admin_provider_id();
+    if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
+      $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
+      $data['provider_id']=$provider;
+      $parameters = http_build_query($data);
+      $result = $this->interface->request('api/orders/getLast.json?' . $parameters);
+      echo json_encode($result);
+    }
+    exit;
+  }
+
   public function get_delivery_days_options($beforeDate=null,$client=null,$office=null,$profile=null) {
     //echo '----'.print_r(func_get_args());exit;
     if(!is_null($office)){
@@ -1665,5 +1677,8 @@ $pedidosOnline = new pedidosOnline();
 
 add_action('wp_ajax_nopriv_clipe_delivery_days_options', array($pedidosOnline, 'get_delivery_days_options'));
 add_action('wp_ajax_clipe_delivery_days_options', array($pedidosOnline, 'get_delivery_days_options'));
+
+add_action('wp_ajax_nopriv_clipe_load_previous_order', array($pedidosOnline, 'get_load_previous_order'));
+add_action('wp_ajax_clipe_load_previous_order', array($pedidosOnline, 'get_load_previous_order'));
 
 
