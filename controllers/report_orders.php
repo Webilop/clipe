@@ -2,7 +2,7 @@
 global $pedidosOnline;
 $pedidosOnline->is_login(true);
 $pedidosOnline->validatePermission('provider');
-
+$clients=$pedidosOnline->get_clients_options();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->report_orders();
   $objClients = $pedidosOnline->get_clients();
