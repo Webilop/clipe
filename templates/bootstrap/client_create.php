@@ -12,7 +12,7 @@
       $pedidosOnline->html->create('address',array('label_text'=>'Adress','class'=>'form-control','div_class'=>'form-group','required'=>true));
       $pedidosOnline->html->create('phone',array('label_text'=>'Phone','class'=>'form-control','div_class'=>'form-group','required'=>true));
       $pedidosOnline->html->create('Code',array('label_text'=>'Code','class'=>'form-control','div_class'=>'form-group','required'=>true));
-      $pedidosOnline->html->create('short_name',array('label_text'=>'Short Name','class'=>'form-control','div_class'=>'form-group','required'=>true));
+      $pedidosOnline->html->create('short_name',array('label_text'=>'Short Name Office','class'=>'form-control','div_class'=>'form-group','required'=>true));
       $pedidosOnline->html->create('zone',array('label_text'=>'Zone','class'=>'form-control','div_class'=>'form-group','required'=>true));
       $pedidosOnline->html->create('delivery_days',array('type'=>'checkbox','options'=>$days,'label_text'=>'Delivery Days','class'=>'form-control','div_class'=>'form-group','required'=>true));
     ?>
