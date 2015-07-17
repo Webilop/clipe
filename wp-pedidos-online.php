@@ -22,7 +22,7 @@ class pedidosOnline {
   private $pluginDir = "templates/pedidosonline/";
   private $pluginControllerDir = "controllers/";
   private $cookieName = "wp_clipe";
-  private $gaTrackingCode = 'UA-63078862-3'; //-2 is production, -3 is dev
+  private $gaTrackingCode = null; //-2 is production, -3 is dev
   private $flashMessageSession = "clipeFlashMessages";
   public $days; //array of delivery days with traduction.
   public $layout = "clipe-layout.php";
@@ -30,6 +30,8 @@ class pedidosOnline {
   public $controller;
 
   public function pedidosOnline() {
+    $gaVar = getenv('clipe_analytics');
+    $this->gaTrackingCode  = !is_null($gaVar)? $gaVar : 'UA-63078862-2';
     //pages of plugin with respective template.
     $this->pages['1'] = 'index.php'; //index
     $this->pages['2'] = 'recovery_password.php';
