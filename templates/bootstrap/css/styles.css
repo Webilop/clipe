@@ -69,3 +69,8 @@
 .table-report tr td:nth-child(1){
   text-align: left;
 }
+
+.remove-readonly[readonly]{
+  background-color: white !important; 
+  cursor: auto !important;
+}

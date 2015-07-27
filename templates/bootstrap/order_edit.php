@@ -34,7 +34,7 @@
             </select>
             <div style="display: none" id="loading-days"><img src="<?php echo get_stylesheet_directory_uri() . '/ajax-loader.gif'; ?>"></div>
           <?php } else { ?>
-            <input class="form-control" readonly="" type="date" id="delivery_date" name="delivery_date" required value="<?php echo isset($_POST['delivery_date']) ? $_POST['delivery_date'] : $order->Order->delivery_date; ?>"/>
+            <input class="form-control remove-readonly" readonly="" type="date" id="delivery_date" name="delivery_date" required value="<?php echo isset($_POST['delivery_date']) ? $_POST['delivery_date'] : $order->Order->delivery_date; ?>"/>
           <?php } ?>
           <input type="hidden" id="beforeDate" name="beforeDate" value="<?php echo $order->Order->delivery_date; ?>"/>
         </div>
