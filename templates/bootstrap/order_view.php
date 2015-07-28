@@ -1,6 +1,7 @@
 <div class="clipe-links pull-right">
-  <a href="<?php echo $pedidosOnline->get_link_page('order_list.php') . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-arrow-left"></i></a>
-  <a href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
+  <a title="<?echo __('Dashboard', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a> 
+  <a title="<?echo __('List', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('order_list.php') . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-list"></i></a> 
+  <a title="<?echo __('Edit', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('order_edit.php') .'&id=' . $order->Order->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-pencil-square-o"></i></a> 
   <a href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
 </div>
 <h1><?php _e('Order', 'clipe'); ?></h1>
