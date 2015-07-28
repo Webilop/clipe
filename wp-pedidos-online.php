@@ -33,43 +33,43 @@ class pedidosOnline {
     $gaVar = getenv('clipe_analytics');
     $this->gaTrackingCode  = !is_null($gaVar)? $gaVar : 'UA-63078862-2';
     //pages of plugin with respective template.
-    $this->pages['1'] = 'index.php'; //index
-    $this->pages['2'] = 'recovery_password.php';
-    $this->pages['3'] = 'client_list.php';
-    $this->pages['4'] = 'client_create.php';
-    $this->pages['5'] = 'client_view.php';
-    $this->pages['6'] = 'provider_list.php';
-    $this->pages['7'] = 'product_list.php';
-    $this->pages['8'] = 'product_edit.php';
-    $this->pages['9'] = 'product_view.php';
-    $this->pages['10'] = 'product_delete.php';
-    $this->pages['11'] = 'product_create.php';
-    $this->pages['12'] = 'reports.php';
-    $this->pages['13'] = 'provider_edit.php';
-    $this->pages['14'] = 'category_create.php';
-    $this->pages['15'] = 'category_edit.php';
-    $this->pages['16'] = 'category_list.php';
-    $this->pages['17'] = 'category_view.php';
-    $this->pages['18'] = 'category_delete.php';
-    $this->pages['19'] = 'client_edit.php';
-    $this->pages['20'] = 'office_edit.php';
-    $this->pages['21'] = 'office_list.php';
-    $this->pages['22'] = 'office_view.php';
-    $this->pages['23'] = 'office_delete.php';
-    $this->pages['24'] = 'office_create.php';
-    $this->pages['25'] = 'order_edit.php';
-    $this->pages['26'] = 'order_list.php';
-    $this->pages['27'] = 'order_view.php';
-    $this->pages['28'] = 'order_delete.php';
-    $this->pages['29'] = 'order_create.php';
-    $this->pages['30'] = 'config_error.php';
-    $this->pages['31'] = 'order_cancel.php';
-    $this->pages['32'] = 'batch_client_addition.php';
-    $this->pages['33'] = 'validate_user.php';
-    $this->pages['34'] = 'delivery_days_edit.php';
-    $this->pages['35'] = 'batch_product_addition.php';
-    $this->pages['36'] = 'report_orders.php';
-    $this->pages['37'] = 'client_delete.php';
+    $this->pages['index'] = 'index.php'; //index
+    $this->pages['recovery_password'] = 'recovery_password.php';
+    $this->pages['client_list'] = 'client_list.php';
+    $this->pages['client_create'] = 'client_create.php';
+    $this->pages['client_view'] = 'client_view.php';
+    $this->pages['provider_list'] = 'provider_list.php';
+    $this->pages['product_list'] = 'product_list.php';
+    $this->pages['product_edit'] = 'product_edit.php';
+    $this->pages['product_view'] = 'product_view.php';
+    $this->pages['product_delete'] = 'product_delete.php';
+    $this->pages['product_create'] = 'product_create.php';
+    $this->pages['reports'] = 'reports.php';
+    $this->pages['provider_edit'] = 'provider_edit.php';
+    $this->pages['category_create'] = 'category_create.php';
+    $this->pages['category_edit'] = 'category_edit.php';
+    $this->pages['category_list'] = 'category_list.php';
+    $this->pages['category_view'] = 'category_view.php';
+    $this->pages['category_delete'] = 'category_delete.php';
+    $this->pages['client_edit'] = 'client_edit.php';
+    $this->pages['office_edit'] = 'office_edit.php';
+    $this->pages['office_list'] = 'office_list.php';
+    $this->pages['office_view'] = 'office_view.php';
+    $this->pages['office_delete'] = 'office_delete.php';
+    $this->pages['office_create'] = 'office_create.php';
+    $this->pages['order_edit'] = 'order_edit.php';
+    $this->pages['order_list'] = 'order_list.php';
+    $this->pages['order_view'] = 'order_view.php';
+    $this->pages['order_delete'] = 'order_delete.php';
+    $this->pages['order_create'] = 'order_create.php';
+    $this->pages['config_error'] = 'config_error.php';
+    $this->pages['order_cancel'] = 'order_cancel.php';
+    $this->pages['batch_client_addition'] = 'batch_client_addition.php';
+    $this->pages['validate_user'] = 'validate_user.php';
+    $this->pages['delivery_days_edit'] = 'delivery_days_edit.php';
+    $this->pages['batch_product_addition'] = 'batch_product_addition.php';
+    $this->pages['report_orders'] = 'report_orders.php';
+    $this->pages['client_delete'] = 'client_delete.php';
     add_action('admin_menu', array($this, 'add_plugin_page'));
     add_action('admin_init', array($this, 'page_init'));
     add_action('widgets_init', array($this, 'create_clipe_sidebar'));
@@ -1566,7 +1566,7 @@ class pedidosOnline {
       }
       return array('status' => $status, 'message' => $message, 'data' => $data);
     }
-    return 'validate fields';
+    return array('status' => "error", 'message' => __('Please select at least one client and a date', 'clipe'), 'data' => array());
   }
 
   public function print_pagination($totalRows, $numberRows = 10) {

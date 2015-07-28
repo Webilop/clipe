@@ -2,25 +2,9 @@
 <form method="POST">
   <div class="row">
     <div class="col-md-6">
-      <div class="form-group">
-        <label for="client_id"><?php _e('Client', 'clipe'); ?></label>
-        <select id="client_id" name="client_id[]" required="" multiple="" class="form-control">
-          <?php echo $pedidosOnline->get_clients_options(); ?>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="status"><?php _e('Status', 'clipe'); ?></label>
-        <select id="status" name="status[]" multiple="" class="form-control">
-          <?php foreach ($statusOptions as $key => $value): ?>
-            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-          <?php endforeach; ?>
-          ?>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="dates"><?php _e('Date Range', 'clipe'); ?></label>
-        <input type="text" name="dates" id="dates" value="" required class="form-control" />
-      </div>
+      <?php $pedidosOnline->html->create('client_id',array('multiple'=>true,'type'=>'select','options'=>$clients,'label_text'=>'Client','class'=>'form-control','div_class'=>'form-group','required'=>true));   ?>
+      <?php $pedidosOnline->html->create('status',array('multiple'=>true,'type'=>'select','options'=>$statusOptions,'label_text'=>'Status','class'=>'form-control','div_class'=>'form-group'));   ?>
+      <?php $pedidosOnline->html->create('dates',array('label_text'=>'Date Range','class'=>'form-control','div_class'=>'form-group','required'=>true)); ?>
     </div>
   </div>
 
@@ -59,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($reports)) {
           foreach ($zones as $zoneName => $zonesData): ?>
             <h4><? printf("%s - %s", $clientNames[$clientID], $zoneName); ?></h4>
             <div class="table-responsive">
-              <table class="table table-bordered table-hover table-condensed table-report">  
+              <table class="table table-bordered table-hover table-condensed table-report">
                 <thead>
                   <tr>
                     <th class="product">
@@ -86,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($reports)) {
                     <?php endforeach; ?>
                     <td><?= $totalProductQuantity; ?></td>
                   </tr>
-                  <?php endforeach; ?>              
+                  <?php endforeach; ?>
                 </tbody>
               </table>
             </div>

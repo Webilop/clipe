@@ -23,7 +23,7 @@ class ClipeHtml {
     $mergeOptions = array_replace_recursive($defaultOptions, $options);
     echo '<div class="' . $mergeOptions['div_class'] . '">';
     if ($mergeOptions['label']) {
-      echo '<label ' . ($options['required'] ? 'class="required"' : '') . ' for="' . $name . '">' . __($mergeOptions['label_text'], 'clipe') . '</label>';
+      echo '<label ' . ($mergeOptions['required'] ? 'class="required"' : '') . ' for="' . $name . '">' . __($mergeOptions['label_text'], 'clipe') . '</label>';
     }
     switch ($mergeOptions['type']) {
       case 'text':
