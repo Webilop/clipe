@@ -22,16 +22,26 @@
   transition: all 0.2s ease 0s;
 }
 
-.clipe-container table{
+.clipe-container .clipe-table{
   border: #000000 solid 1px;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-.clipe-container th{
+.clipe-container .clipe-table th{
   border: #000000 solid 1px;
 }
 
-.clipe-container td{
+.clipe-container .clipe-table td{
   border: #000000 solid 1px;
+}
+
+.clipe-flash-messages{
+  margin-top: 10px;
+}
+
+.clipe-container .checkbox input{
+  width: auto;
+  height: auto;
+  margin-top: 0;
 }
