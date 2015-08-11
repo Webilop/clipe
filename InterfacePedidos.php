@@ -9,6 +9,7 @@ class InterfacePedidos {
   public function InterfacePedidos() {
     $apiVar = getenv('clipe_url_api');
     $this->server = !is_null($apiVar)? $apiVar : 'https://app.clipe.co/';
+    //$this->server = 'http://dev.webilop.com/pedidos-online/';
   }
 
   /**

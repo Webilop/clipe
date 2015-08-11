@@ -4,7 +4,7 @@
 </div>
 <h1><?php _e('Orders', 'clipe'); ?>
   <?php if (in_array('client', $user->permissions)): ?>
-    <a title="<?= __('Add Order', 'clipe'); ?>" href="<?= $createOrderUrl; ?>"><i class="fa fa-plus"></i></a>
+    <a title="<?= __('New', 'clipe'); ?>" href="<?= $createOrderUrl; ?>"><i class="fa fa-plus"></i></a>
   <?php endif; ?>
 </h1>
 <?php if (empty($orders)): ?>
@@ -39,9 +39,6 @@
             <input type="hidden" id='id' value="<?php echo $order->Order->id ?>" />
             <a title="<?= __('View', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("order_view.php") . '&id=' . $order->Order->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-eye"></i></a>
             <a title="<?= __('Edit', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("order_edit.php") . '&id=' . $order->Order->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-pencil-square-o"></i></a>
-            <?php if ($_GET['profile'] == 'client') { ?>
-              <a title="<?= __('Cancel', 'clipe'); ?>" class="cancel" href="<?php echo $pedidosOnline->get_link_page("order_cancel.php") . '&id=' . $order->Order->id . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-times"></i></a>
-            <?php } ?>
           </td>
         </tr>
         <?php

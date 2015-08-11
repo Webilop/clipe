@@ -73,9 +73,6 @@
           <input type="hidden" id='id' value="<?php echo $order->Order->id ?>" />
           <a title="<?= __('View', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("order_view.php") . '&id=' . $order->Order->id . '&profile=' . $profile; ?>"><i class="fa fa-eye"></i></a>
           <a title="<?= __('Edit', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page("order_edit.php") . '&id=' . $order->Order->id . '&profile=' . $profile; ?>"><i class="fa fa-pencil-square-o"></i></a>
-          <?php if ($profile == 'client') { ?>
-            <a title="<?= __('Cancel', 'clipe'); ?>" class="cancel" href="<?php echo $pedidosOnline->get_link_page("order_cancel.php") . '&id=' . $order->Order->id . '&profile=' . $profile; ?>"><i class="fa fa-times"></i></a>
-          <?php } ?>
         </td>
       </tr>
       <?php endforeach; ?>
