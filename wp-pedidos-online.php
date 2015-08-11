@@ -149,9 +149,9 @@ class pedidosOnline {
       $page = $array[0]; //page always firts.
       $pos = strpos($page, $this->suffixPages);
       $pageNumber = substr($page, $pos);
-      if ($pos && isset($this->pages[$pageNumber]) && $pageNumber != 30) {
+      if ($pos && isset($this->pages[$pageNumber]) && $pageNumber != 'config_error') {
         if (!$validAccess) {
-          wp_redirect(site_url() . '?' . $this->suffixPages . 30);
+          wp_redirect(site_url() . '?' . $this->suffixPages . 'config_error');
           die();
         }
       }
@@ -161,7 +161,7 @@ class pedidosOnline {
       $id = $options['login_page'];
       if (is_page($id)) {
         if (!$validAccess) {
-          wp_redirect(site_url() . '?' . $this->suffixPages . 30);
+          wp_redirect(site_url() . '?' . $this->suffixPages . 'config_error');
           die();
         }
       }
