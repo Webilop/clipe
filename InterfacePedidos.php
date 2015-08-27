@@ -5,11 +5,14 @@ class InterfacePedidos {
   private $server = null;
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
+  private $debug = false;
 
   public function InterfacePedidos() {
     $apiVar = getenv('clipe_url_api');
     $this->server = !is_null($apiVar)? $apiVar : 'https://app.clipe.co/';
-    //$this->server = 'http://dev.webilop.com/pedidos-online/';
+    if (false) {
+      $this->server = 'YOUR LOCAL API';
+    }
   }
 
   /**
@@ -66,10 +69,12 @@ class InterfacePedidos {
    */
 
   public function request($request, $type = "get", $data = array()) {
-    /*echo '<br>post: <br>';
-    print_r($data);
-    echo "<br> request:" . $this->server . "$request <br> type:$type <br>";*/
-    //echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
+    if ($this->debug) {
+      echo '<br>post: <br>';
+      print_r($data);
+      echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
+      //echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
+    }
     $ch = curl_init();
     $options = get_option('pediodosonline_option_name');
     if(!isset($options['language']) || empty($options['language'])){
@@ -109,8 +114,10 @@ class InterfacePedidos {
       echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
       exit;
     }
-   //echo "<br> status request: $status ";
-   //echo "<br> json: $json_response <br>";
+    if ($this->debug) {
+      echo "<br> status request: $status ";
+      echo "<br> json: $json_response <br>";
+    }
     return $response;
   }
 
