@@ -818,9 +818,15 @@ class pedidosOnline {
       if ($result->status == 'fail') {
         $resultAux = array('status' => $result->status, 'message' => $result->message);
         $resultAux['errors'] = array();
-        foreach ($result->data as $objError) {
-          //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
-          $resultAux['errors'][] = sprintf(__('The client %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
+        foreach ($result->data as $client_name => $objError) {
+          $error_field = get_object_vars($objError);
+          $error_text = '';
+          if (is_string(current(current($error_field)))) {
+            $error_text = current(current($error_field));
+          } else {
+            $error_text = current($error_field);
+          }
+          $resultAux['errors'][][] = sprintf(__('The client %s could not be created by %s', 'clipe'), $client_name, $error_text);
         }
       } else {
         $resultAux = array('status' => $result->status, 'message' => $result->data->message);
@@ -844,9 +850,15 @@ class pedidosOnline {
       if ($result->status == 'fail') {
         $resultAux = array('status' => $result->status, 'message' => $result->message);
         $resultAux['errors'] = array();
-        foreach ($result->data as $objError) {
-          //$resultAux['errors'][] = array('field' => $objError->field, 'error' => $objError->error->{0}->{0});
-          $resultAux['errors'][] = sprintf(__('The Product %s could not be created by %s', 'cilpe'), $objError->field, $objError->error->{0}->{0});
+        foreach ($result->data as $product_name => $objError) {
+          $error_field = get_object_vars($objError);
+          $error_text = '';
+          if (is_string(current(current($error_field)))) {
+            $error_text = current(current($error_field));
+          } else {
+            $error_text = current($error_field);
+          }
+          $resultAux['errors'][][] = sprintf(__('The Product %s could not be created by %s', 'clipe'), $product_name, $error_text);
         }
       } else {
         $resultAux = array('status' => $result->status, 'message' => $result->data->message);
