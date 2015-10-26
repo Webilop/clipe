@@ -6,12 +6,14 @@ class InterfacePedidos {
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
   private $debug = false;
+  private $debugFirePHP = false;
 
   public function InterfacePedidos() {
     $apiVar = getenv('clipe_url_api');
+    $apiVar = 'http://clipe-api/';
     $this->server = !is_null($apiVar)? $apiVar : 'https://app.clipe.co/';
-    if (false) {
-      $this->server = 'YOUR LOCAL API';
+    if ( $this->debug || $this->debugFirePHP ) {
+      $this->server = 'http://clipe-api/';
     }
   }
 
@@ -43,13 +45,12 @@ class InterfacePedidos {
    */
 
   public function login($username = "", $password = "", $onlyCheck = false) {
-    /*//echo "$username-$password";
     if (empty($username) || empty($password)) {
       //login for the admin
       $this->options = get_option('pediodosonline_option_name');
       $username = $this->options['email'];
       $password = $this->options['password'];
-    }*/
+    }
     if ($onlyCheck) {
       $result = $this->request('api/users/login.json', 'post', array('email' => $username, 'password' => $password, 'only_check' => "true"));
     }
@@ -69,12 +70,19 @@ class InterfacePedidos {
    */
 
   public function request($request, $type = "get", $data = array()) {
+
     if ($this->debug) {
       echo '<br>post: <br>';
       print_r($data);
       echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
       //echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
     }
+    if ( $this->debugFirePHP) {
+      FB::log($type, 'Request ');
+      FB::log($this->server . $request, 'Server: ');
+      FB::log($data, 'Data: ');
+    }
+
     $ch = curl_init();
     $options = get_option('pediodosonline_option_name');
     if(!isset($options['language']) || empty($options['language'])){
@@ -104,8 +112,6 @@ class InterfacePedidos {
     $json_response = curl_exec($ch);
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
 
-
-
     curl_close($ch);
     // get a json file and this is decode and after iterated with this
     $response = json_decode($json_response);
@@ -117,6 +123,11 @@ class InterfacePedidos {
     if ($this->debug) {
       echo "<br> status request: $status ";
       echo "<br> json: $json_response <br>";
+    }
+    if ( $this->debugFirePHP ) {
+      FB::log($status, 'status');
+      FB::log($json_response, 'json_response');
+      FB::log($json_response, 'json_response');
     }
     return $response;
   }
@@ -148,5 +159,3 @@ class InterfacePedidos {
   }
 
 }
-
-?>
