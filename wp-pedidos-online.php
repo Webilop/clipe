@@ -814,9 +814,17 @@ class pedidosOnline {
       $contenido = base64_encode($contenido);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['file'] = $contenido;
+
       $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
+
       if ($result->status == 'fail') {
-        $resultAux = array('status' => $result->status, 'message' => $result->message);
+        $resultAux = array('status' => $result->status);
+        if ( isset( $result->data->message ) && !empty( $result->data->message ) ) {
+          $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+        }
+        if ( isset( $result->message ) && !empty( $result->message ) ) {
+          $resultAux = array('status' => $result->status, 'message' => $result->message);
+        }
         $resultAux['errors'] = array();
         foreach ($result->data as $client_name => $objError) {
           $error_field = get_object_vars($objError);
@@ -829,7 +837,13 @@ class pedidosOnline {
           $resultAux['errors'][][] = sprintf(__('The client %s could not be created by %s', 'clipe'), $client_name, $error_text);
         }
       } else {
-        $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+        $resultAux = array();
+        if ( isset( $result->data->message ) ) {
+          $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+        }
+        if ( isset( $result->message ) ) {
+          $resultAux = array('status' => $result->status, 'message' => $result->message);
+        }
       }
       return json_decode(json_encode($resultAux));
     }
@@ -1694,5 +1708,3 @@ add_action('wp_ajax_clipe_delivery_days_options', array($pedidosOnline, 'get_del
 
 add_action('wp_ajax_nopriv_clipe_load_previous_order', array($pedidosOnline, 'get_load_previous_order'));
 add_action('wp_ajax_clipe_load_previous_order', array($pedidosOnline, 'get_load_previous_order'));
-
-
