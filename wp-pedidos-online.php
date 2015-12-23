@@ -875,7 +875,13 @@ class pedidosOnline {
           $resultAux['errors'][][] = sprintf(__('The Product %s could not be created by %s', 'clipe'), $product_name, $error_text);
         }
       } else {
-        $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+        $resultAux = array();
+        if ( isset( $result->data->message ) ) {
+          $resultAux = array('status' => $result->status, 'message' => $result->data->message);
+        }
+        if ( isset( $result->message ) ) {
+          $resultAux = array('status' => $result->status, 'message' => $result->message);
+        }
       }
       return json_decode(json_encode($resultAux));
     }
