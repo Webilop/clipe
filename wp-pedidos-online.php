@@ -1606,16 +1606,20 @@ class pedidosOnline {
     <nav>
       <ul class="pagination">
         <?php
-        $active = isset($_GET['page']) ? $_GET['page'] : 1;
-        $numberPages = ceil($totalRows / $numberRows);
+        $active = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        $numberPages = intval(ceil($totalRows / $numberRows));
         $previewUrl = $_SERVER['REQUEST_URI'];
         $previewUrl = preg_replace('/&page=(\d)+/', '', $previewUrl);
         ?>
-        <li class="<?php echo ($active == 1) ? 'disabled' : ''; ?>">
-          <a href="<?php echo $previewUrl; ?>&page=<?php echo $active - 1 ?>" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
+        <?php if($active === 1): ?>
+          <li class="disabled"><span >&laquo;</span></li>
+        <?php else: ?>
+          <li>
+            <a href="<?= $previewUrl; ?>&page=<?= $active - 1 ?>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        <?php endif; ?>
         <?php
         for ($i = 1; $i <= $numberPages; $i++) {
           ?>
@@ -1623,11 +1627,15 @@ class pedidosOnline {
           <?php
         }
         ?>
-        <li class="<?php echo ($active == $numberPages) ? 'disabled' : ''; ?>">
-          <a href="<?php echo $previewUrl; ?>&page=<?php echo $active + 1 ?>" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
+        <?php if($active === $numberPages): ?>
+          <li class="disabled"><span >&raquo;</span></li>
+        <?php else: ?>
+          <li>
+            <a href="<?= $previewUrl; ?>&page=<?= $active + 1 ?>" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        <?php endif; ?>
       </ul>
     </nav>
     <?php
