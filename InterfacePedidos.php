@@ -6,7 +6,7 @@ class InterfacePedidos {
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
   private $debug = false;
-  private $debugFirePHP = false;
+  private $debugFirePHP = true;
 
   public function InterfacePedidos() {
     $apiVar = getenv('clipe_url_api');
@@ -113,12 +113,6 @@ class InterfacePedidos {
 
     curl_close($ch);
     // get a json file and this is decode and after iterated with this
-    $response = json_decode($json_response);
-    if($status==302){
-      echo "<h1>".__("An error 302 has occurred in the service of clipe, please try later or contact with admistrador service.","clipe")."</h1>";
-      echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
-      exit;
-    }
     if ($this->debug) {
       echo "<br> status request: $status ";
       echo "<br> json: $json_response <br>";
@@ -128,6 +122,13 @@ class InterfacePedidos {
       FB::log($json_response, 'json_response');
       FB::log($json_response, 'json_response');
     }
+    $response = json_decode($json_response);
+    if($status==302){
+      echo "<h1>".__("An error 302 has occurred in the service of clipe, please try later or contact with admistrador service.","clipe")."</h1>";
+      echo "<br> request:" . $this->server . "$request <br> type:$type <br>";
+      exit;
+    }
+
     return $response;
   }
 

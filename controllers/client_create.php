@@ -10,6 +10,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   else
     $pedidosOnline->add_flash_message($result->message, $type);
 }
-
 $days = $pedidosOnline->get_days();
-?>
