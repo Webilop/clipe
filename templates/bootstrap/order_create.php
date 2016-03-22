@@ -59,7 +59,7 @@
                   <tr>
                     <td><?php echo $products[$product];
                   ?><input type="hidden" value="<?php echo $product; ?>" name="product_id[]"/></td>
-                    <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]"></td>
+                    <td class="quantity"><input class="form-control quantity-input" value="<?php echo $quantities[$key]; ?>" type="number" name="quantity[]" min="1"  pattern=".{1,}" required ></td>
                     <td class="actions">
                       <a onclick="clipe_remove_product(this,<?php echo $product; ?>);"><i class="fa fa-trash-o"></i></a>
                     </td>

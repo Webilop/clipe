@@ -1359,7 +1359,7 @@ class pedidosOnline {
   }
 
   public function create_order() {
-    //if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['provider_id'] = $this->get_admin_provider_id();
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_id'] = $_POST['headquarters_id'];
@@ -1369,8 +1369,11 @@ class pedidosOnline {
       $data['client_notes'] = $_POST['client_notes'];
       $result = $this->interface->request('api/orders/add.json', 'post', $data);
       return $result;
-    //}
-    //return __('Order couldn\'t be created. Please verify fields', 'clipe');
+    }
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = __('Order couldn\'t be created. Please verify fields', 'clipe');
+    return $result;
   }
 
   public function delete_order($id) {
@@ -1774,9 +1777,13 @@ class pedidosOnline {
     if (empty($data))
       return false;
     $message = "<ul style='margin: 0;'>";
-    foreach ($data as $field => $errors)
-      foreach ($errors as $error)
-        $message .= "<li>$error</li>";
+    foreach ($data as $field => $errors) {
+      foreach ($errors as $error) {
+        if (is_string($error)){
+          $message .= "<li>$error</li>";
+        }
+      }
+    }
     $message .= "</ul>";
     return $message;
   }

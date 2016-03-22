@@ -6,7 +6,7 @@ class InterfacePedidos {
   private $cookieName = "wp_clipe";
   private $ivOption="wp_clipe_iv";
   private $debug = false;
-  private $debugFirePHP = true;
+  private $debugFirePHP = false;
 
   public function InterfacePedidos() {
     $apiVar = getenv('clipe_url_api');
