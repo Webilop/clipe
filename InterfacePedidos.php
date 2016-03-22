@@ -10,10 +10,7 @@ class InterfacePedidos {
 
   public function InterfacePedidos() {
     $apiVar = getenv('clipe_url_api');
-    $this->server = !is_null($apiVar)? $apiVar : 'https://app.clipe.co/';
-    if ( $this->debug || $this->debugFirePHP ) {
-      $this->server = 'http://clipe-api/';
-    }
+    $this->server = $apiVar === false ? 'https://app.clipe.co/' : $apiVar;
   }
 
   /**

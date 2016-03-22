@@ -1,444 +1,740 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Clipe 0.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-17 09:06-0500\n"
+"POT-Creation-Date: 2016-03-22 12:08-0500\n"
 "PO-Revision-Date: 2015-06-17 09:06-0500\n"
 "Last-Translator: Carlos Guzman <carlos.guzman@webilop.com>\n"
 "Language-Team: Webilop <support@webilop.com>\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_x;_e;_n\n"
-"X-Poedit-Basepath: ../\n"
+"X-Poedit-Basepath: ..\n"
 "Plural-Forms: s,es\n"
-"X-Poedit-Language: Spanish\n"
-"X-Poedit-Country: Spain\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.8.7\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: wp-pedidos-online.php:93
-msgid "Monday"
-msgstr ""
-
-#: wp-pedidos-online.php:94
-msgid "Tuesday"
-msgstr ""
-
-#: wp-pedidos-online.php:95
-msgid "Wednesday"
-msgstr ""
-
-#: wp-pedidos-online.php:96
-msgid "Thursday"
-msgstr ""
-
-#: wp-pedidos-online.php:97
-msgid "Friday"
-msgstr ""
-
-#: wp-pedidos-online.php:98
-msgid "Saturday"
-msgstr ""
-
-#: wp-pedidos-online.php:99
-msgid "Sunday"
-msgstr ""
-
-#: wp-pedidos-online.php:279
-msgid "Clipe Access"
-msgstr ""
-
-#: wp-pedidos-online.php:279
-msgid "Clipe"
-msgstr ""
-
-#: wp-pedidos-online.php:288
-msgid "Settings"
-msgstr ""
-
-#: wp-pedidos-online.php:337
-msgid "Login Page"
-msgstr ""
-
-#: wp-pedidos-online.php:344
-#: templates/pedidosonline/office_create.php:12
-#: templates/pedidosonline/client_view.php:9
-#: templates/pedidosonline/office_view.php:12
-#: templates/pedidosonline/login.php:24
-msgid "Email"
-msgstr ""
-
-#: wp-pedidos-online.php:351
-#: templates/pedidosonline/login.php:28
-msgid "Password"
-msgstr ""
-
-#: wp-pedidos-online.php:358
-msgid "Allow collection of statistic data in Clipe"
-msgstr ""
-
-#: wp-pedidos-online.php:435
-#: wp-pedidos-online.php:981
-msgid "There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress"
-msgstr ""
-
-#: wp-pedidos-online.php:489
-msgid "Clipe Sidebar"
-msgstr ""
-
-#: wp-pedidos-online.php:623
-msgid "Are you sure?"
-msgstr ""
-
-#: wp-pedidos-online.php:624
-msgid "Are you sure you want to cancel the order?"
-msgstr ""
-
-#: wp-pedidos-online.php:709
-#, php-format
-msgid "The client %s could not be created by %s"
-msgstr ""
-
-#: wp-pedidos-online.php:735
-#, php-format
-msgid "The Product %s could not be created by %s"
-msgstr ""
-
-#: wp-pedidos-online.php:1145
-msgid "Order couldn't be created. Please verify fields"
-msgstr ""
-
-#: wp-pedidos-online.php:1275
-msgid "Chose one"
-msgstr ""
-
-#: wp-pedidos-online.php:1379
-msgid "Not Results"
-msgstr ""
-
-#: wp-pedidos-online.php:1426
-msgid "The user does not have permission to access this page"
-msgstr ""
-
-#: InterfacePedidos.php:101
+#: InterfacePedidos.php:127
 msgid "An error 302 has occurred in the service of clipe, please try later or contact with admistrador service."
 msgstr ""
 
-#: templates/pedidosonline/order_create.php:1
-msgid "Create Order"
+#: controllers/order_create.php:11
+msgid "You can not create orders because the provider did not assign you products."
 msgstr ""
 
-#: templates/pedidosonline/order_create.php:4
-#: templates/pedidosonline/order_edit.php:4
-msgid "Offices "
+#: controllers/order_edit.php:36 wp-pedidos-online.php:118
+msgid "Pending"
 msgstr ""
 
-#: templates/pedidosonline/order_create.php:10
-#: templates/pedidosonline/order_edit.php:29
-msgid "Date"
+#: controllers/order_edit.php:36 controllers/order_edit.php:44
+#: wp-pedidos-online.php:118
+msgid "Cancelled"
 msgstr ""
 
+#: controllers/order_edit.php:44 templates/bootstrap/order_list.php:7
+#: wp-pedidos-online.php:118
+msgid "New"
+msgstr ""
+
+#: controllers/order_view.php:14
+msgid "The order status is now “In progress”, according to the admin configuration."
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:2
+#: templates/bootstrap/batch_product_addition.php:2
+#: templates/bootstrap/category_edit.php:2
+#: templates/bootstrap/category_list.php:2
+#: templates/bootstrap/category_view.php:2
+#: templates/bootstrap/client_create.php:2
+#: templates/bootstrap/client_edit.php:2 templates/bootstrap/client_list.php:2
+#: templates/bootstrap/client_view.php:2
+#: templates/bootstrap/delivery_days_edit.php:3 templates/bootstrap/index.php:4
+#: templates/bootstrap/office_create.php:2
+#: templates/bootstrap/office_edit.php:2 templates/bootstrap/office_list.php:2
+#: templates/bootstrap/office_view.php:2 templates/bootstrap/order_create.php:4
+#: templates/bootstrap/order_edit.php:3 templates/bootstrap/order_list.php:2
+#: templates/bootstrap/order_view.php:2
+#: templates/bootstrap/product_create.php:2
+#: templates/bootstrap/product_edit.php:2
+#: templates/bootstrap/product_list.php:2
+#: templates/bootstrap/product_view.php:2
+#: templates/bootstrap/provider_edit.php:2
+msgid "Dashboard"
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:3
+#: templates/bootstrap/batch_product_addition.php:3
+#: templates/bootstrap/category_edit.php:4
+#: templates/bootstrap/category_list.php:4
+#: templates/bootstrap/category_view.php:5
+#: templates/bootstrap/client_create.php:4
+#: templates/bootstrap/client_edit.php:3 templates/bootstrap/client_list.php:3
+#: templates/bootstrap/client_view.php:4
+#: templates/bootstrap/delivery_days_edit.php:4 templates/bootstrap/index.php:2
+#: templates/bootstrap/office_create.php:3
+#: templates/bootstrap/office_edit.php:4 templates/bootstrap/office_list.php:3
+#: templates/bootstrap/office_view.php:7 templates/bootstrap/order_create.php:6
+#: templates/bootstrap/order_edit.php:5 templates/bootstrap/order_list.php:3
+#: templates/bootstrap/product_create.php:4
+#: templates/bootstrap/product_edit.php:4
+#: templates/bootstrap/product_list.php:4
+#: templates/bootstrap/product_view.php:5
+#: templates/bootstrap/provider_edit.php:3 templates/pedidosonline/index.php:4
+msgid "Logout"
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:5
+#: templates/pedidosonline/batch_client_addition.php:1
+msgid "Batch Client Addition"
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:8
+#: templates/bootstrap/batch_product_addition.php:8
+#: templates/pedidosonline/batch_client_addition.php:4
+#: templates/pedidosonline/batch_product_addition.php:4
+msgid "File"
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:8
+#: templates/bootstrap/batch_product_addition.php:8
+#: templates/pedidosonline/batch_client_addition.php:4
+#: templates/pedidosonline/batch_product_addition.php:4
+msgid "supported file: xls, xlsx, xlsm, csv or ods."
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:12
+#: templates/bootstrap/batch_product_addition.php:12
+#: templates/pedidosonline/batch_client_addition.php:7
+#: templates/pedidosonline/batch_product_addition.php:7
+msgid "Upload"
+msgstr ""
+
+#: templates/bootstrap/batch_client_addition.php:23
+#: templates/bootstrap/batch_product_addition.php:23
+msgid "the file is not supported, check it xls, xlsx, xlsm, csv or ods."
+msgstr ""
+
+#: templates/bootstrap/batch_product_addition.php:5
+#: templates/pedidosonline/batch_product_addition.php:1
+msgid "Batch Product Addition"
+msgstr ""
+
+#: templates/bootstrap/category_create.php:5
+#: templates/pedidosonline/category_create.php:1
+msgid "Create Category"
+msgstr ""
+
+#: templates/bootstrap/category_create.php:10
+#: templates/bootstrap/client_create.php:56
+#: templates/bootstrap/office_create.php:59
+#: templates/bootstrap/order_create.php:76
+#: templates/bootstrap/product_create.php:26
+#: templates/bootstrap/report_orders.php:12
+#: templates/pedidosonline/category_create.php:7
+#: templates/pedidosonline/client_create.php:46
+#: templates/pedidosonline/office_create.php:15
+#: templates/pedidosonline/order_create.php:32
+#: templates/pedidosonline/product_create.php:28
+#: templates/pedidosonline/report_orders.php:22
+msgid "Create"
+msgstr ""
+
+#: templates/bootstrap/category_edit.php:3
+#: templates/bootstrap/category_view.php:3
+#: templates/bootstrap/client_create.php:3
+#: templates/bootstrap/office_edit.php:3 templates/bootstrap/order_create.php:5
+#: templates/bootstrap/order_edit.php:4 templates/bootstrap/order_view.php:3
+#: templates/bootstrap/product_create.php:3
+#: templates/bootstrap/product_edit.php:3
+#: templates/bootstrap/product_list.php:3
+#: templates/bootstrap/product_view.php:3
+msgid "List"
+msgstr ""
+
+#: templates/bootstrap/category_edit.php:6
+msgid "Edit Category"
+msgstr ""
+
+#: templates/bootstrap/category_edit.php:11
+#: templates/bootstrap/client_edit.php:26
+#: templates/bootstrap/delivery_days_edit.php:22
+#: templates/bootstrap/office_edit.php:17
+#: templates/bootstrap/order_edit.php:144
+#: templates/bootstrap/product_edit.php:26
+#: templates/bootstrap/provider_edit.php:31
+#: templates/pedidosonline/category_edit.php:7
+#: templates/pedidosonline/client_edit.php:33
+#: templates/pedidosonline/delivery_days_edit.php:33
+#: templates/pedidosonline/office_edit.php:15
+#: templates/pedidosonline/order_edit.php:106
+#: templates/pedidosonline/product_edit.php:35
+#: templates/pedidosonline/provider_edit.php:41
+msgid "Update"
+msgstr ""
+
+#: templates/bootstrap/category_list.php:3
+#: templates/bootstrap/category_view.php:9 templates/bootstrap/index.php:18
+#: templates/bootstrap/order_view.php:24 templates/bootstrap/product_list.php:6
 #: templates/pedidosonline/order_create.php:15
 #: templates/pedidosonline/order_edit.php:52
 #: templates/pedidosonline/product_list.php:12
 msgid "Products"
 msgstr ""
 
-#: templates/pedidosonline/order_create.php:24
-#: templates/pedidosonline/order_edit.php:69
-msgid "Product"
+#: templates/bootstrap/category_list.php:6
+msgid "Product Categories"
 msgstr ""
 
-#: templates/pedidosonline/order_create.php:25
-#: templates/pedidosonline/order_edit.php:70
-msgid "Quantity"
+#: templates/bootstrap/category_list.php:6
+msgid "Add Category"
 msgstr ""
 
+#: templates/bootstrap/category_list.php:9
+#, php-format
+msgid "There are no product categories, create a category %s"
+msgstr ""
+
+#: templates/bootstrap/category_list.php:9
+#: templates/bootstrap/client_list.php:9 templates/bootstrap/order_list.php:14
+#: templates/bootstrap/order_list.php:16
+#: templates/bootstrap/product_list.php:11
+#: templates/pedidosonline/product_list.php:6
+msgid "here"
+msgstr ""
+
+#: templates/bootstrap/category_list.php:15
+#: templates/pedidosonline/category_list.php:5
+msgid "Categories"
+msgstr ""
+
+#: templates/bootstrap/category_list.php:16
+#: templates/bootstrap/client_list.php:16
+#: templates/bootstrap/client_view.php:21 templates/bootstrap/index.php:63
+#: templates/bootstrap/office_list.php:11
+#: templates/bootstrap/order_create.php:42
+#: templates/bootstrap/order_edit.php:82 templates/bootstrap/order_list.php:27
+#: templates/bootstrap/product_list.php:20
+#: templates/pedidosonline/category_list.php:7
+#: templates/pedidosonline/client_list.php:13
+#: templates/pedidosonline/client_view.php:10
+#: templates/pedidosonline/index.php:41
+#: templates/pedidosonline/office_list.php:7
 #: templates/pedidosonline/order_create.php:26
 #: templates/pedidosonline/order_edit.php:71
-#: templates/pedidosonline/client_view.php:10
-#: templates/pedidosonline/provider_list.php:6
+#: templates/pedidosonline/order_list.php:19
 #: templates/pedidosonline/product_list.php:13
-#: templates/pedidosonline/office_list.php:7
+#: templates/pedidosonline/provider_list.php:6
 msgid "Actions"
 msgstr ""
 
-#: templates/pedidosonline/order_create.php:32
-#: templates/pedidosonline/office_create.php:15
-msgid "Create"
+#: templates/bootstrap/category_list.php:26
+#: templates/bootstrap/client_view.php:34 templates/bootstrap/index.php:74
+#: templates/bootstrap/office_list.php:21 templates/bootstrap/order_list.php:40
+#: templates/bootstrap/product_list.php:34
+#: templates/pedidosonline/client_view.php:24
+#: templates/pedidosonline/index.php:52
+msgid "View"
 msgstr ""
 
+#: templates/bootstrap/category_list.php:27
+#: templates/bootstrap/category_view.php:4 templates/bootstrap/index.php:75
+#: templates/bootstrap/office_list.php:22 templates/bootstrap/office_view.php:5
+#: templates/bootstrap/order_list.php:41 templates/bootstrap/order_view.php:4
+#: templates/bootstrap/product_list.php:35
+#: templates/bootstrap/product_view.php:4 templates/pedidosonline/index.php:53
+msgid "Edit"
+msgstr ""
+
+#: templates/bootstrap/category_list.php:28
+#: templates/bootstrap/client_list.php:27
+#: templates/bootstrap/client_view.php:36
+#: templates/bootstrap/office_list.php:23
+#: templates/bootstrap/product_list.php:36
+msgid "Delete"
+msgstr ""
+
+#: templates/bootstrap/client_create.php:6
+#: templates/pedidosonline/client_create.php:1
+msgid "Create Client"
+msgstr ""
+
+#: templates/bootstrap/client_edit.php:6
+#: templates/pedidosonline/client_edit.php:1
+msgid "Edit Client"
+msgstr ""
+
+#: templates/bootstrap/client_edit.php:40
+#: templates/bootstrap/provider_edit.php:45
+#: templates/pedidosonline/client_edit.php:46
+#: templates/pedidosonline/provider_edit.php:54
+msgid "if you update the password the current password is required."
+msgstr ""
+
+#: templates/bootstrap/client_edit.php:46
+#: templates/bootstrap/provider_edit.php:51
+#: templates/pedidosonline/client_edit.php:52
+#: templates/pedidosonline/provider_edit.php:60
+msgid "Password and confirm password Don't Match"
+msgstr ""
+
+#: templates/bootstrap/client_list.php:5 templates/bootstrap/client_view.php:3
+#: templates/bootstrap/delivery_days_edit.php:2
+#: templates/bootstrap/index.php:14 templates/bootstrap/product_view.php:22
+#: templates/pedidosonline/product_create.php:23
+#: templates/pedidosonline/product_edit.php:29
+#: templates/pedidosonline/product_view.php:16
+msgid "Clients"
+msgstr ""
+
+#: templates/bootstrap/client_list.php:5
+msgid "Add Client"
+msgstr ""
+
+#: templates/bootstrap/client_list.php:6
+#: templates/pedidosonline/client_list.php:2
+msgid "Add clients in block"
+msgstr ""
+
+#: templates/bootstrap/client_list.php:9
+#: templates/pedidosonline/client_list.php:6
+#, php-format
+msgid "There are no clients, create your first client %s"
+msgstr ""
+
+#: templates/bootstrap/client_list.php:15
+#: templates/pedidosonline/client_list.php:12
+#: templates/pedidosonline/client_view.php:1
+#: templates/pedidosonline/report_orders.php:4
+#: templates/pedidosonline/report_orders.php:58
+msgid "Client"
+msgstr ""
+
+#: templates/bootstrap/client_view.php:10
+#: templates/bootstrap/office_list.php:10
+#: templates/pedidosonline/office_list.php:5
+msgid "Headquarters"
+msgstr ""
+
+#: templates/bootstrap/client_view.php:12
+msgid "Add Office"
+msgstr ""
+
+#: templates/bootstrap/client_view.php:18
+#: templates/pedidosonline/client_create.php:20
+#: templates/pedidosonline/delivery_days_edit.php:9
+msgid "Code"
+msgstr ""
+
+#: templates/bootstrap/client_view.php:19 templates/bootstrap/index.php:61
+#: templates/bootstrap/office_view.php:15 templates/bootstrap/order_list.php:25
+#: templates/pedidosonline/client_create.php:12
+#: templates/pedidosonline/client_view.php:7
+#: templates/pedidosonline/index.php:39
+#: templates/pedidosonline/office_create.php:4
+#: templates/pedidosonline/office_edit.php:4
+#: templates/pedidosonline/office_view.php:4
+#: templates/pedidosonline/provider_edit.php:34
+msgid "Address"
+msgstr ""
+
+#: templates/bootstrap/client_view.php:20
+#: templates/bootstrap/office_view.php:19
+#: templates/pedidosonline/client_create.php:16
+#: templates/pedidosonline/client_view.php:8
+#: templates/pedidosonline/office_create.php:8
+#: templates/pedidosonline/office_edit.php:8
+#: templates/pedidosonline/office_view.php:8
+#: templates/pedidosonline/provider_edit.php:38
+msgid "Phone"
+msgstr ""
+
+#: templates/bootstrap/client_view.php:46
+msgid "There are no Headquarters"
+msgstr ""
+
+#: templates/bootstrap/config_error.php:1
+#: templates/pedidosonline/config_error.php:1
+msgid "Error"
+msgstr ""
+
+#: templates/bootstrap/config_error.php:4
+#: templates/pedidosonline/config_error.php:4
+msgid "Clipe is not correctly configured in this website."
+msgstr ""
+
+#: templates/bootstrap/delivery_days_edit.php:7
+#: templates/pedidosonline/delivery_days_edit.php:1
+msgid "Edit client headquarters"
+msgstr ""
+
+#: templates/bootstrap/delivery_days_edit.php:35
+#: templates/bootstrap/office_create.php:73
+#: templates/pedidosonline/client_create.php:65
+#: templates/pedidosonline/delivery_days_edit.php:45
+msgid "required to select at least one"
+msgstr ""
+
+#: templates/bootstrap/index.php:10 templates/bootstrap/index.php:37
+#: templates/pedidosonline/index.php:7 templates/pedidosonline/index.php:16
+msgid "Account"
+msgstr ""
+
+#: templates/bootstrap/index.php:26 templates/bootstrap/index.php:41
+#: templates/bootstrap/office_view.php:29 templates/bootstrap/order_list.php:5
+#: templates/pedidosonline/index.php:11 templates/pedidosonline/index.php:17
+#: templates/pedidosonline/office_view.php:20
+msgid "Orders"
+msgstr ""
+
+#: templates/bootstrap/index.php:30 templates/bootstrap/reports.php:1
+#: templates/pedidosonline/index.php:12 templates/pedidosonline/reports.php:1
+msgid "Reports"
+msgstr ""
+
+#: templates/bootstrap/index.php:45 templates/pedidosonline/index.php:18
+#: templates/pedidosonline/order_list.php:16
+msgid "Offices"
+msgstr ""
+
+#: templates/bootstrap/index.php:51 templates/pedidosonline/index.php:29
+msgid "Last Orders"
+msgstr ""
+
+#: templates/bootstrap/index.php:54 templates/pedidosonline/index.php:32
+msgid "There are not orders for next days"
+msgstr ""
+
+#: templates/bootstrap/index.php:60 templates/bootstrap/office_view.php:36
+#: templates/bootstrap/order_create.php:17
+#: templates/bootstrap/order_list.php:24 templates/pedidosonline/index.php:38
+#: templates/pedidosonline/office_view.php:27
+msgid "Delivery Date"
+msgstr ""
+
+#: templates/bootstrap/index.php:62 templates/bootstrap/office_view.php:35
+#: templates/bootstrap/order_edit.php:42 templates/bootstrap/order_list.php:26
+#: templates/pedidosonline/index.php:40
+#: templates/pedidosonline/office_view.php:26
+#: templates/pedidosonline/order_edit.php:34
+#: templates/pedidosonline/order_list.php:18
+#: templates/pedidosonline/report_orders.php:10
+msgid "Status"
+msgstr ""
+
+#: templates/bootstrap/login.php:27 templates/bootstrap/recovery_password.php:9
+#: templates/pedidosonline/login.php:31
+msgid "Login"
+msgstr ""
+
+#: templates/bootstrap/login.php:30 templates/pedidosonline/login.php:32
+msgid "Password Recovery"
+msgstr ""
+
+#: templates/bootstrap/office_create.php:5
+msgid "Create Headquarter"
+msgstr ""
+
+#: templates/bootstrap/office_edit.php:6
+#: templates/pedidosonline/office_edit.php:1
+msgid "Edit Headquarters"
+msgstr ""
+
+#: templates/bootstrap/office_list.php:5
+#: templates/pedidosonline/office_list.php:1
+msgid "Headquarters List"
+msgstr ""
+
+#: templates/bootstrap/office_view.php:4
+msgid "Headquarter List"
+msgstr ""
+
+#: templates/bootstrap/office_view.php:10
+msgid "Headquarter"
+msgstr ""
+
+#: templates/bootstrap/office_view.php:23
+#: templates/pedidosonline/client_create.php:8
+#: templates/pedidosonline/client_edit.php:6
+#: templates/pedidosonline/client_view.php:9
+#: templates/pedidosonline/login.php:24
+#: templates/pedidosonline/office_create.php:12
+#: templates/pedidosonline/office_edit.php:12
+#: templates/pedidosonline/office_view.php:12
+#: templates/pedidosonline/provider_edit.php:6
+#: templates/pedidosonline/recovery_password.php:4 wp-pedidos-online.php:371
+msgid "Email"
+msgstr ""
+
+#: templates/bootstrap/office_view.php:34
+#: templates/pedidosonline/office_view.php:25
+msgid "ID"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:8
+#: templates/pedidosonline/order_create.php:1
+msgid "Create Order"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:40
+#: templates/bootstrap/order_edit.php:80 templates/bootstrap/order_view.php:28
+#: templates/bootstrap/product_list.php:17
+#: templates/pedidosonline/order_create.php:24
+#: templates/pedidosonline/order_edit.php:69
+#: templates/pedidosonline/order_view.php:22
+#: templates/pedidosonline/product_view.php:1
+msgid "Product"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:41
+#: templates/bootstrap/order_edit.php:81 templates/bootstrap/order_view.php:29
+#: templates/pedidosonline/order_create.php:25
+#: templates/pedidosonline/order_edit.php:70
+#: templates/pedidosonline/order_view.php:23
+msgid "Quantity"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:79
+msgid "Load previous order"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:160
+msgid "Before"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:179
+msgid "Error loading last order"
+msgstr ""
+
+#: templates/bootstrap/order_create.php:185
+#: templates/bootstrap/order_edit.php:158
 #: templates/pedidosonline/order_create.php:73
 #: templates/pedidosonline/order_edit.php:122
 msgid "Requires at least one product"
 msgstr ""
 
+#: templates/bootstrap/order_edit.php:7
 #: templates/pedidosonline/order_edit.php:1
 msgid "Edit Order"
 msgstr ""
 
-#: templates/pedidosonline/order_edit.php:34
-#: templates/pedidosonline/office_view.php:26
-msgid "Status"
+#: templates/bootstrap/order_edit.php:29 templates/bootstrap/order_view.php:19
+#: templates/bootstrap/order_view.php:49
+#: templates/bootstrap/report_orders.php:40
+#: templates/pedidosonline/order_create.php:10
+#: templates/pedidosonline/order_edit.php:29
+#: templates/pedidosonline/order_view.php:16
+#: templates/pedidosonline/report_orders.php:54
+msgid "Date"
 msgstr ""
 
-#: templates/pedidosonline/order_edit.php:106
-#: templates/pedidosonline/product_edit.php:35
-msgid "Update"
+#: templates/bootstrap/order_edit.php:120
+msgid "this product is no longer available and is automatically deleted when the order is updated"
 msgstr ""
 
-#: templates/pedidosonline/office_create.php:1
-msgid "Create Office"
+#: templates/bootstrap/order_list.php:14
+#: templates/pedidosonline/order_list.php:6
+#, php-format
+msgid "There are no orders, create your first order %s"
 msgstr ""
 
-#: templates/pedidosonline/office_create.php:4
-#: templates/pedidosonline/client_view.php:7
-#: templates/pedidosonline/office_view.php:4
-msgid "Address"
+#: templates/bootstrap/order_list.php:16
+#: templates/pedidosonline/order_list.php:8
+msgid "There are no orders, invite your clients to make their first orders"
 msgstr ""
 
-#: templates/pedidosonline/office_create.php:8
-#: templates/pedidosonline/client_view.php:8
-#: templates/pedidosonline/office_view.php:8
-msgid "Phone"
+#: templates/bootstrap/order_view.php:7
+#: templates/pedidosonline/order_view.php:1
+msgid "Order"
 msgstr ""
 
-#: templates/pedidosonline/product_edit.php:4
-msgid "Name"
+#: templates/bootstrap/order_view.php:11
+#: templates/pedidosonline/order_create.php:4
+#: templates/pedidosonline/order_edit.php:4
+#: templates/pedidosonline/order_view.php:4
+msgid "Offices "
 msgstr ""
 
-#: templates/pedidosonline/product_edit.php:8
-msgid "Measure Type"
+#: templates/bootstrap/order_view.php:15
+#: templates/pedidosonline/order_view.php:10
+msgid "Status "
 msgstr ""
 
-#: templates/pedidosonline/product_edit.php:12
-msgid "New Category"
+#: templates/bootstrap/order_view.php:45
+msgid "History"
 msgstr ""
 
-#: templates/pedidosonline/product_edit.php:16
-#: templates/pedidosonline/category_view.php:1
-msgid "Category"
+#: templates/bootstrap/order_view.php:50
+msgid "Changes"
 msgstr ""
 
-#: templates/pedidosonline/product_edit.php:29
-msgid "Clients"
+#: templates/bootstrap/product_create.php:6
+#: templates/pedidosonline/product_create.php:1
+msgid "Create Product"
 msgstr ""
 
-#: templates/pedidosonline/product_edit.php:31
-msgid "None"
-msgstr ""
-
+#: templates/bootstrap/product_create.php:42
+#: templates/bootstrap/product_edit.php:42
+#: templates/pedidosonline/product_create.php:46
 #: templates/pedidosonline/product_edit.php:52
 msgid "Requires at least one category"
 msgstr ""
 
-#: templates/pedidosonline/client_view.php:1
-msgid "Client"
+#: templates/bootstrap/product_list.php:6
+msgid "Add Product"
 msgstr ""
 
-#: templates/pedidosonline/client_view.php:6
-#: templates/pedidosonline/office_view.php:1
-msgid "Office"
-msgstr ""
-
-#: templates/pedidosonline/client_view.php:24
-msgid "View"
-msgstr ""
-
-#: templates/pedidosonline/office_view.php:20
-msgid "Orders"
-msgstr ""
-
-#: templates/pedidosonline/office_view.php:25
-msgid "ID"
-msgstr ""
-
-#: templates/pedidosonline/office_view.php:27
-msgid "Delivery Date"
-msgstr ""
-
-#: templates/pedidosonline/provider_list.php:5
-msgid "Suppliers"
-msgstr ""
-
-#: templates/pedidosonline/product_list.php:1
-msgid "Product List"
-msgstr ""
-
+#: templates/bootstrap/product_list.php:7
 #: templates/pedidosonline/product_list.php:2
 msgid "Add Products in block"
 msgstr ""
 
+#: templates/bootstrap/product_list.php:11
 #: templates/pedidosonline/product_list.php:6
 #, php-format
 msgid "There are no products, create your first product %s"
 msgstr ""
 
-#: templates/pedidosonline/product_list.php:6
-msgid "here"
+#: templates/bootstrap/product_list.php:18
+#: templates/bootstrap/product_view.php:12
+#: templates/pedidosonline/product_create.php:8
+#: templates/pedidosonline/product_edit.php:8
+#: templates/pedidosonline/product_view.php:8
+msgid "Measure Type"
 msgstr ""
 
-#: templates/pedidosonline/office_list.php:1
-msgid "Headquarters List"
+#: templates/bootstrap/product_list.php:19
+#: templates/bootstrap/product_view.php:16
+#: templates/pedidosonline/category_view.php:1
+#: templates/pedidosonline/product_create.php:16
+#: templates/pedidosonline/product_edit.php:16
+#: templates/pedidosonline/product_view.php:12
+msgid "Category"
 msgstr ""
 
-#: templates/pedidosonline/office_list.php:5
-msgid "Headquarters"
+#: templates/bootstrap/product_view.php:25
+msgid "There are no clients related to this product"
 msgstr ""
 
-#: templates/pedidosonline/office_list.php:6
-msgid "Created"
+#: templates/bootstrap/product_view.php:32
+#: templates/pedidosonline/category_create.php:4
+#: templates/pedidosonline/category_edit.php:4
+#: templates/pedidosonline/client_create.php:4
+#: templates/pedidosonline/client_edit.php:22
+#: templates/pedidosonline/product_create.php:4
+#: templates/pedidosonline/product_edit.php:4
+#: templates/pedidosonline/product_view.php:4
+#: templates/pedidosonline/provider_edit.php:22
+msgid "Name"
 msgstr ""
 
-#: templates/pedidosonline/reports.php:1
-msgid "Reports"
+#: templates/bootstrap/provider_edit.php:5
+#: templates/pedidosonline/provider_edit.php:1
+msgid "Provider Account"
 msgstr ""
 
-#: templates/pedidosonline/reports.php:5
-msgid "Report"
+#: templates/bootstrap/recovery_password.php:5
+#: templates/pedidosonline/recovery_password.php:7
+msgid "Recovery"
 msgstr ""
 
-#: templates/pedidosonline/reports.php:6
-msgid "Action"
-msgstr ""
-
-#: templates/pedidosonline/reports.php:11
-msgid "Report of Orders"
-msgstr ""
-
-#: templates/pedidosonline/login.php:31
-msgid "Login"
-msgstr ""
-
-#: templates/pedidosonline/login.php:32
-msgid "Password Recovery"
-msgstr ""
-
-#: templates/pedidosonline/batch_client_addition.php:1
-msgid "Batch Client Addition"
-msgstr ""
-
-#: templates/pedidosonline/batch_client_addition.php:4
-msgid "File"
-msgstr ""
-
-#: templates/pedidosonline/batch_client_addition.php:4
-msgid "supported file: xls, xlsx, xlsm, csv or ods."
-msgstr ""
-
-#: templates/pedidosonline/batch_client_addition.php:7
-msgid "Upload"
-msgstr ""
-
-#: templates/pedidosonline/batch_client_addition.php:22
-msgid "The file is not supported, supported formats are: xls, xlsx, xlsm, csv or ods."
-msgstr ""
-
+#: templates/bootstrap/report_orders.php:1
+#: templates/bootstrap/report_orders.php:88
 #: templates/pedidosonline/report_orders.php:1
-#: templates/pedidosonline/report_orders.php:112
+#: templates/pedidosonline/report_orders.php:109
 msgid "Report Orders"
 msgstr ""
 
-#: templates/pedidosonline/report_orders.php:21
-msgid "Date Range"
+#: templates/bootstrap/report_orders.php:50
+msgid "Producto/sede"
 msgstr ""
 
-#: templates/pedidosonline/report_orders.php:65
-#: templates/pedidosonline/delivery_days_edit.php:5
-#: templates/pedidosonline/delivery_days_edit.php:29
-#: templates/pedidosonline/client_create.php:28
-msgid "Zone"
+#: templates/bootstrap/report_orders.php:55
+msgid "Total"
 msgstr ""
 
-#: templates/pedidosonline/office_edit.php:1
-msgid "Edit Headquarters"
+#: templates/bootstrap/reports.php:5 templates/pedidosonline/reports.php:5
+msgid "Report"
 msgstr ""
 
-#: templates/pedidosonline/order_view.php:1
-msgid "Order"
+#: templates/bootstrap/reports.php:6 templates/pedidosonline/reports.php:6
+msgid "Action"
 msgstr ""
 
-#: templates/pedidosonline/order_view.php:10
-msgid "Status "
+#: templates/bootstrap/reports.php:11 templates/pedidosonline/reports.php:11
+msgid "Report of Orders"
+msgstr ""
+
+#: templates/pedidosonline/batch_client_addition.php:22
+#: templates/pedidosonline/batch_product_addition.php:22
+msgid "The file is not supported, supported formats are: xls, xlsx, xlsm, csv or ods."
 msgstr ""
 
 #: templates/pedidosonline/category_edit.php:1
 msgid "Edit Product"
 msgstr ""
 
-#: templates/pedidosonline/product_create.php:1
-msgid "Create Product"
+#: templates/pedidosonline/category_list.php:1
+msgid "Category List"
 msgstr ""
 
-#: templates/pedidosonline/provider_edit.php:1
-msgid "Provider Account"
+#: templates/pedidosonline/category_list.php:6
+#: templates/pedidosonline/office_list.php:6
+#: templates/pedidosonline/order_list.php:17
+msgid "Created"
 msgstr ""
 
-#: templates/pedidosonline/provider_edit.php:14
+#: templates/pedidosonline/client_create.php:24
+msgid "Short Name"
+msgstr ""
+
+#: templates/pedidosonline/client_create.php:28
+#: templates/pedidosonline/delivery_days_edit.php:5
+#: templates/pedidosonline/delivery_days_edit.php:29
+#: templates/pedidosonline/report_orders.php:62
+msgid "Zone"
+msgstr ""
+
+#: templates/pedidosonline/client_create.php:32
+msgid "Delivery Days"
+msgstr ""
+
+#: templates/pedidosonline/client_edit.php:10
+#: templates/pedidosonline/login.php:28
+#: templates/pedidosonline/provider_edit.php:10 wp-pedidos-online.php:378
+msgid "Password"
+msgstr ""
+
 #: templates/pedidosonline/client_edit.php:14
+#: templates/pedidosonline/provider_edit.php:14
 msgid "Confirm Password"
 msgstr ""
 
-#: templates/pedidosonline/provider_edit.php:18
 #: templates/pedidosonline/client_edit.php:18
+#: templates/pedidosonline/provider_edit.php:18
 msgid "Current Password"
 msgstr ""
 
-#: templates/pedidosonline/provider_edit.php:26
 #: templates/pedidosonline/client_edit.php:26
+#: templates/pedidosonline/provider_edit.php:26
 msgid "First Name"
 msgstr ""
 
-#: templates/pedidosonline/provider_edit.php:30
 #: templates/pedidosonline/client_edit.php:30
+#: templates/pedidosonline/provider_edit.php:30
 msgid "Last Name"
-msgstr ""
-
-#: templates/pedidosonline/provider_edit.php:54
-#: templates/pedidosonline/client_edit.php:46
-msgid "if you update the password the current password is required."
-msgstr ""
-
-#: templates/pedidosonline/provider_edit.php:60
-#: templates/pedidosonline/client_edit.php:52
-msgid "Password and confirm password Don't Match"
 msgstr ""
 
 #: templates/pedidosonline/client_list.php:1
 msgid "list of Clients"
 msgstr ""
 
-#: templates/pedidosonline/client_list.php:2
-msgid "Add clients in block"
-msgstr ""
-
-#: templates/pedidosonline/client_list.php:6
-#, php-format
-msgid "There are no clients, create your first client %s"
-msgstr ""
-
-#: templates/pedidosonline/recovery_password.php:7
-msgid "Recovery"
-msgstr ""
-
-#: templates/pedidosonline/delivery_days_edit.php:1
-msgid "Edit client headquarters"
-msgstr ""
-
-#: templates/pedidosonline/delivery_days_edit.php:9
-#: templates/pedidosonline/client_create.php:20
-msgid "Code"
-msgstr ""
-
-#: templates/pedidosonline/delivery_days_edit.php:45
-#: templates/pedidosonline/client_create.php:65
-msgid "required to select at least one"
-msgstr ""
-
-#: templates/pedidosonline/category_create.php:1
-msgid "Create Category"
+#: templates/pedidosonline/client_view.php:6
+#: templates/pedidosonline/office_view.php:1
+msgid "Office"
 msgstr ""
 
 #: templates/pedidosonline/index.php:1
@@ -449,21 +745,17 @@ msgstr ""
 msgid "Section General"
 msgstr ""
 
-#: templates/pedidosonline/index.php:4
-msgid "Logout"
-msgstr ""
-
 #: templates/pedidosonline/index.php:6
 msgid "Section Provider"
 msgstr ""
 
-#: templates/pedidosonline/index.php:7
-#: templates/pedidosonline/index.php:16
-msgid "Account"
-msgstr ""
-
 #: templates/pedidosonline/index.php:8
 msgid "List of Client"
+msgstr ""
+
+#: templates/pedidosonline/index.php:9
+#: templates/pedidosonline/product_list.php:1
+msgid "Product List"
 msgstr ""
 
 #: templates/pedidosonline/index.php:10
@@ -474,72 +766,146 @@ msgstr ""
 msgid "Section Client"
 msgstr ""
 
-#: templates/pedidosonline/index.php:18
-msgid "Offices"
-msgstr ""
-
-#: templates/pedidosonline/index.php:29
-msgid "Last Orders"
-msgstr ""
-
-#: templates/pedidosonline/index.php:32
-msgid "There are not orders for next days"
-msgstr ""
-
-#: templates/pedidosonline/index.php:53
-msgid "Edit"
-msgstr ""
-
 #: templates/pedidosonline/index.php:55
+#: templates/pedidosonline/order_list.php:35
 msgid "Cancel"
 msgstr ""
 
-#: templates/pedidosonline/client_create.php:1
-msgid "Create Client"
-msgstr ""
-
-#: templates/pedidosonline/client_create.php:24
-msgid "Short Name"
-msgstr ""
-
-#: templates/pedidosonline/client_create.php:32
-msgid "Delivery Days"
-msgstr ""
-
-#: templates/pedidosonline/config_error.php:1
-msgid "Error"
-msgstr ""
-
-#: templates/pedidosonline/config_error.php:4
-msgid "Clipe is not correctly configured in this website."
-msgstr ""
-
-#: templates/pedidosonline/client_edit.php:1
-msgid "Edit Client"
-msgstr ""
-
-#: templates/pedidosonline/category_list.php:1
-msgid "Category List"
-msgstr ""
-
-#: templates/pedidosonline/category_list.php:5
-msgid "Categories"
-msgstr ""
-
-#: templates/pedidosonline/batch_product_addition.php:1
-msgid "Batch Product Addition"
+#: templates/pedidosonline/office_create.php:1
+msgid "Create Office"
 msgstr ""
 
 #: templates/pedidosonline/order_list.php:1
 msgid "Order List"
 msgstr ""
 
-#: templates/pedidosonline/order_list.php:6
+#: templates/pedidosonline/product_create.php:12
+#: templates/pedidosonline/product_edit.php:12
+msgid "New Category"
+msgstr ""
+
+#: templates/pedidosonline/product_edit.php:31
+msgid "None"
+msgstr ""
+
+#: templates/pedidosonline/provider_list.php:5
+msgid "Suppliers"
+msgstr ""
+
+#: templates/pedidosonline/report_orders.php:18
+msgid "Date Range"
+msgstr ""
+
+#: wp-pedidos-online.php:102
+msgid "Monday"
+msgstr ""
+
+#: wp-pedidos-online.php:103
+msgid "Tuesday"
+msgstr ""
+
+#: wp-pedidos-online.php:104
+msgid "Wednesday"
+msgstr ""
+
+#: wp-pedidos-online.php:105
+msgid "Thursday"
+msgstr ""
+
+#: wp-pedidos-online.php:106
+msgid "Friday"
+msgstr ""
+
+#: wp-pedidos-online.php:107
+msgid "Saturday"
+msgstr ""
+
+#: wp-pedidos-online.php:108
+msgid "Sunday"
+msgstr ""
+
+#: wp-pedidos-online.php:118
+msgid "In progress"
+msgstr ""
+
+#: wp-pedidos-online.php:118
+msgid "Completed"
+msgstr ""
+
+#: wp-pedidos-online.php:306
+msgid "Clipe Access"
+msgstr ""
+
+#: wp-pedidos-online.php:306
+msgid "Clipe"
+msgstr ""
+
+#: wp-pedidos-online.php:315
+msgid "Settings"
+msgstr ""
+
+#: wp-pedidos-online.php:364
+msgid "Login Page"
+msgstr ""
+
+#: wp-pedidos-online.php:385
+msgid "Allow collection of statistic data in Clipe"
+msgstr ""
+
+#: wp-pedidos-online.php:395
+msgid "Language API responses"
+msgstr ""
+
+#: wp-pedidos-online.php:405
+msgid "Change status of new orders to in progess automatically when review their details"
+msgstr ""
+
+#: wp-pedidos-online.php:415
+msgid "Theme Templates"
+msgstr ""
+
+#: wp-pedidos-online.php:501
+msgid "There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress"
+msgstr ""
+
+#: wp-pedidos-online.php:602
+msgid "Clipe Sidebar"
+msgstr ""
+
+#: wp-pedidos-online.php:740
+msgid "Are you sure?"
+msgstr ""
+
+#: wp-pedidos-online.php:741
+msgid "Are you sure you want to cancel the order?"
+msgstr ""
+
+#: wp-pedidos-online.php:836
 #, php-format
-msgid "There are no orders, create your first order %s"
+msgid "The client %s could not be created by %s"
 msgstr ""
 
-#: templates/pedidosonline/order_list.php:8
-msgid "There are no orders, invite your clients to make their first orders"
+#: wp-pedidos-online.php:877
+#, php-format
+msgid "The Product %s could not be created by %s"
 msgstr ""
 
+#: wp-pedidos-online.php:1375
+msgid "Order couldn't be created. Please verify fields"
+msgstr ""
+
+#: wp-pedidos-online.php:1551
+msgid "Chose one"
+msgstr ""
+
+#: wp-pedidos-online.php:1667
+msgid "Not Results"
+msgstr ""
+
+#: wp-pedidos-online.php:1673
+msgid "Please select at least one client and a date"
+msgstr ""
+
+#: wp-pedidos-online.php:1723
+msgid "The user does not have permission to access this page"
+msgstr ""
