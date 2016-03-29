@@ -2,7 +2,7 @@
   <a title="<?echo __('Dashboard', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
   <a title="<?echo __('Logout', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
 </div>
-<h1><?php _e('Headquarters List', 'clipe'); ?>  <a title="<?= __("Add Headquarter"); ?>" href="<?php echo $pedidosOnline->get_link_page("office_create.php"). '&profile=' . $_GET['profile']; ?>"><i class="fa fa-plus"></i></a></h1>
+<h1><?php _e('Headquarters List', 'clipe'); ?></h1>
 <div class="table-responsive">
   <table class="table table-stripped">
     <thead>

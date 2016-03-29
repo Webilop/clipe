@@ -6,7 +6,7 @@
 <h1><?php _e('Edit Client', 'clipe'); ?></h1>
 <form method="POST">
   <div class="row">
-    <input type="hidden" name="client_id" value="<?php echo $user->Client->id; ?>"/>
+    <input type="hidden" name="user_id" value="<?php echo $user->User->id; ?>"/>
     <div class="col-md-6">
       <?php
       $pedidosOnline->html->create('email', array('value'=>$user->User->email,'label_text' => 'Email', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => true));
@@ -19,7 +19,6 @@
       <?php
       $pedidosOnline->html->create('first_name', array('value'=>$user->User->first_name,'label_text' => 'First Name', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
       $pedidosOnline->html->create('last_name', array('value'=>$user->User->last_name,'label_text' => 'Last Name', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => false));
-      $pedidosOnline->html->create('name', array('value'=>$user->Client->name,'label_text' => 'Business Name', 'class' => 'form-control', 'div_class' => 'form-group', 'required' => true));
       ?>
     </div>
   </div>
