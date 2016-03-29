@@ -19,6 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $days = $pedidosOnline->get_days();
 $clientsData = $pedidosOnline->get_clients(array('limit' => 1000));
 $clients = array();
-foreach ($clientsData->clients as $clientData) {
+foreach ($clientsData as $clientData) {
   $clients[$clientData->Client->id] = $clientData->Client->name;
 }
