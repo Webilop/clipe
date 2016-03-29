@@ -2,7 +2,7 @@
   <a title="<?echo __('Dashboard', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('index.php'); ?>"><i class="fa fa-home"></i></a>
   <?php if (in_array('client', $user->permissions)): ?>
     <a title="<?echo __('Headquarter List', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('office_list.php') . '&profile=' . $_GET['profile']; ?>"><i class="fa fa-list"></i></a>
-    <a title="<?echo __('Edit', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('office_edit.php') . '&id=' . $order->Headquarters->id.'&profile='.$_GET['profile']; ?>"><i class="fa fa-edit"></i></a>
+    <a title="<?echo __('Edit', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_link_page('office_edit.php') . '&id=' . $office->Headquarters->id.'&profile='.$_GET['profile']; ?>"><i class="fa fa-edit"></i></a>
   <?php endif; ?>
   <a title="<?echo __('Logout', 'clipe'); ?>" href="<?php echo $pedidosOnline->get_logout_url(); ?>"><i class="fa fa-sign-out"></i></a>
 </div>
@@ -13,15 +13,15 @@
   <div class="row">
     <div class="col-md-4">
       <label><?php _e('Address', 'clipe'); ?></label>
-      <div><?php echo $order->Headquarters->address; ?></div>
+      <div><?php echo $office->Headquarters->address; ?></div>
     </div>
     <div class="col-md-4">
       <label><?php _e('Phone', 'clipe'); ?></label>
-      <div><?php echo $order->Headquarters->phone; ?></div>
+      <div><?php echo $office->Headquarters->phone; ?></div>
     </div>
     <div class="col-md-4">
       <label><?php _e('Email', 'clipe'); ?></label>
-      <div><?php echo $order->Headquarters->email; ?></div>
+      <div><?php echo $office->User->email; ?></div>
     </div>
   </div>
 </div>

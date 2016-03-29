@@ -10,7 +10,12 @@
     <input type="hidden" name="client_id" value="<?= $_GET['client']; ?>"/>
     <?php
     $pedidosOnline->html->create('zone',array('value'=>(isset($zone->name) ? $zone->name : ''),'label_text'=>'Zone','class'=>'form-control','div_class'=>'form-group','required'=>true));
-    $pedidosOnline->html->create('Code',array('value'=>$code,'label_text'=>'Code','class'=>'form-control','div_class'=>'form-group','required'=>true));
+    $pedidosOnline->html->create('code',
+      array('value' => $code,
+            'label_text' => 'Code',
+            'class' => 'form-control',
+            'div_class' => 'form-group',
+            'required' => true));
     $pedidosOnline->html->create('delivery_days',array('value'=>$delivery_days,'type'=>'checkbox','options'=>$days,'label_text'=>'Delivery Days','class'=>'form-control','div_class'=>'form-group','required'=>true));
     ?>
     <button type="submit" class="btn btn-default pull-left login-submit" id="submit">

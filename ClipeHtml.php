@@ -15,6 +15,7 @@ class ClipeHtml {
         'required' => false,
         'label' => true,
         'label_text' => 'Default',
+        'label_id' => false,
         'readonly'=> false
     );
     if (isset($_POST[$name])) { //priority post value
@@ -23,7 +24,8 @@ class ClipeHtml {
     $mergeOptions = array_replace_recursive($defaultOptions, $options);
     echo '<div class="' . $mergeOptions['div_class'] . '">';
     if ($mergeOptions['label']) {
-      echo '<label ' . ($mergeOptions['required'] ? 'class="required"' : '') . ' for="' . $name . '">' . __($mergeOptions['label_text'], 'clipe') . '</label>';
+      $htmlLabelId = ($mergeOptions['label_id'])? 'id="' . $mergeOptions['label_id'] . '"' : '';
+      echo '<label ' . $htmlLabelId . ($mergeOptions['required'] ? 'class="required"' : '') . ' for="' . $name . '">' . __($mergeOptions['label_text'], 'clipe') . '</label>';
     }
     switch ($mergeOptions['type']) {
       case 'text':

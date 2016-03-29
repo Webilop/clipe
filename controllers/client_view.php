@@ -11,4 +11,4 @@ else{
   exit();
 }
 
-?>
+$createOfficeUrl = $pedidosOnline->get_link_page('office_create.php') . '&client_id=' . $_GET['id']; 

@@ -814,7 +814,6 @@ class pedidosOnline {
       $contenido = base64_encode($contenido);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['file'] = $contenido;
-
       $result = $this->interface->request('api/clients/addFromFile.json', 'post', $data);
 
       if ($result->status == 'fail') {
@@ -847,7 +846,10 @@ class pedidosOnline {
       }
       return json_decode(json_encode($resultAux));
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function addition_file_of_products() {
@@ -885,24 +887,37 @@ class pedidosOnline {
       }
       return json_decode(json_encode($resultAux));
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function create_client() {
-    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['address']) && isset($_POST['phone']) && isset($_POST['zone'])) {
-      $data = array('email' => $_POST['email']);
-      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
+    if ( isset($_POST['name'])
+      && isset($_POST['short_name'])
+      && isset($_POST['email'])
+      && isset($_POST['code'])
+      && isset($_POST['address'])
+      && isset($_POST['phone'])
+      && isset($_POST['delivery_days'])
+      && isset($_POST['zone'])) {
+      $data = array();
       $data['name'] = $_POST['name'];
+      $data['email'] = $_POST['email'];
+      $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
       $data['code'] = isset($_POST['code']) ? $_POST['code'] : '';
-      $data['short_name'] = isset($_POST['short_name']) ? $_POST['short_name'] : '';
+      $data['short_name'] = isset($_POST['code']) ? $_POST['code'] : '';
       $data['delivery_days'] = isset($_POST['delivery_days']) ? $_POST['delivery_days'] : array();
       $data['zone'] = $_POST['zone'];
-      $result = $this->interface->request('api/clients/add.json', 'post', $data);
-      return $result;
+      return $this->interface->request('api/clients/add.json', 'post', $data);
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   /*
@@ -916,25 +931,32 @@ class pedidosOnline {
       $result = $this->interface->request('/api/providers/deleteClient/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
-  public function edit_client($id) {
-    if (isset($_POST['email']) && isset($_POST['name']) && isset($_POST['first_name']) && isset($_POST['last_name'])) {
+  public function edit_user($id){
+    if (isset($_POST['email'])) {
       $data = array('email' => $_POST['email']);
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
-      $data['name'] = $_POST['name'];
       $data['first_name'] = $_POST['first_name'];
       $data['last_name'] = $_POST['last_name'];
-      if (isset($_POST['password']) && isset($_POST['confirm_password']) && isset($_POST['current_password'])) {
+      if (!empty($_POST['password'])
+        && !empty($_POST['confirm_password'])
+        && !empty($_POST['current_password'])) {
         $data['password'] = $_POST['password'];
         $data['confirm_password'] = $_POST['confirm_password'];
         $data['current_password'] = $_POST['current_password'];
       }
-      $result = $this->interface->request('api/clients/edit/' . $id . '.json', 'post', $data);
+      $result = $this->interface->request('api/users/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function get_client($id) {
@@ -955,17 +977,19 @@ class pedidosOnline {
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['name'] = $_POST['name'];
       $data['measure_type'] = $_POST['measure_type'];
-      if (isset($_POST['category_id'])) {
+      if (!empty($_POST['category_id'])) {
         $data['category_id'] = $_POST['category_id'];
-      }
-      if (isset($_POST['category_name'])) {
+      } else {
         $data['category_name'] = $_POST['category_name'];
       }
       $data['client_id'] = isset($_POST['client_id']) ? $_POST['client_id'] : array();
       $result = $this->interface->request('api/products/add.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function delete_product($id) {
@@ -975,7 +999,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/products/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function edit_product($id) {
@@ -993,7 +1020,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/products/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function get_products($options = array()) {
@@ -1053,7 +1083,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/providers/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function create_category() {
@@ -1063,7 +1096,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/product_categories/add.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function delete_category($id) {
@@ -1073,7 +1109,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/product_categories/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function edit_category($id) {
@@ -1083,7 +1122,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/product_categories/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function get_categories($options = array()) {
@@ -1114,9 +1156,12 @@ class pedidosOnline {
   }
 
   public function get_categories_options($id = 0, $options = array()) {
-    $categories = $this->get_categories($options)->productCategories;
-    $htmlCategories = "";
-    $options=array();
+    $categories = $this->get_categories($options);
+    if(!property_exists($categories, 'productCategories')){
+      return array();
+    }
+    $categories = $categories->productCategories;
+    $options = array();
     foreach ($categories as $category) {
       $options[$category->ProductCategory->id]=$category->ProductCategory->name;
     }
@@ -1124,22 +1169,32 @@ class pedidosOnline {
   }
 
   public function create_office() {
-    if (isset($_POST['address']) && isset($_POST['phone'])) {
+    if ( isset($_POST['short_name'])
+      && isset($_POST['email'])
+      && isset($_POST['code'])
+      && isset($_POST['address'])
+      && isset($_POST['phone'])
+      && isset($_POST['delivery_days'])
+      && isset($_POST['zone'])) {
+      $data = array();
+      $data['client_id'] = $_POST['client_id'];
+      $data['email'] = $_POST['email'];
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['address'] = $_POST['address'];
       $data['phone'] = $_POST['phone'];
-      //$data['email'] = $_POST['email'];
-      $provider_id = $this->get_admin_provider_id();
-      if ($provider_id != 0) {
-        $data['provider_id'] = $provider_id;
-        $result = $this->interface->request('api/headquarters/add.json', 'post', $data);
-        return $result;
-      } else {
-        echo __('There is an error in the server of clipe or is not configured at administrator account on the backend of Worpress', 'clipe');
-        exit;
-      }
+      $data['code'] = isset($_POST['code']) ? $_POST['code'] : '';
+      $data['short_name'] = isset($_POST['short_name']) ? $_POST['short_name'] : '';
+      $data['delivery_days'] = isset($_POST['delivery_days']) ? $_POST['delivery_days'] : array();
+      $data['zone'] = $_POST['zone'];
+
+      $result = $this->interface->request('api/headquarters/add.json', 'post', $data);
+      return $result;
+
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function delete_office($id) {
@@ -1149,7 +1204,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/headquarters/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function edit_office($id) {
@@ -1161,7 +1219,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/headquarters/edit/' . $id . '.json', 'post', $data);
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function get_offices($options = array()) {
@@ -1180,7 +1241,13 @@ class pedidosOnline {
 
   public function get_office_orders($id, $profile = 'client') {
     if (isset($_COOKIE[$this->cookieName]) && $_COOKIE[$this->cookieName] != '') {
-      $orders = $this->get_orders(array('profile' => $profile))->Orders;
+      $orders = $this->get_orders(array('profile' => $profile));
+      if(property_exists($orders, 'Orders')) {
+        $orders = $orders->Orders;
+      } else {
+        $orders = array();
+      }
+
       $office_orders = array();
       foreach ($orders as $order) {
         if ($order) {
@@ -1217,6 +1284,7 @@ class pedidosOnline {
       $data = array('access_token' => $this->interface->decrypt($_COOKIE[$this->cookieName]));
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/headquarters/get/' . $id . '.json?' . $parameters);
+
       if ($result->status == "success") {
         return $result->data;
       } else {
@@ -1266,7 +1334,7 @@ class pedidosOnline {
     }
     $options=array();
     foreach ($products as $product) {
-      $options[$product->Product->id]=$product->Product->name;
+      $options[$product->Product->id] = $product->Product->name . ' - ' . $product->Product->measure_type;
     }
     return $options;
   }
@@ -1291,7 +1359,7 @@ class pedidosOnline {
   }
 
   public function create_order() {
-    //if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    if (isset($_POST['headquarters_id']) && isset($_POST['delivery_date']) && isset($_POST['product_id']) && isset($_POST['quantity'])) {
       $data['provider_id'] = $this->get_admin_provider_id();
       $data['access_token'] = $this->interface->decrypt($_COOKIE[$this->cookieName]);
       $data['headquarters_id'] = $_POST['headquarters_id'];
@@ -1301,8 +1369,11 @@ class pedidosOnline {
       $data['client_notes'] = $_POST['client_notes'];
       $result = $this->interface->request('api/orders/add.json', 'post', $data);
       return $result;
-    //}
-    //return __('Order couldn\'t be created. Please verify fields', 'clipe');
+    }
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = __('Order couldn\'t be created. Please verify fields', 'clipe');
+    return $result;
   }
 
   public function delete_order($id) {
@@ -1312,7 +1383,10 @@ class pedidosOnline {
       $result = $this->interface->request('api/orders/delete/' . $id . '.json?' . $parameters, 'delete');
       return $result;
     }
-    return 'validate fields';
+    $result = new stdClass();
+    $result->status = 'fail';
+    $result->message = 'validate fields';
+    return $result;
   }
 
   public function edit_order($id, $cancel = false) {
@@ -1403,7 +1477,7 @@ class pedidosOnline {
       if ($result->status == "success") {
         $data = $result->data;
         $permissions = array();
-        if (isset($data->Client) && !empty($data->Client->id)) {
+        if (isset($data->Headquarters) && count($data->Headquarters)) {
           $permissions[] = 'client';
         }
         if (isset($data->Provider) && !empty($data->Provider->id)) {
@@ -1464,9 +1538,7 @@ class pedidosOnline {
   }
 
   public function get_delivery_days_options($beforeDate=null,$client=null,$office=null,$profile=null) {
-    //echo '----'.print_r(func_get_args());exit;
     if(!is_null($office)){
-      //echo 'algo'.  var_dump($office);exit;
       $_POST['beforeDate']=$beforeDate;
       $_POST['client']=$client;
       $_POST['office']=$office;
@@ -1705,9 +1777,13 @@ class pedidosOnline {
     if (empty($data))
       return false;
     $message = "<ul style='margin: 0;'>";
-    foreach ($data as $field => $errors)
-      foreach ($errors as $error)
-        $message .= "<li>$error</li>";
+    foreach ($data as $field => $errors) {
+      foreach ($errors as $error) {
+        if (is_string($error)){
+          $message .= "<li>$error</li>";
+        }
+      }
+    }
     $message .= "</ul>";
     return $message;
   }

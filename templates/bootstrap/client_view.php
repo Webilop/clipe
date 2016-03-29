@@ -6,7 +6,11 @@
 
 <h1><?php echo $client->Client->name; ?></h1>
 
-<h3><?= __('Headquarters', 'clipe'); ?></h3>
+<h3>
+<?= __('Headquarters', 'clipe'); ?>
+&nbsp;
+<a title="<?= __('Add Office', 'clipe'); ?>" href="<?= $createOfficeUrl; ?>"><i class="fa fa-plus"></i></a>
+</h3>
 <?php if (!empty($client->Headquarters)): ?>
 <table class="table table-striped">
   <thead>
