@@ -6,7 +6,6 @@ $clients=$pedidosOnline->get_clients_options();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = $pedidosOnline->report_orders();
   $objClients = $pedidosOnline->get_clients();
-  $objClients=$objClients->clients;
   $clientNames = array();
   $reports = array();
   foreach ($objClients as $client) {

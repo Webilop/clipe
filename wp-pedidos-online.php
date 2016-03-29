@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Clipe
  * Description: Clipe plugin add features to manage your clients and their supply orders in your WordPress website.
- * Version: 0.5
+ * Version: 2.0.0
  * Text Domain: clipe
  * Author: Webilop
  * Author URI: http://www.webilop.com/
@@ -778,11 +778,10 @@ class pedidosOnline {
    */
 
   public function get_clients_options($options = array()) {
-    $clients = $this->get_clients($options)->clients;
-    $html = "";
-    $options=array();
+    $clients = $this->get_clients($options);
+    $options = array();
     foreach ($clients as $client) {
-      $options[$client->Client->id]=$client->Client->name;
+      $options[$client->Client->id] = $client->Client->name;
     }
     return $options;
   }
@@ -798,10 +797,12 @@ class pedidosOnline {
       $parameters = http_build_query($data);
       $result = $this->interface->request('api/clients/index.json?' . $parameters);
       if ($result->status == "success") {
-        return $result->data;
-      } else {
+        if(property_exists($result->data, 'clients') && is_array($result->data->clients)) {
+          return $result->data->clients;
+        }
         return array();
       }
+      return array();
     }
   }
 
