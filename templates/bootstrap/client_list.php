@@ -34,7 +34,7 @@
   </table>
   <div class="text-center">
     <?php
-    $pedidosOnline->print_pagination($result->rows,$numberRows);
+    $pedidosOnline->print_pagination(count($clients) ,$numberRows);
     ?>
   </div>
 <?php endif; ?>
